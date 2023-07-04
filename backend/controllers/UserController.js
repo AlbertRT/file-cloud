@@ -30,7 +30,7 @@ export async function register(req, res) {
     }
 
     const userId = random_string(32);
-    const folderName = `${userId}-${moment().unix()}`
+    const folderName = `${userId}-${moment().unix()}`;
 
     await createFolder(`src/folders/${folderName}`);
     await createFolder(`src/folders/${folderName}/root`);
@@ -47,7 +47,7 @@ export async function register(req, res) {
             error: false,
             ok: true,
             msg: 'User created with ' + folderName
-        })
+        });
     } catch (error) {
         return res.status(400).json({
             error: true,
@@ -55,4 +55,72 @@ export async function register(req, res) {
             msg: error.message
         });
     }
+}
+
+export async function login(req, res) {
+    let { username, email } = req.body;
+
+    const user = await User.findOne({ $or: [{ username }, { email }] });
+
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "User not found"
+        });
+    }
+
+    let clientKey = random_string(64);
+    res.cookie('key', clientKey, {
+        httpOnly: true
+    });
+    
+    clientKey = await bcrypt.hash(clientKey, 10);
+    await user.updateOne({ key: clientKey });
+
+    res.cookie('email', email, {
+        httpOnly: true
+    });
+
+    res.status(200).json({
+        error: false,
+        ok: true,
+        data: {
+            key: clientKey
+        },
+        msg: "Login successfull"
+    });
+}
+
+export async function logout(req, res) {
+    const { key, email } = req.cookies
+
+    if (!key || !email) {
+        return res.status(400).json({
+            error: true,
+            ok: false,
+            msg: "You have been logout"
+        });
+    }
+
+    const user = await User.findOne({ key: req.key });
+
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "User not found"
+        });
+    }
+
+    res.clearCookie('key');
+    res.clearCookie('email');
+
+    await User.updateOne({ key: req.key }, { key: '' });
+
+    res.status(200).json({
+        ok: true,
+        error: false,
+        msg: "Success to logout"
+    });
 }

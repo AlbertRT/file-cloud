@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    key: {
+        type: String,
+        default: ""
+    },
     created_on: {
         type: String,
         default: moment().unix()
