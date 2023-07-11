@@ -22,7 +22,7 @@ export async function cookieValidation(req, res, next) {
     }
 
     // validate the key that sent from client with key in database
-    const compared = await bcrypt.compare(key, user.key)
+    const compared = await bcrypt.compare(key, user.key);
     
     if (!compared) {
         return res.status(401).json({

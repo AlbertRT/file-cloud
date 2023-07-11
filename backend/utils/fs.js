@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export async function createFolder(path) {
+export async function createDir(path) {
     try {
         await fs.promises.mkdir(path);
 
@@ -43,10 +43,28 @@ export async function readDir(folderPath) {
             const item = await getItemInfo(itemPath);
             items.push(item);
         }
-        console.log(items);
 
         return items;
     } catch (err) {
-        return err;
+        throw new Error(err);
+    }
+}
+
+export async function rename(path, newPath) {
+    try {
+        await fs.promises.rename(path, newPath);
+
+        return 1;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+export async function rmFolder(path) {
+    try {
+        await fs.promises.rmdir(path);
+
+        return 1;
+    } catch (error) {
+        throw new Error(error);
     }
 }

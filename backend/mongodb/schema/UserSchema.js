@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 1073741824
     },
+    storage: {
+        type: Number,
+        default: 0
+    },
     user_folder: {
         type: String,
         required: true

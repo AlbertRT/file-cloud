@@ -2,8 +2,7 @@ import User from "../mongodb/models/User.js";
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import random_string from "../utils/random_string.js";
-import { createFolder } from "../utils/fs.js";
-import moment from "moment";
+import { createDir } from "../utils/fs.js";
 
 export async function register(req, res) {
     let { username, email, password, confirm_password } = req.body;
@@ -30,10 +29,9 @@ export async function register(req, res) {
     }
 
     const userId = random_string(32);
-    const folderName = `${userId}-${moment().unix()}`;
+    const folderName = `${userId}`;
 
-    await createFolder(`src/folders/${folderName}`);
-    await createFolder(`src/folders/${folderName}/root`);
+    await createDir(process.env.folderName + folderName);
 
     try {
         await User.create({
