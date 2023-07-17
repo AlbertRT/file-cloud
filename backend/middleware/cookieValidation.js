@@ -33,5 +33,6 @@ export async function cookieValidation(req, res, next) {
     }
 
     req.key = user.key;
+    req.folder_name = user.user_folder;
     next();
 }

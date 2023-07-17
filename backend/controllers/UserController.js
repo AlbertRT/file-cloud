@@ -31,7 +31,7 @@ export async function register(req, res) {
     const userId = random_string(32);
     const folderName = `${userId}`;
 
-    await createDir(process.env.folderName + folderName);
+    await createDir(`src/folders/${folderName}`);
 
     try {
         await User.create({

@@ -68,3 +68,13 @@ export async function rmFolder(path) {
         throw new Error(error);
     }
 }
+
+export async function unlinkFile(path) {
+    try {
+        await fs.promises.unlink(path);
+
+        return 1;
+    } catch (error) {
+        throw new Error(error);
+    }
+}

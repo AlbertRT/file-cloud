@@ -2,7 +2,6 @@ import { readDir, createDir, rename, rmFolder } from "../utils/fs.js";
 import User from "../mongodb/models/User.js";
 import Folder from "../mongodb/models/Folder.js";
 import random_string from "../utils/random_string.js";
-import fs from 'fs';
 
 export async function readFolder (req, res) {
     const key = req.key;
