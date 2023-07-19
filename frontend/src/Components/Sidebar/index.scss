@@ -1,0 +1,194 @@
+@use "../../variables.scss" as variable;
+@forward "../../variables.scss";
+@import "../../mixin.scss";
+
+.Sidebar {
+	width: 100%;
+	height: calc(92vh - 40px - 20px);
+	border-right: 1px solid variable.$dark_gray_1;
+	padding: 1rem 1.5rem;
+
+	.Menus {
+		height: 65vh;
+		.menu {
+			list-style: none;
+			margin-bottom: 0.5rem;
+
+			&.trash-bin {
+				a {
+					&.active {
+						background: variable.$danger;
+						color: variable.$white;
+					}
+				}
+			}
+
+			a {
+				color: variable.$black;
+				width: 100%;
+				height: 35px;
+				transition: all 250ms;
+				padding: 0 1rem;
+				border-radius: 5px;
+				font-size: 0.9rem;
+				display: flex;
+				align-items: center;
+				text-decoration: none;
+
+				span {
+					margin-left: 0.5rem;
+				}
+
+				.icons {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				&:hover,
+				&.active {
+					background: variable.$dark_blue;
+					color: variable.$white;
+				}
+
+				&.trash-bin {
+					&:hover,
+					&.active {
+						background: variable.$danger;
+						color: variable.$white;
+					}
+				}
+				&.subMenu {
+					&:hover,
+					&.active {
+						background: variable.$light_gray_2;
+						color: variable.$black;
+					}
+				}
+			}
+		}
+		.menu-expand {
+			height: auto;
+			width: 100%;
+			user-select: none;
+
+			.expand-title {
+				color: variable.$black;
+				width: 100%;
+				height: 35px;
+				transition: all 250ms;
+				padding: 0 1rem;
+				border-radius: 5px;
+				font-size: 0.9rem;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				.title {
+					display: flex;
+					align-items: center;
+
+					span {
+						margin-left: 0.5rem;
+					}
+
+					.icons {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+
+				.expand-icon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					transition: transform 250ms;
+
+					&.expanded {
+						transform: rotate(90deg);
+					}
+				}
+
+				&:hover,
+				&.active {
+					background: variable.$dark_blue;
+					color: variable.$white;
+				}
+			}
+			.submenu {
+				margin-top: 0.5rem;
+				padding: 0 1rem;
+				height: 0;
+				visibility: collapse;
+				transition: all 250ms;
+				opacity: 0;
+
+				&.expanded {
+					height: 15vh;
+					max-height: 30vh;
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+		}
+	}
+
+	.Account {
+		height: 15vh;
+		margin-top: 1rem;
+
+		.storage {
+			.title {
+				display: flex;
+				align-items: center;
+				user-select: none;
+				font-size: 0.9rem;
+				color: variable.$dark_gray_2;
+
+				.icons {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				span {
+					margin-left: 0.2rem;
+				}
+			}
+			.storage-bar {
+				margin-top: 0.35rem;
+
+				.bar-container {
+					width: 100%;
+					background: variable.$medium_gray_1;
+					height: 10px;
+					border-radius: 50px;
+					position: relative;
+
+					.bar {
+						height: 100%;
+						border-radius: inherit;
+					}
+				}
+				.storage-used {
+					margin-top: 0.3rem;
+					font-size: 0.8rem;
+					color: variable.$dark_gray_2;
+					display: flex;
+					align-items: center;
+
+					.using {
+						margin-right: 0.2rem;
+					}
+					.total {
+						margin-left: 0.2rem;
+					}
+					.percentage {
+						margin-left: 0.3rem;
+					}
+				}
+			}
+		}
+	}
+}

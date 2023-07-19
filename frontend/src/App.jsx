@@ -1,5 +1,15 @@
+import { Routes, Route } from 'react-router-dom';
+import './index.scss';
+import Home from './Page/Home/Home';
+
 function App() {
-	return <h1>Vite + React</h1>;
+	return (
+        <div className="Apps">
+            <Routes>
+                <Route path='/' element={<Home />} />
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
