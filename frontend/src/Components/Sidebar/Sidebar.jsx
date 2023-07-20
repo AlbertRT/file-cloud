@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./index.scss";
+import "./Sidebar.scss";
 import {
 	LuHome,
 	LuFolderClosed,
@@ -22,7 +22,7 @@ const Sidebar = () => {
 	};
 	const percentages = Math.round((storage.used / storage.total) * 100);
 
-    const color = percentages <= 50 ? "457b9d" : percentages <= 75 ? "ffce54" : "e63946";
+    const color = percentages <= 50 ? "#457b9d" : percentages <= 75 ? "#ffce54" : "#e63946";
 
 	return (
 		<div className="Sidebar">
@@ -106,11 +106,7 @@ const Sidebar = () => {
 								className="bar"
 								style={{
 									width: `${percentages}%`,
-									background: (percentages <= 50
-											? "#457b9d"
-											: percentages <= 75
-											? "#ffce54"
-											: "#e63946"),
+									background: color,
 								}}
 							></div>
 						</div>

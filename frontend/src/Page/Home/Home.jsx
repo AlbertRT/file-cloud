@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import './Home.scss';
+import Footer from '../../Components/Footer/Footer';
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
             </div>
             <div className="content"></div>
         </section>
+        <Footer />
     </div>
   )
 }

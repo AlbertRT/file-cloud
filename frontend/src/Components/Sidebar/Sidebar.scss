@@ -1,12 +1,11 @@
-@use "../../variables.scss" as variable;
-@forward "../../variables.scss";
-@import "../../mixin.scss";
+@import "../../variables.scss";
 
 .Sidebar {
 	width: 100%;
 	height: calc(92vh - 40px - 20px);
-	border-right: 1px solid variable.$dark_gray_1;
+	border-right: 1px solid $dark_gray_1;
 	padding: 1rem 1.5rem;
+    background: $light_gray_2;
 
 	.Menus {
 		height: 65vh;
@@ -17,14 +16,14 @@
 			&.trash-bin {
 				a {
 					&.active {
-						background: variable.$danger;
-						color: variable.$white;
+						background: $danger;
+						color: $white;
 					}
 				}
 			}
 
 			a {
-				color: variable.$black;
+				color: $black;
 				width: 100%;
 				height: 35px;
 				transition: all 250ms;
@@ -47,22 +46,22 @@
 
 				&:hover,
 				&.active {
-					background: variable.$dark_blue;
-					color: variable.$white;
+					background: $dark_blue;
+					color: $white;
 				}
 
 				&.trash-bin {
 					&:hover,
 					&.active {
-						background: variable.$danger;
-						color: variable.$white;
+						background: $danger;
+						color: $white;
 					}
 				}
 				&.subMenu {
 					&:hover,
 					&.active {
-						background: variable.$light_gray_2;
-						color: variable.$black;
+						background: $light_gray_2;
+						color: $black;
 					}
 				}
 			}
@@ -73,7 +72,7 @@
 			user-select: none;
 
 			.expand-title {
-				color: variable.$black;
+				color: $black;
 				width: 100%;
 				height: 35px;
 				transition: all 250ms;
@@ -113,8 +112,8 @@
 
 				&:hover,
 				&.active {
-					background: variable.$dark_blue;
-					color: variable.$white;
+					background: $dark_blue;
+					color: $white;
 				}
 			}
 			.submenu {
@@ -124,6 +123,12 @@
 				visibility: collapse;
 				transition: all 250ms;
 				opacity: 0;
+
+                .subMenu {
+                    &:hover {
+                        background: $medium_gray_1;
+                    }
+                }
 
 				&.expanded {
 					height: 15vh;
@@ -136,7 +141,7 @@
 	}
 
 	.Account {
-		height: 15vh;
+		height: 10vh;
 		margin-top: 1rem;
 
 		.storage {
@@ -145,7 +150,7 @@
 				align-items: center;
 				user-select: none;
 				font-size: 0.9rem;
-				color: variable.$dark_gray_2;
+				color: $dark_gray_2;
 
 				.icons {
 					display: flex;
@@ -153,7 +158,7 @@
 					justify-content: center;
 				}
 				span {
-					margin-left: 0.2rem;
+					margin-left: 0.5rem;
 				}
 			}
 			.storage-bar {
@@ -161,7 +166,7 @@
 
 				.bar-container {
 					width: 100%;
-					background: variable.$medium_gray_1;
+					background: $medium_gray_1;
 					height: 10px;
 					border-radius: 50px;
 					position: relative;
@@ -173,10 +178,11 @@
 				}
 				.storage-used {
 					margin-top: 0.3rem;
-					font-size: 0.8rem;
-					color: variable.$dark_gray_2;
+					font-size: 0.78rem;
+					color: $dark_gray_2;
 					display: flex;
 					align-items: center;
+                    user-select: none;
 
 					.using {
 						margin-right: 0.2rem;
