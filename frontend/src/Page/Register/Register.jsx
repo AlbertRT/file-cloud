@@ -1,74 +1,144 @@
-import React from 'react'
+import React, { useState } from "react";
 import { LuMail, LuLock, LuUser } from "react-icons/lu";
-import './Register.scss';
+import "./Register.scss";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const Register = () => {
-  return (
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirm_password, setConfirmPassword] = useState("");
+
+    const navigate = useNavigate();
+
+	const submit = async () => {
+		const data = {
+			username,
+			email,
+			password,
+			confirm_password,
+		};
+
+        if (data.username === "" || data.email === "" || data.password === "" || data.confirm_password === "") {
+            return toast.error("Please fill the required field!");
+        }
+
+		if (data.confirm_password !== data.password) {
+            const passwordLabel = document.querySelector('label.password');
+            const confirmPasswordLabel = document.querySelector('label.confirm_password');
+
+            passwordLabel.classList.add('error');
+            confirmPasswordLabel.classList.add('error');
+
+            setTimeout(() => {
+                passwordLabel.classList.remove('error');
+                confirmPasswordLabel.classList.remove('error');
+            }, 2500)
+
+			return toast.error("Password not Match!");
+		}
+
+        try {
+            await axios.post('http://localhost:5050/user/register', data);
+            navigate('/login');
+        } catch (error) {
+            toast.error(error.message);
+        }
+	};
+
+	return (
 		<div className="Register">
+			<ToastContainer
+				position="top-right"
+				autoClose={2000}
+				closeOnClick
+				closeButton
+				pauseOnHover
+			/>
 			<section className="main">
 				<div className="auth-card">
 					<div className="title">Register</div>
 					<div className="form">
-						<form action="">
-							<div className="input">
-								<label htmlFor="username">
-									<span>Username</span>
-									<LuUser />
-								</label>
-								<input
-									type="text"
-									id="username"
-									className="username"
-									placeholder="John Doe"
-								/>
-							</div>
-							<div className="input">
-								<label htmlFor="email">
-									<span>Email</span>
-									<LuMail />
-								</label>
-								<input
-									type="email"
-									id="email"
-									className="email"
-									placeholder="exmaple@gmail.com"
-								/>
-							</div>
-							<div className="input">
-								<label htmlFor="password">
-									<span>Password</span>
-									<LuLock />
-								</label>
-								<input
-									type="password"
-									id="password"
-									className="password"
-									placeholder="****"
-								/>
-							</div>
-							<div className="input">
-								<label htmlFor="confirm_password">
-									<span>Confirm Password</span>
-									<LuLock />
-								</label>
-								<input
-									type="password"
-									id="confirm_password"
-									className="email"
-									placeholder="****"
-								/>
-							</div>
-							<div className="button">
-								<button type="submit" disabled={true}>
-									Register!
-								</button>
-							</div>
-						</form>
+						<div className="input">
+							<label htmlFor="username" className="username">
+								<span>Username</span>
+								<LuUser />
+							</label>
+							<input
+								type="text"
+								id="username"
+								className="username"
+								placeholder="John Doe"
+								value={username}
+								onInput={(e) => setUsername(e.target.value)}
+							/>
+						</div>
+						<div className="input">
+							<label htmlFor="email" className="email">
+								<span>Email</span>
+								<LuMail />
+							</label>
+							<input
+								type="email"
+								id="email"
+								className="email"
+								placeholder="exmaple@gmail.com"
+								value={email}
+								onInput={(e) => setEmail(e.target.value)}
+							/>
+						</div>
+						<div className="input">
+							<label htmlFor="password" className="password">
+								<span>Password</span>
+								<LuLock />
+							</label>
+							<input
+								type="password"
+								id="password"
+								className="password"
+								placeholder="****"
+								value={password}
+								onInput={(e) => setPassword(e.target.value)}
+							/>
+						</div>
+						<div className="input">
+							<label
+								htmlFor="confirm_password"
+								className="confirm_password"
+							>
+								<span>Confirm Password</span>
+								<LuLock />
+							</label>
+							<input
+								type="password"
+								id="confirm_password"
+								className="email"
+								placeholder="****"
+								value={confirm_password}
+								onInput={(e) =>
+									setConfirmPassword(e.target.value)
+								}
+							/>
+						</div>
+                        <div className="links">
+                            <ul>
+                                <li>
+                                    <Link to={'/login'}>Already have account?</Link>
+                                </li>
+                            </ul>
+                        </div>
+						<div className="button">
+							<button onClick={submit}>Register!</button>
+						</div>
 					</div>
 				</div>
 			</section>
 		</div>
-  );
-}
+	);
+};
 
 export default Register;

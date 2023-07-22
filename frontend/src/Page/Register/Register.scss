@@ -49,6 +49,10 @@
                         span {
                             margin-right: .3rem;
                         }
+
+                        &.error {
+                            color: $danger;
+                        }
                     }
                 }
                 .links {
