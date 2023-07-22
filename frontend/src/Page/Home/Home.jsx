@@ -12,7 +12,11 @@ const Home = () => {
             <div className="sidebar">
                 <Sidebar />
             </div>
-            <div className="content"></div>
+            <div className="content">
+                <section id="home" className='home'>
+                    <div className="section-title">Home</div>
+                </section>
+            </div>
         </section>
         <Footer />
     </div>
