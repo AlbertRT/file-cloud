@@ -11,10 +11,22 @@ import {
 } from "react-icons/lu";
 import fiony from "../../Assets/20230718_151947.jpg";
 import { Link } from "react-router-dom";
+import Fetcher from "../../Utils/Fetcher";
+import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ data }) => {
+    const navigate = useNavigate();
 	const [searchValue, setSearchValue] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const onLogout = async () => {
+        try {
+            await Fetcher(['http://localhost:5050/user/logout', 'delete']);
+            navigate('/login');
+        } catch (error) {
+            return
+        }
+    } 
 
 	return (
 		<nav className="navbar">
@@ -60,7 +72,7 @@ const Navbar = () => {
 							<img src={fiony} alt="" />
 						</div>
 						<div className="name">
-							<p>Fiony Alveria</p>
+							<p>{data.username}</p>
 						</div>
 					</div>
 					<div className={showDropdown ? "dropdown show" : "dropdown"} >
@@ -70,10 +82,10 @@ const Navbar = () => {
 							</div>
 							<div className="information">
 								<div className="name">
-									<p>Fiony Alveria</p>
+									<p>{data.username}</p>
 								</div>
 								<div className="email">
-									<p>fiony.alveria@jkt48.com</p>
+									<p>{data.email}</p>
 								</div>
 							</div>
 						</div>
@@ -97,12 +109,12 @@ const Navbar = () => {
 						</div>
 						<div className="bottom-menus-dropdown">
 							<div className="bottom-menu-dropdown logout">
-								<Link>
+								<button onClick={onLogout}>
 									<div className="icons">
 										<LuLogOut />
 									</div>
 									<span>Log Out</span>
-								</Link>
+								</button>
 							</div>
 						</div>
 					</div>

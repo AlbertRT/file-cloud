@@ -3,29 +3,42 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./Home.scss";
 import Footer from "../../Components/Footer/Footer";
-import axios from "axios";
-
+import useSWR from "swr";
+import Fetcher from "../../Utils/Fetcher";
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContainer } from "../../Components/Cards/Cards";
 const Home = () => {
-	const test = async () => {
-        try {
-            const data = await axios.get('http://localhost:5050');
-            console.log(data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    test();
+
+    const navigate = useNavigate();
+
+	const { data: response, error, mutate, isLoading } = useSWR(
+		["http://localhost:5050/user/me", "get"],
+		Fetcher,
+		{
+			revalidateOnMount: true,
+		}
+	);
+	if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (error) {
+        navigate('/login');
+    }
 
 	return (
 		<div className="Home">
-			<Navbar />
+			<Navbar data={response.data} />
 			<section id="Main">
 				<div className="sidebar">
-					<Sidebar />
+					<Sidebar data={response.data} />
 				</div>
 				<div className="content">
 					<section id="home" className="home">
 						<div className="section-title">Home</div>
+                        <CardContainer>
+                            <Card type={'folder'}/>
+                        </CardContainer>
 					</section>
 				</div>
 			</section>

@@ -122,3 +122,42 @@ export async function logout(req, res) {
         msg: "Success to logout"
     });
 }
+
+export async function me(req, res) {
+    const { key, email } = req.cookies; 
+
+    if (!key) {
+        return res.status(401).json({
+            error: true,
+            ok: false,
+            msg: "Key is Missing, please Login!"
+        });
+        
+    }
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "User not found"
+        });
+    }
+
+    const data = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        default_storage: user.default_storage,
+        storage: user.storage,
+        user_folder: user.user_folder,
+        created_on: user.created_on
+    }
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data
+    });
+}

@@ -1,0 +1,31 @@
+@import '../../variables.scss';
+
+.CardContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+
+    .Card {
+        user-select: none;
+        padding: 1rem;
+        transition: all 250ms;
+
+        &.folder {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            width: max-content;
+            border-radius: 5px;
+            background: $light_gray_2;
+
+            &:hover {
+                background: $medium_gray_1;
+            }
+
+            .name {
+                margin-left: .5rem;
+                font-size: .9rem;
+            }
+        }
+    }
+}

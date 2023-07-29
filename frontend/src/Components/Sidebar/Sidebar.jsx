@@ -14,14 +14,14 @@ import { Link } from "react-router-dom";
 import { BtoGB, BtoMB } from "../../Utils/DataConverter";
 import "../../variables.scss";
 
-const Sidebar = () => {
+const Sidebar = ({data}) => {
 	const [isSubmenuOpen, setOpensubmenu] = useState(false);
 	const storage = {
-		used: 26214400,
-		total: 1073741824,
+		used: data.storage,
+		total: data.default_storage,
 	};
-	const percentages = Math.round((storage.used / storage.total) * 100);
 
+	const percentages = Math.round((storage.used / storage.total) * 100);
     const color = percentages <= 50 ? "#457b9d" : percentages <= 75 ? "#ffce54" : "#e63946";
 
 	return (

@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, logout, register } from '../controllers/UserController.js';
+import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
 import { createFolder, deleteFolder, readFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
@@ -9,6 +9,7 @@ import path from 'path';
 const Route = express.Router();
 
 // Authentication routes
+Route.get('/user/me', cookieValidation, me)
 Route.post('/user/register', register);
 Route.post('/user/login', login);
 Route.delete('/user/logout', cookieValidation, logout);
