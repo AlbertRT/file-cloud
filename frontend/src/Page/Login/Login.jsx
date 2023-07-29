@@ -64,7 +64,7 @@ const Login = () => {
 									</Link>
 								</li>
 								<li id="password-reset">
-									<Link>Forgot your password?</Link>
+									<Link>Forgot your Email?</Link>
 								</li>
 							</ul>
 						</div>
