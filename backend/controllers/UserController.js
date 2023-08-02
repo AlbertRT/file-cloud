@@ -70,14 +70,16 @@ export async function login(req, res) {
 
     let clientKey = random_string(64);
     res.cookie('key', clientKey, {
-        httpOnly: true
+        httpOnly: true,
+        maxAge: 14 * 24 * 60 * 60 * 1000
     });
     
     clientKey = await bcrypt.hash(clientKey, 10);
     await user.updateOne({ key: clientKey });
 
     res.cookie('email', email, {
-        httpOnly: true
+        httpOnly: true,
+        maxAge: 14 * 24 * 60 * 60 * 1000
     });
 
     res.status(200).json({

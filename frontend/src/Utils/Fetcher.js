@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const Fetcher = async ([url, method, headers = {}]) => {
-    const response = await axios({ url, method, headers: { ...headers.headers} });
+const Fetcher = async ([url, method, data={}, headers = {}]) => {
+    const response = await axios({ url, method, data: { ...data.data },  headers: { ...headers.headers} });
     return response.data;
 }
 

@@ -1,18 +1,25 @@
 import { Link } from "react-router-dom";
 import "./Cards.scss";
-import { LuFolder } from "react-icons/lu";
+import { LuFolder, LuImage } from "react-icons/lu";
 
-export const CardContainer = (props) => {
-	return <div className="CardContainer">{props.children}</div>;
+export const CardContainer = ({ children, position, sectionTitle }) => {
+	return (
+		<div className={`CardContainer ${position}`}>
+			{sectionTitle ? (<div className="title">{sectionTitle}</div>) : ("")}
+            <div className={position}>
+                {children}
+            </div>
+		</div>
+	);
 };
 
-export const Card = ({ type }) => {
+export const Card = ({ type, size, name, url }) => {
 	return (
-		<Link className={`Card ${type.toLowerCase()}`}>
+		<Link className={`Card ${type.toLowerCase()} ${size}`}>
 			<div className="icons">
-				<LuFolder />
+				{type.toLowerCase() !== "folder" ? <LuImage /> : <LuFolder />}
 			</div>
-			<div className="name">My Folder</div>
+			<div className="name">{name}</div>
 		</Link>
 	);
 };
