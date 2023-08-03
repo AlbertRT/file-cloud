@@ -1,32 +1,26 @@
 import "./ActionBar.scss";
-import { Button, Dropdown, Space, Modal, Upload, notification } from "antd";
-import { LuFilePlus2, LuFolderPlus, LuInbox, LuPlus } from "react-icons/lu";
+import { Button, Dropdown, Space, Modal } from "antd";
+import { LuFilePlus2, LuFolderPlus, LuPlus } from "react-icons/lu";
 import { useState } from "react";
-import Fetcher from "../../Utils/Fetcher";
-import axios from "axios";
+import { FileDragger } from "../FileUpload/Dragger";
+import NewFolder from "../FileUpload/NewFolder";
+import { useLocation } from "react-router-dom";
 
 const ActionBar = () => {
-    // props
+	// props
 	const [isModalOpen, setIsModalOpen] = useState(false);
-    const [api, contextHolder] = notification.useNotification();
+	const [openedModal, setOpenedModal] = useState(null);
+	const [folderName, setFolderName] = useState("");
+	const { pathname } = useLocation();
+    console.log(folderName);
 
-    // Ant notification
-    const openNotification = (type, msg) => {
-        if (type === 'error') {
-            api.error({
-                message: 'An Error',
-                description: msg
-            });
-        }
-    }
 	// Ant Modals
-	const showModal = () => {
+	const showModal = (type) => {
+		setOpenedModal(type);
 		setIsModalOpen(true);
 	};
-	const handleOk = () => {
-		setIsModalOpen(false);
-	};
 	const handleCancel = () => {
+		setOpenedModal(null);
 		setIsModalOpen(false);
 	};
 
@@ -36,43 +30,18 @@ const ActionBar = () => {
 			label: "File",
 			key: 1,
 			icon: <LuFilePlus2 />,
-			onClick: showModal,
+			onClick: () => showModal("file"),
 		},
 		{
 			label: "Folder",
 			key: 2,
 			icon: <LuFolderPlus />,
+			onClick: () => showModal("folder"),
 		},
 	];
 
-	// Antd file props
-	const uploadImage = async (options) => {
-		const { onSuccess, onError, file, onProgress } = options;
-
-		const fmData = new FormData();
-		const config = {
-			headers: { "content-type": "multipart/form-data" },
-		};
-
-		fmData.append("image", file);
-		try {
-            await axios.post(
-				"http://localhost:5050/user/file/upload", 
-                fmData,
-                config
-			);
-            onSuccess("Ok");
-            setTimeout(() => {
-                handleCancel()
-            }, 1500)
-        } catch (error) {
-            onError(error);
-            openNotification("error", error.message);
-        }
-	};
 	return (
 		<div className="ActionBar">
-            {contextHolder}
 			<div className="menus">
 				<div className="new">
 					<Dropdown
@@ -92,28 +61,39 @@ const ActionBar = () => {
 				</div>
 			</div>
 			<Modal
-				title="Upload File"
+				title={
+					openedModal === "file" ? "Upload File" : "Create new Folder"
+				}
 				open={isModalOpen}
-				onOk={handleOk}
 				onCancel={handleCancel}
-				footer={[]}
+				footer={[
+					openedModal === "folder"
+						? [
+								<Button
+									onClick={handleCancel}
+									type="default"
+									danger
+								>
+									Cancel
+								</Button>,
+								<Button
+									type="primary"
+									disabled={folderName === ""}
+								>
+									Make
+								</Button>,
+						  ]
+						: "",
+				]}
 			>
-				<Upload.Dragger
-					maxCount={1}
-					customRequest={uploadImage}
-					accept="image/*"
-				>
-					<p className="upload-drag-icons">
-						<LuInbox />
-					</p>
-					<p className="ant-upload-text">
-						Click or drag file to this area to upload
-					</p>
-					<p className="ant-upload-hint">
-						Support for a single or bulk upload. Strictly prohibited
-						from uploading company data or other banned files.
-					</p>
-				</Upload.Dragger>
+				{openedModal === "file" ? (
+					<FileDragger />
+				) : (
+					<NewFolder
+						onInput={(e) => setFolderName(e.target.value)}
+						folderName={folderName}
+					/>
+				)}
 			</Modal>
 		</div>
 	);
