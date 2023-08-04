@@ -6,12 +6,12 @@ import Footer from "../../Components/Footer/Footer";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Fetcher";
 import { useNavigate } from "react-router-dom";
-import { CardContainer, Card } from "../../Components/Cards/Cards";
 import ActionBar from "../../Components/ActionBar/ActionBar";
-import { Table } from "antd";
+import {Files} from '../../Components/Files/Files';
 
 const Home = () => {
 	const navigate = useNavigate();
+    
 
 	const {
 		data: response,
@@ -20,6 +20,8 @@ const Home = () => {
 		isLoading,
 	} = useSWR(["http://localhost:5050/user/me", "get"], Fetcher, {
 		revalidateOnMount: true,
+		revalidateOnFocus: true,
+        refreshInterval: 500
 	});
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -28,39 +30,6 @@ const Home = () => {
 	if (error) {
 		navigate("/login");
 	}
-
-	const dataSource = [
-		{
-			key: "1",
-			name: "Mike",
-			age: 32,
-			address: "10 Downing Street",
-		},
-		{
-			key: "2",
-			name: "John",
-			age: 42,
-			address: "10 Downing Street",
-		},
-	];
-
-	const columns = [
-		{
-			title: "Name",
-			dataIndex: "name",
-			key: "name",
-		},
-		{
-			title: "Age",
-			dataIndex: "age",
-			key: "age",
-		},
-		{
-			title: "Address",
-			dataIndex: "address",
-			key: "address",
-		},
-	];
 
 	return (
 		<div className="Home">
@@ -73,13 +42,7 @@ const Home = () => {
 					<section id="home" className="home">
 						<ActionBar />
 						<div className="section-title">Home</div>
-						<Table
-							dataSource={dataSource}
-							columns={columns}
-							scroll={{
-								y: 240,
-							}}
-						/>
+						<Files />
 					</section>
 				</div>
 			</section>

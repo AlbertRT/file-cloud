@@ -12,7 +12,6 @@ const ActionBar = () => {
 	const [openedModal, setOpenedModal] = useState(null);
 	const [folderName, setFolderName] = useState("");
 	const { pathname } = useLocation();
-    console.log(folderName);
 
 	// Ant Modals
 	const showModal = (type) => {

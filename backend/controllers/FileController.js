@@ -4,6 +4,28 @@ import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
 import { rename, unlinkFile } from "../utils/fs.js";
 import path from 'path';
+import {readDir} from '../utils/fs.js';
+
+export async function ls (req, res) {
+    const {location} = req.params;
+    const { user_folder } = await User.findOne({ key: req.key });
+
+    let path = `src/folders/`;
+    let data;
+
+    if (location === 'root') {
+        path = `src/folders/${user_folder}`;
+        data = await readDir(path);
+    } else {
+        path = `src/folders/${location}`
+    }
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data
+    })
+}
 
 export async function uploadFile (req, res) {
     const { originalname, path, filename, size, mimetype } = req.file;

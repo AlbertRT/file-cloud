@@ -1,9 +1,9 @@
 import express from 'express';
 import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
-import { createFolder, deleteFolder, readFolder, renameFolder } from '../controllers/FolderController.js';
+import { createFolder, deleteFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
-import { uploadFile, renameFile, deleteFile } from '../controllers/FileController.js';
+import { uploadFile, renameFile, deleteFile, ls } from '../controllers/FileController.js';
 import path from 'path';
 
 const Route = express.Router();
@@ -20,7 +20,6 @@ Route.delete('/user/logout', cookieValidation, logout);
 Route.post('/user/file/folder/create', cookieValidation, createFolder);
 Route.patch('/user/file/folder/rename', cookieValidation, renameFolder);
 Route.delete('/user/file/folder/delete', cookieValidation, deleteFolder);
-Route.get('/user/file', cookieValidation, readFolder);
 
 
 // multer config
@@ -37,6 +36,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // file manager
+Route.get('/user/file/:location', cookieValidation, ls)
 Route.post('/user/file/upload', cookieValidation, upload.single('image'), uploadFile);
 Route.patch('/user/file/rename', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);

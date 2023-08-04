@@ -11,7 +11,7 @@ import {
 	LuHardDrive,
 } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import { BtoGB, BtoMB } from "../../Utils/DataConverter";
+import { formatBytes} from '../../Utils/DataConverter';
 import "../../variables.scss";
 
 const Sidebar = ({data}) => {
@@ -112,11 +112,11 @@ const Sidebar = ({data}) => {
 						</div>
 						<div className="storage-used">
 							<span className="using">
-								{Math.round(BtoMB(storage.used))} MB
+								{formatBytes(storage.used)}
 							</span>
 							of
 							<span className="total">
-								{Math.round(BtoGB(storage.total))} GB
+								{formatBytes(storage.total)}
 							</span>
 							<span className="percentage">({percentages}%)</span>
 						</div>

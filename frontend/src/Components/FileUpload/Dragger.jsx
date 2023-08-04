@@ -1,10 +1,17 @@
 import { Upload } from "antd";
 import { LuInbox } from "react-icons/lu";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export const FileDragger = () => {
+    let { pathname } = useLocation();
+
+    if (pathname === "/") {
+		pathname = "root";
+	}
+
 	const uploadImage = async (options) => {
-		const { onSuccess, onError, file, onProgress } = options;
+		const { onSuccess, onError, file } = options;
 
 		const fmData = new FormData();
 		const config = {
@@ -19,9 +26,7 @@ export const FileDragger = () => {
 				config
 			);
 			onSuccess("Ok");
-			setTimeout(() => {
-				handleCancel();
-			}, 1500);
+            Mutate("http://localhost:5050/user/file/upload");
 		} catch (error) {
 			onError(error);
 		}
