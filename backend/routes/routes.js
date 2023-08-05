@@ -5,6 +5,7 @@ import { createFolder, deleteFolder, renameFolder } from '../controllers/FolderC
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls } from '../controllers/FileController.js';
 import path from 'path';
+import {download} from '../controllers/DownloadController.js';
 
 const Route = express.Router();
 
@@ -36,10 +37,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // file manager
-Route.get('/user/file/:location', cookieValidation, ls)
+Route.get('/user/file/:location', cookieValidation, ls);
 Route.post('/user/file/upload', cookieValidation, upload.single('image'), uploadFile);
 Route.patch('/user/file/rename', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);
+
+// download manager
+Route.get('/download/:type/:id', download)
 
 Route.get('/', cookieValidation, (req, res) => res.json({ ok: true }));
 

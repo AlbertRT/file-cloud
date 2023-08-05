@@ -46,6 +46,7 @@ export async function uploadFile (req, res) {
 
     // User
     const user = await User.findOne({ key });
+    const id = random_string(32)
 
     if (!user) {
         return res.status(404).json({
@@ -58,11 +59,12 @@ export async function uploadFile (req, res) {
     const folder = await Folder.findOne({ name: req.body.folder_name });
 
     let newUserStorage = user.storage + size;
+    let downloadURL = `http://localhost:5050/download/file/${id}`
 
     try {
         
         await File.create({
-            id: random_string(32),
+            id,
             fileName: filename,
             mimetype,
             originalName: originalname,
@@ -70,6 +72,7 @@ export async function uploadFile (req, res) {
             size,
             userId: user._id,
             date_modified: moment().unix(),
+            url: downloadURL,
             folderId: folder?._id
         });
         await User.updateOne({

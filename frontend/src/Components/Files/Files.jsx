@@ -1,22 +1,21 @@
-import { Table } from "antd";
+import { Space, Table, Button, Image } from "antd";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Fetcher";
 import { Link, useLocation } from "react-router-dom";
 import { LuFile, LuFolder, LuImage } from "react-icons/lu";
 import moment from "moment";
 import { formatBytes } from "../../Utils/DataConverter";
+import { useState } from "react";
 
 export const Files = () => {
 	let { pathname } = useLocation();
+	const [visible, setVisible] = useState(false);
 
 	if (pathname === "/") {
 		pathname = "root";
 	}
 
-	const {
-		data: files,
-		isLoading,
-	} = useSWR(
+	const { data: files, isLoading } = useSWR(
 		[`http://localhost:5050/user/file/${pathname}`, "get"],
 		Fetcher,
 		{
@@ -41,8 +40,6 @@ export const Files = () => {
 			title: "Name",
 			dataIndex: "name",
 			key: "name",
-			render: (text) => <Link>{text}</Link>,
-			sorter: (a, b) => a.age - b.age,
 		},
 		{
 			title: "Size",
@@ -63,13 +60,40 @@ export const Files = () => {
 		},
 	];
 
+	// Image
+	const ImagePreview = ({ preview, name }) => {
+		return (
+			<>
+				<Button type="text" onClick={() => setVisible(true)}>{name}</Button>
+				<Image
+					src={preview}
+                    style={{ display: "none" }}
+					preview={{
+						visible,
+						src: preview,
+						onVisibleChange: (val) => {
+							setVisible(val);
+						},
+					}}
+				/>
+			</>
+		);
+	};
+
 	const file = files.data.map((file, index) => {
 		return {
 			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
-			name: file.originalName,
+			name:
+				file.mimetype.split("/")[0] === "image" ? (
+					<ImagePreview preview={file.url} name={file.originalName} />
+				) : (
+					<Link>{file.originalName}</Link>
+				),
 			size: file.size ? formatBytes(file.size) : "-",
 			type: file.mimetype,
-			date_modified: moment.unix(file.date_modified).format("DD MMM YYYY kk:mm"),
+			date_modified: moment
+				.unix(file.date_modified)
+				.format("DD MMM YYYY hh:mm A"),
 			key: file.id,
 		};
 	});
