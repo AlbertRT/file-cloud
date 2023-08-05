@@ -17,6 +17,10 @@ const fileSchema = new Schema({
     },
     date_modified: String,
     url: String,
+    author: {
+        type: String,
+        required: true
+    },
     folderId: {
         type: Schema.Types.ObjectId,
         required: false,

@@ -24,6 +24,10 @@ const folderSchema = new Schema({
     date_modified: {
         type: String
     },
+    author: {
+        type: String,
+        required: true
+    },
     userId: {
         type: Schema.Types.ObjectId,
         required: true,

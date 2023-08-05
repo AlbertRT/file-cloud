@@ -1,21 +1,22 @@
-import { Space, Table, Button, Image } from "antd";
+import { Space, Table, Button, Dropdown } from "antd";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Fetcher";
 import { Link, useLocation } from "react-router-dom";
-import { LuFile, LuFolder, LuImage } from "react-icons/lu";
-import moment from "moment";
+import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
 import { formatBytes } from "../../Utils/DataConverter";
-import { useState } from "react";
+import axios from "axios";
+import formatUnixDate from '../../Utils/FormatDate';
+import formatStr from "../../Utils/FormatString";
+import ImagePreview from './ImagePreview';
 
 export const Files = () => {
 	let { pathname } = useLocation();
-	const [visible, setVisible] = useState(false);
 
 	if (pathname === "/") {
 		pathname = "root";
 	}
 
-	const { data: files, isLoading } = useSWR(
+	const { data: files, isLoading, mutate } = useSWR(
 		[`http://localhost:5050/user/file/${pathname}`, "get"],
 		Fetcher,
 		{
@@ -29,6 +30,62 @@ export const Files = () => {
 		return <div>Loading..</div>;
 	}
 
+	// actions
+	const deleteData = async (record) => {
+		const id = record.key;
+        let url;
+
+        if (record.type !== 'folder') {
+            url = "http://localhost:5050/user/file/delete";
+        } else {
+            url = "http://localhost:5050/user/file/folder/delete";
+        }
+
+        try {
+            await axios.delete(url, { data: { id } });
+            mutate();
+        } catch (error) {
+            console.log(error);
+        }
+	};
+    const downloadFile = async (record) => {
+        const url = `http://localhost:5050/download/file/${record.key}`;
+        const urlParts = url.split("/");
+		const filename = urlParts[urlParts.length - 1];
+
+		const downloadLink = document.createElement("a");
+		downloadLink.href = url;
+		downloadLink.download = filename;
+
+		downloadLink.style.display = "none";
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+        downloadLink.remove()
+	};
+
+    const items = [
+		{
+			key: "1",
+			label: "Download",
+			onClick: (event) => {
+				downloadFile(event.record);
+			},
+		},
+		{
+			key: "2",
+			label: "Properties",
+		},
+		{
+			key: "3",
+			label: "Delete",
+			danger: true,
+			onClick: (event) => {
+				deleteData(event.record);
+			},
+		},
+	];
+
+	// tables
 	const columns = [
 		{
 			title: <LuFile />,
@@ -58,43 +115,65 @@ export const Files = () => {
 			dataIndex: "date_modified",
 			key: "date_modified",
 		},
+		{
+			title: "Author",
+			dataIndex: "author",
+			key: "author",
+            width: "10%"
+		},
+		{
+			title: "",
+			dataIndex: "action",
+			key: "action",
+			width: 100,
+			fixed: "right",
+			render: (text, record) => {
+				return (
+					<Space>
+						<Dropdown
+							menu={{
+								items: items.map((item) => ({
+									...item,
+									onClick:
+										item.onClick &&
+										(() =>
+											item.onClick({ item, record })),
+								})),
+							}}
+							trigger={"click"}
+						>
+							<Button type="text">
+								<LuMoreVertical />
+							</Button>
+						</Dropdown>
+					</Space>
+				);
+			},
+		},
 	];
-
-	// Image
-	const ImagePreview = ({ preview, name }) => {
-		return (
-			<>
-				<Button type="text" onClick={() => setVisible(true)}>{name}</Button>
-				<Image
-					src={preview}
-                    style={{ display: "none" }}
-					preview={{
-						visible,
-						src: preview,
-						onVisibleChange: (val) => {
-							setVisible(val);
-						},
-					}}
-				/>
-			</>
-		);
-	};
 
 	const file = files.data.map((file, index) => {
 		return {
 			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
 			name:
 				file.mimetype.split("/")[0] === "image" ? (
-					<ImagePreview preview={file.url} name={file.originalName} />
+					<Space>
+						<ImagePreview
+							preview={file.url}
+							name={formatStr(file.originalName)}
+						/>
+					</Space>
 				) : (
-					<Link>{file.originalName}</Link>
+					<Space>
+						<Link>{file.originalName}</Link>
+					</Space>
 				),
 			size: file.size ? formatBytes(file.size) : "-",
 			type: file.mimetype,
-			date_modified: moment
-				.unix(file.date_modified)
-				.format("DD MMM YYYY hh:mm A"),
+			date_modified: formatUnixDate(file.date_modified),
+			author: file.author,
 			key: file.id,
+			url: file.url,
 		};
 	});
 	const dataSource = [...file];
@@ -103,9 +182,10 @@ export const Files = () => {
 			dataSource={dataSource}
 			columns={columns}
 			scroll={{
-				y: 240,
+				y: 340,
 			}}
 			size="small"
+            pagination={false}
 		/>
 	);
 };

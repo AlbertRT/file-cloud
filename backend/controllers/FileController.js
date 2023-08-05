@@ -73,6 +73,7 @@ export async function uploadFile (req, res) {
             userId: user._id,
             date_modified: moment().unix(),
             url: downloadURL,
+            author: user.username,
             folderId: folder?._id
         });
         await User.updateOne({
@@ -141,10 +142,10 @@ export async function renameFile(req, res) {
 }
 
 export async function deleteFile(req, res) {
-    const { name } = req.body;
+    const { id } = req.body;
 
     const file = await File.findOne({
-        originalName: name
+        id
     });
     
     let { storage } = await User.findOne({ key: req.key });

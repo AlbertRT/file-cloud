@@ -49,6 +49,7 @@ export async function createFolder (req, res) {
             directory: path,
             mimetype: "folder",
             date_modified: moment().unix(),
+            author: user.username,
             userId: user._id
         });
 
@@ -113,24 +114,28 @@ export async function renameFolder (req, res) {
     }
 }
 export async function deleteFolder (req, res) {
-    let { name } = req.body;
+    const { id } = req.body 
 
-    // replace " " with "_" and make all string to lowercase
-    name = name.replace(" ", "_").toLowerCase();
+    const folder = await Folder.findOne({ id });
 
-    const key = req.key;
-    const user = await User.findOne({ key });
-    
-    try {
-        await rmFolder(`src/folders/${user.user_folder}/${name}`);
-        await Folder.deleteOne({
-            userId: user._id
+    if (!folder) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "Folder not Found"
         });
+    }
+
+    try {
+        await rmFolder(folder.directory);
+        await Folder.deleteOne({ id });
+
         return res.status(200).json({
             ok: true,
             error: false,
-            msg: `${name} successfully deleted`
+            msg: "Successfully deleted"
         });
+
     } catch (error) {
         return res.status(400).json({
             error: true,
