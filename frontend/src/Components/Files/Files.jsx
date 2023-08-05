@@ -2,9 +2,9 @@ import { Table } from "antd";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Fetcher";
 import { Link, useLocation } from "react-router-dom";
-import { LuFile, LuImage } from "react-icons/lu";
+import { LuFile, LuFolder, LuImage } from "react-icons/lu";
 import moment from "moment";
-import {formatBytes} from '../../Utils/DataConverter';
+import { formatBytes } from "../../Utils/DataConverter";
 
 export const Files = () => {
 	let { pathname } = useLocation();
@@ -16,14 +16,13 @@ export const Files = () => {
 	const {
 		data: files,
 		isLoading,
-		mutate,
 	} = useSWR(
 		[`http://localhost:5050/user/file/${pathname}`, "get"],
 		Fetcher,
 		{
 			revalidateOnMount: true,
 			revalidateOnFocus: true,
-            refreshInterval: 500
+			refreshInterval: 500,
 		}
 	);
 
@@ -49,29 +48,29 @@ export const Files = () => {
 			title: "Size",
 			dataIndex: "size",
 			key: "size",
-            width: "10%"
+			width: "10%",
 		},
 		{
-            title: "Type",
+			title: "Type",
 			dataIndex: "type",
 			key: "type",
-            width: "10%"
+			width: "10%",
 		},
-        {
-            title: "Created",
-            dataIndex: "created",
-            key: "created",
-        },
+		{
+			title: "Date Modified",
+			dataIndex: "date_modified",
+			key: "date_modified",
+		},
 	];
 
-	const file = files.data.map((file, key) => {
-        return {
-            icon: <LuImage />,
-			name: file.name,
-			size: formatBytes(file.size),
-			type: file.type,
-			created: moment(file.created).format("DD MMM YYYY kk:MM"),
-			key,
+	const file = files.data.map((file, index) => {
+		return {
+			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
+			name: file.originalName,
+			size: file.size ? formatBytes(file.size) : "-",
+			type: file.mimetype,
+			date_modified: moment.unix(file.date_modified).format("DD MMM YYYY kk:mm"),
+			key: file.id,
 		};
 	});
 	const dataSource = [...file];

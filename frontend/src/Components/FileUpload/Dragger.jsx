@@ -26,7 +26,6 @@ export const FileDragger = () => {
 				config
 			);
 			onSuccess("Ok");
-            Mutate("http://localhost:5050/user/file/upload");
 		} catch (error) {
 			onError(error);
 		}

@@ -5,13 +5,19 @@ import { useState } from "react";
 import { FileDragger } from "../FileUpload/Dragger";
 import NewFolder from "../FileUpload/NewFolder";
 import { useLocation } from "react-router-dom";
+import Fetcher from "../../Utils/Fetcher";
+import axios from "axios";
 
 const ActionBar = () => {
 	// props
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [openedModal, setOpenedModal] = useState(null);
 	const [folderName, setFolderName] = useState("");
-	const { pathname } = useLocation();
+	let { pathname } = useLocation();
+
+	if (pathname === "/") {
+		pathname = "root";
+	}
 
 	// Ant Modals
 	const showModal = (type) => {
@@ -38,6 +44,17 @@ const ActionBar = () => {
 			onClick: () => showModal("folder"),
 		},
 	];
+
+	// create folder
+	const createFolder = async () => {
+		const body = { name: folderName, location: pathname };
+		try {
+			await axios.post("http://localhost:5050/user/file/folder/create", body);
+			handleCancel();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className="ActionBar">
@@ -78,6 +95,7 @@ const ActionBar = () => {
 								<Button
 									type="primary"
 									disabled={folderName === ""}
+									onClick={createFolder}
 								>
 									Make
 								</Button>,

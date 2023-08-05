@@ -15,6 +15,7 @@ const fileSchema = new Schema({
         required: true,
         ref: 'users'
     },
+    date_modified: String,
     folderId: {
         type: Schema.Types.ObjectId,
         required: false,

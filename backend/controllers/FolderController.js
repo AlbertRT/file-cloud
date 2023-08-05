@@ -2,10 +2,14 @@ import { readDir, createDir, rename, rmFolder } from "../utils/fs.js";
 import User from "../mongodb/models/User.js";
 import Folder from "../mongodb/models/Folder.js";
 import random_string from "../utils/random_string.js";
+import fs from 'fs';
+import moment from 'moment';
 
 export async function createFolder (req, res) {
-    let { name } = req.body;
+    let { name, location } = req.body;
     const key = req.key;
+    let path;
+    const originalName = name;
     
     const user = await User.findOne({ key });
 
@@ -30,13 +34,21 @@ export async function createFolder (req, res) {
         });
     }
 
+    if (location === 'root') {
+        path = `${process.env.folderPath}${user.user_folder}/${name}`;
+    } else {
+        path = `${process.env.folderPath}${user.user_folder}/${location}/${name}` 
+    }
+
     try {
-        await createDir(process.env.folderPath + `${user.user_folder}/` + name);
+        await createDir(path);
         await Folder.create({
             id: random_string(32),
             name,
-            originalname: name,
-            directory: process.env.folderPath + `${user.user_folder}/`, name,
+            originalName,
+            directory: path,
+            mimetype: "folder",
+            date_modified: moment().unix(),
             userId: user._id
         });
 
@@ -84,8 +96,8 @@ export async function renameFolder (req, res) {
             userId: user._id
         }, {
             name: newName,
-            originalname: originalName,
-            directory: `src/folders/${user.user_folder}/${newName}`
+            originalName,
+            directory: `src/folders/${user.user_folder}/${newName}`,
         });
         return res.status(200).json({
             ok: true,

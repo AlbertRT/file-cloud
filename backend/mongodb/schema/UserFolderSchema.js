@@ -9,13 +9,20 @@ const folderSchema = new Schema({
         type: String,
         required: true
     },
-    originalname: {
+    originalName: {
         type: String,
         required: true,
     },
     directory: {
         type: String,
         required: true
+    },
+    mimetype: {
+        type: String,
+        required: true
+    },
+    date_modified: {
+        type: String
     },
     userId: {
         type: Schema.Types.ObjectId,
