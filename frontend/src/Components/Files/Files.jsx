@@ -1,22 +1,29 @@
-import { Space, Table, Button, Dropdown } from "antd";
+import { Space, Table, Button, Dropdown, Modal } from "antd";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Fetcher";
 import { Link, useLocation } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
 import { formatBytes } from "../../Utils/DataConverter";
 import axios from "axios";
-import formatUnixDate from '../../Utils/FormatDate';
+import formatUnixDate from "../../Utils/FormatDate";
 import formatStr from "../../Utils/FormatString";
-import ImagePreview from './ImagePreview';
+import ImagePreview from "./ImagePreview/ImagePreview";
+import { useState } from "react";
 
 export const Files = () => {
+	const [open, setOpen] = useState(false);
+    const [properties, setProperties] = useState(null)
 	let { pathname } = useLocation();
 
 	if (pathname === "/") {
 		pathname = "root";
 	}
 
-	const { data: files, isLoading, mutate } = useSWR(
+	const {
+		data: files,
+		isLoading,
+		mutate,
+	} = useSWR(
 		[`http://localhost:5050/user/file/${pathname}`, "get"],
 		Fetcher,
 		{
@@ -33,24 +40,24 @@ export const Files = () => {
 	// actions
 	const deleteData = async (record) => {
 		const id = record.key;
-        let url;
+		let url;
 
-        if (record.type !== 'folder') {
-            url = "http://localhost:5050/user/file/delete";
-        } else {
-            url = "http://localhost:5050/user/file/folder/delete";
-        }
+		if (record.type !== "folder") {
+			url = "http://localhost:5050/user/file/delete";
+		} else {
+			url = "http://localhost:5050/user/file/folder/delete";
+		}
 
-        try {
-            await axios.delete(url, { data: { id } });
-            mutate();
-        } catch (error) {
-            console.log(error);
-        }
+		try {
+			await axios.delete(url, { data: { id } });
+			mutate();
+		} catch (error) {
+			console.log(error);
+		}
 	};
-    const downloadFile = async (record) => {
-        const url = `http://localhost:5050/download/file/${record.key}`;
-        const urlParts = url.split("/");
+	const downloadFile = async (record) => {
+		const url = `http://localhost:5050/download/file/${record.key}`;
+		const urlParts = url.split("/");
 		const filename = urlParts[urlParts.length - 1];
 
 		const downloadLink = document.createElement("a");
@@ -60,10 +67,16 @@ export const Files = () => {
 		downloadLink.style.display = "none";
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
-        downloadLink.remove()
+		downloadLink.remove();
 	};
 
-    const items = [
+	// properties
+    const onClose = () => {
+        setOpen(false);
+        setProperties(null);
+    }
+
+	const items = [
 		{
 			key: "1",
 			label: "Download",
@@ -74,6 +87,16 @@ export const Files = () => {
 		{
 			key: "2",
 			label: "Properties",
+			onClick: async (event) => {
+                try {
+                    const {data} = await Fetcher([`http://localhost:5050/user/file/details/${event.record.key}`, 'get']);
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+
+                setOpen(true);
+            },
 		},
 		{
 			key: "3",
@@ -119,7 +142,7 @@ export const Files = () => {
 			title: "Author",
 			dataIndex: "author",
 			key: "author",
-            width: "10%"
+			width: "10%",
 		},
 		{
 			title: "",
@@ -136,8 +159,7 @@ export const Files = () => {
 									...item,
 									onClick:
 										item.onClick &&
-										(() =>
-											item.onClick({ item, record })),
+										(() => item.onClick({ item, record })),
 								})),
 							}}
 							trigger={"click"}
@@ -152,7 +174,7 @@ export const Files = () => {
 		},
 	];
 
-	const file = files.data.map((file, index) => {
+	const file = files.data.map((file) => {
 		return {
 			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
 			name:
@@ -178,14 +200,23 @@ export const Files = () => {
 	});
 	const dataSource = [...file];
 	return (
-		<Table
-			dataSource={dataSource}
-			columns={columns}
-			scroll={{
-				y: 340,
-			}}
-			size="small"
-            pagination={false}
-		/>
+		<>
+			<Table
+				dataSource={dataSource}
+				columns={columns}
+				scroll={{
+					y: 340,
+				}}
+				size="small"
+				pagination={false}
+			/>
+			<Modal
+				open={open}
+				onOk={onClose}
+				footer={null}
+				onCancel={onClose}
+				title={"Properties"}
+			></Modal>
+		</>
 	);
 };

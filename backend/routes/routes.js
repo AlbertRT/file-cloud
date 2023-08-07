@@ -3,7 +3,7 @@ import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
 import { createFolder, deleteFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
-import { uploadFile, renameFile, deleteFile, ls } from '../controllers/FileController.js';
+import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
 import path from 'path';
 import {download} from '../controllers/DownloadController.js';
 
@@ -38,6 +38,7 @@ const upload = multer({ storage: storage });
 
 // file manager
 Route.get('/user/file/:location', cookieValidation, ls);
+Route.get('/user/file/details/:id', cookieValidation, details);
 Route.post('/user/file/upload', cookieValidation, upload.single('image'), uploadFile);
 Route.patch('/user/file/rename', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);

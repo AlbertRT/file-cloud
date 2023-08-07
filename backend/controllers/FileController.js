@@ -40,6 +40,32 @@ export async function ls (req, res) {
 
 }
 
+export async function details (req, res) {
+    const { id } = req.params;
+
+    const file = await File.findOne({ id });
+    if (!file) return res.status(404).json({
+        error: true,
+        ok: false,
+        msg: "File Not Found!"
+    });
+
+    const { originalName, fileName, size, date_modified, mimetype, author } = file;
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data: {
+            originalName, 
+            fileName,
+            size,
+            date_modified,
+            mimetype,
+            author
+        }
+    })
+}
+
 export async function uploadFile (req, res) {
     const { originalname, path, filename, size, mimetype } = req.file;
     const key = req.key;

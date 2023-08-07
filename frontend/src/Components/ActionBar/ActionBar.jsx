@@ -5,7 +5,6 @@ import { useState } from "react";
 import { FileDragger } from "../FileUpload/Dragger";
 import NewFolder from "../FileUpload/NewFolder";
 import { useLocation } from "react-router-dom";
-import Fetcher from "../../Utils/Fetcher";
 import axios from "axios";
 
 const ActionBar = () => {
