@@ -1,14 +1,17 @@
-import { Space, Table, Button, Dropdown, Modal } from "antd";
+import { Space, Table, Button, Dropdown, Drawer, Image } from "antd";
 import useSWR from "swr";
-import Fetcher from "../../Utils/Fetcher";
 import { Link, useLocation } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
-import { formatBytes } from "../../Utils/DataConverter";
-import axios from "axios";
-import formatUnixDate from "../../Utils/FormatDate";
-import formatStr from "../../Utils/FormatString";
+import { formatBytes } from "../../Utils/Helper/DataConverter";
+import formatUnixDate from "../../Utils/Helper/FormatDate";
+import formatStr from "../../Utils/Helper/FormatString";
 import ImagePreview from "./ImagePreview/ImagePreview";
 import { useState } from "react";
+import downloadFile from "../../Utils/Func/DownloadFile";
+import deleteData from "../../Utils/Func/DeleteData";
+import Fetcher from '../../Utils/Helper/Fetcher';
+import './File.scss';
+import Properties from "./Properties";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -37,39 +40,6 @@ export const Files = () => {
 		return <div>Loading..</div>;
 	}
 
-	// actions
-	const deleteData = async (record) => {
-		const id = record.key;
-		let url;
-
-		if (record.type !== "folder") {
-			url = "http://localhost:5050/user/file/delete";
-		} else {
-			url = "http://localhost:5050/user/file/folder/delete";
-		}
-
-		try {
-			await axios.delete(url, { data: { id } });
-			mutate();
-		} catch (error) {
-			console.log(error);
-		}
-	};
-	const downloadFile = async (record) => {
-		const url = `http://localhost:5050/download/file/${record.key}`;
-		const urlParts = url.split("/");
-		const filename = urlParts[urlParts.length - 1];
-
-		const downloadLink = document.createElement("a");
-		downloadLink.href = url;
-		downloadLink.download = filename;
-
-		downloadLink.style.display = "none";
-		document.body.appendChild(downloadLink);
-		downloadLink.click();
-		downloadLink.remove();
-	};
-
 	// properties
     const onClose = () => {
         setOpen(false);
@@ -90,7 +60,7 @@ export const Files = () => {
 			onClick: async (event) => {
                 try {
                     const {data} = await Fetcher([`http://localhost:5050/user/file/details/${event.record.key}`, 'get']);
-                    console.log(data);
+                    setProperties(data);
                 } catch (error) {
                     console.log(error);
                 }
@@ -210,13 +180,7 @@ export const Files = () => {
 				size="small"
 				pagination={false}
 			/>
-			<Modal
-				open={open}
-				onOk={onClose}
-				footer={null}
-				onCancel={onClose}
-				title={"Properties"}
-			></Modal>
+            <Properties open={open} onClose={onClose} properties={properties} />
 		</>
 	);
 };

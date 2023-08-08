@@ -11,7 +11,7 @@ import {
 } from "react-icons/lu";
 import fiony from "../../Assets/20230718_151947.jpg";
 import { Link } from "react-router-dom";
-import Fetcher from "../../Utils/Fetcher";
+import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ data }) => {

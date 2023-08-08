@@ -4,7 +4,7 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./Home.scss";
 import Footer from "../../Components/Footer/Footer";
 import useSWR from "swr";
-import Fetcher from "../../Utils/Fetcher";
+import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
 import ActionBar from "../../Components/ActionBar/ActionBar";
 import {Files} from '../../Components/Files/Files';

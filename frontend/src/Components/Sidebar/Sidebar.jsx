@@ -11,7 +11,7 @@ import {
 	LuHardDrive,
 } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import { formatBytes} from '../../Utils/DataConverter';
+import { formatBytes} from '../../Utils/Helper/DataConverter';
 import "../../variables.scss";
 
 const Sidebar = ({data}) => {

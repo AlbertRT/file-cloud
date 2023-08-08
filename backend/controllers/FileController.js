@@ -50,7 +50,7 @@ export async function details (req, res) {
         msg: "File Not Found!"
     });
 
-    const { originalName, fileName, size, date_modified, mimetype, author } = file;
+    const { originalName, fileName, size, date_modified, mimetype, author, url } = file;
 
     return res.status(200).json({
         ok: true,
@@ -61,7 +61,8 @@ export async function details (req, res) {
             size,
             date_modified,
             mimetype,
-            author
+            author,
+            url
         }
     })
 }
