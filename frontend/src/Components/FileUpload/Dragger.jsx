@@ -4,9 +4,9 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 
 export const FileDragger = () => {
-    let { pathname } = useLocation();
+	let { pathname } = useLocation();
 
-    if (pathname === "/") {
+	if (pathname === "/") {
 		pathname = "root";
 	}
 
@@ -17,13 +17,24 @@ export const FileDragger = () => {
 		const config = {
 			headers: { "content-type": "multipart/form-data" },
 		};
-
 		fmData.append("image", file);
+        fmData.append("pathname", pathname)
+
+        const data = {
+            pathname,
+            fmData
+        }
+
 		try {
 			await axios.post(
-				"http://localhost:5050/user/file/upload",
+				`http://localhost:5050/user/file/upload`,
 				fmData,
-				config
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    },
+                    params: { pathname }
+                 }
 			);
 			onSuccess("Ok");
 		} catch (error) {

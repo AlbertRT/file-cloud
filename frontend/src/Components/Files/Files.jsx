@@ -19,15 +19,17 @@ export const Files = () => {
 	let { pathname } = useLocation();
 
 	if (pathname === "/") {
-		pathname = "root";
-	}
+		pathname = "/root";
+	} else {
+        pathname = `/${pathname.split("/")[2]}`;
+    }
 
 	const {
 		data: files,
 		isLoading,
 		mutate,
 	} = useSWR(
-		[`http://localhost:5050/user/file/${pathname}`, "get"],
+		[`http://localhost:5050/user/file${pathname}`, "get"],
 		Fetcher,
 		{
 			revalidateOnMount: true,
@@ -157,7 +159,7 @@ export const Files = () => {
 					</Space>
 				) : (
 					<Space>
-						<Link>{file.originalName}</Link>
+						<Link to={`folder/${file.id}`}>{file.originalName}</Link>
 					</Space>
 				),
 			size: file.size ? formatBytes(file.size) : "-",

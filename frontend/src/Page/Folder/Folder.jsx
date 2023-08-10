@@ -1,14 +1,12 @@
 import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
-import "./Home.scss";
 import Footer from "../../Components/Footer/Footer";
+import ActionBar from "../../Components/ActionBar/ActionBar";
+import { Files } from "../../Components/Files/Files";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
-import ActionBar from "../../Components/ActionBar/ActionBar";
-import {Files} from '../../Components/Files/Files';
-
-const Home = () => {
+const Folder = () => {
 	const navigate = useNavigate();
 
 	const {
@@ -19,7 +17,7 @@ const Home = () => {
 	} = useSWR(["http://localhost:5050/user/me", "get"], Fetcher, {
 		revalidateOnMount: true,
 		revalidateOnFocus: true,
-        refreshInterval: 500
+		refreshInterval: 500,
 	});
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -28,7 +26,6 @@ const Home = () => {
 	if (error) {
 		navigate("/login");
 	}
-
 	return (
 		<div className="Home">
 			<Navbar data={response.data} />
@@ -39,7 +36,7 @@ const Home = () => {
 				<div className="content">
 					<section id="home" className="home">
 						<ActionBar />
-						<div className="section-title">Home</div>
+						<div className="section-title">Folder</div>
 						<Files />
 					</section>
 				</div>
@@ -49,4 +46,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default Folder;

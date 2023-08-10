@@ -9,16 +9,17 @@ import moment from 'moment';
 export async function ls (req, res) {
     const {location} = req.params;
     const { user_folder, _id } = await User.findOne({ key: req.key });
-
+    
     let path = `src/folders/`;
     let data = []
 
     if (location === 'root') {
         path = `src/folders/${user_folder}`;
     } else {
-        path = `src/folders/${location}`
+        const {name} = await Folder.findOne({ id: location });
+        path = `src/folders/${user_folder}/${name}`
     }
-    
+
     try {
         const folder = await Folder.find({ userId:  _id});
         const file =  await File.find({ userId: _id });
@@ -68,46 +69,46 @@ export async function details (req, res) {
 }
 
 export async function uploadFile (req, res) {
-    const { originalname, path, filename, size, mimetype } = req.file;
+    // const { originalname, path, filename, size, mimetype } = req.file;
     const key = req.key;
 
     // User
-    const user = await User.findOne({ key });
-    const id = random_string(32)
+    // const user = await User.findOne({ key });
+    // const id = random_string(32)
 
-    if (!user) {
-        return res.status(404).json({
-            error: true,
-            ok: false,
-            msg: "User Not Found!"
-        });
-    }
+    // if (!user) {
+    //     return res.status(404).json({
+    //         error: true,
+    //         ok: false,
+    //         msg: "User Not Found!"
+    //     });
+    // }
 
-    const folder = await Folder.findOne({ name: req.body.folder_name });
+    // const folder = await Folder.findOne({ name: req.body.folder_name });
 
-    let newUserStorage = user.storage + size;
-    let downloadURL = `http://localhost:5050/download/file/${id}`
+    // let newUserStorage = user.storage + size;
+    // let downloadURL = `http://localhost:5050/download/file/${id}`
 
     try {
         
-        await File.create({
-            id,
-            fileName: filename,
-            mimetype,
-            originalName: originalname,
-            path,
-            size,
-            userId: user._id,
-            date_modified: moment().unix(),
-            url: downloadURL,
-            author: user.username,
-            folderId: folder?._id
-        });
-        await User.updateOne({
-            key
-        }, {
-            storage: newUserStorage
-        });
+        // await File.create({
+        //     id,
+        //     fileName: filename,
+        //     mimetype,
+        //     originalName: originalname,
+        //     path,
+        //     size,
+        //     userId: user._id,
+        //     date_modified: moment().unix(),
+        //     url: downloadURL,
+        //     author: user.username,
+        //     folderId: folder?._id
+        // });
+        // await User.updateOne({
+        //     key
+        // }, {
+        //     storage: newUserStorage
+        // });
 
         return res.status(200).json({
             ok: true,

@@ -6,6 +6,7 @@ import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
 import path from 'path';
 import {download} from '../controllers/DownloadController.js';
+import location from '../middleware/location.js';
 
 const Route = express.Router();
 
@@ -26,12 +27,14 @@ Route.delete('/user/file/folder/delete', cookieValidation, deleteFolder);
 // multer config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const folder = req.folder_name;
-        cb(null, path.join('src/folders', folder));
+        const location = req.location;
+        
+        cb(null, location);
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, `${file.fieldname}-${uniqueSuffix}.${file.originalname.split(".")[1]}`);
+        const file_name = req.file_name;
+
+        cb(null, `${file_name}.${file.originalname.split(".")[1]}`);
     }
 });
 const upload = multer({ storage: storage });
@@ -39,7 +42,7 @@ const upload = multer({ storage: storage });
 // file manager
 Route.get('/user/file/:location', cookieValidation, ls);
 Route.get('/user/file/details/:id', cookieValidation, details);
-Route.post('/user/file/upload', cookieValidation, upload.single('image'), uploadFile);
+Route.post('/user/file/upload', cookieValidation, location, upload.single("image"), uploadFile);
 Route.patch('/user/file/rename', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);
 
