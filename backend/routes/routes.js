@@ -19,7 +19,7 @@ Route.delete('/user/logout', cookieValidation, logout);
 // Files manager routes
 
 // folders manager
-Route.post('/user/file/folder/create', cookieValidation, createFolder);
+Route.post('/user/file/folder/create', cookieValidation, location, createFolder);
 Route.patch('/user/file/folder/rename', cookieValidation, renameFolder);
 Route.delete('/user/file/folder/delete', cookieValidation, deleteFolder);
 

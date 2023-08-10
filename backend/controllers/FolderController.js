@@ -6,52 +6,55 @@ import fs from 'fs';
 import moment from 'moment';
 
 export async function createFolder (req, res) {
-    let { name, location } = req.body;
-    const key = req.key;
-    let path;
-    const originalName = name;
+    let { name } = req.body;
+
+    const id = random_string(32)
+    let path = `${req.location}/${id}`;
+    // const key = req.key;
+    // let path;
+    // const originalName = name;
     
-    const user = await User.findOne({ key });
+    // const user = await User.findOne({ key });
 
-    // checking the name if name === root, rejected
-    if (name === 'root') {
-        return res.status(400).json({
-            error: true,
-            ok: false,
-            msg: `can't use ${name}`
-        });
-    }
+    // // checking the name if name === root, rejected
+    // if (name === 'root') {
+    //     return res.status(400).json({
+    //         error: true,
+    //         ok: false,
+    //         msg: `can't use ${name}`
+    //     });
+    // }
 
-    // check the is duplicate or not
-    name = name.replace(" ", "_").toLowerCase();
-    const isDuplicate = fs.existsSync(`src/folders/${user.user_folder}/${name}`);
+    // // check the is duplicate or not
+    // name = name.replace(" ", "_").toLowerCase();
+    // const isDuplicate = fs.existsSync(`src/folders/${user.user_folder}/${name}`);
 
-    if (isDuplicate) {
-        return res.status(400).json({
-            error: true,
-            ok: false,
-            msg: `${name} is already in use, please use other name`
-        });
-    }
+    // if (isDuplicate) {
+    //     return res.status(400).json({
+    //         error: true,
+    //         ok: false,
+    //         msg: `${name} is already in use, please use other name`
+    //     });
+    // }
 
-    if (location === 'root') {
-        path = `${process.env.folderPath}${user.user_folder}/${name}`;
-    } else {
-        path = `${process.env.folderPath}${user.user_folder}/${location}/${name}` 
-    }
+    // if (location === 'root') {
+    //     path = `${process.env.folderPath}${user.user_folder}/${name}`;
+    // } else {
+    //     path = `${process.env.folderPath}${user.user_folder}/${location}/${name}` 
+    // }
 
     try {
         await createDir(path);
-        await Folder.create({
-            id: random_string(32),
-            name,
-            originalName,
-            directory: path,
-            mimetype: "folder",
-            date_modified: moment().unix(),
-            author: user.username,
-            userId: user._id
-        });
+        // await Folder.create({
+        //     id: random_string(32),
+        //     name,
+        //     originalName,
+        //     directory: path,
+        //     mimetype: "folder",
+        //     date_modified: moment().unix(),
+        //     author: user.username,
+        //     userId: user._id
+        // });
 
         return res.status(201).json({
             ok: true,

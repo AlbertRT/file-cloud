@@ -28,7 +28,7 @@ const Sidebar = ({data}) => {
 		<div className="Sidebar">
 			<div className="Menus">
 				<div className="menu">
-					<Link className="home">
+					<Link className="home" to="/">
 						<div className="icons">
 							<LuHome />
 						</div>

@@ -46,9 +46,9 @@ const ActionBar = () => {
 
 	// create folder
 	const createFolder = async () => {
-		const body = { name: folderName, location: pathname };
+		const body = { name: folderName };
 		try {
-			await axios.post("http://localhost:5050/user/file/folder/create", body);
+			await axios.post("http://localhost:5050/user/file/folder/create", body, { params: {pathname} });
 			handleCancel();
 		} catch (error) {
 			console.log(error);
