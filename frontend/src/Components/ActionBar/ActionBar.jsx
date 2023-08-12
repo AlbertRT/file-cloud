@@ -6,12 +6,14 @@ import { FileDragger } from "../FileUpload/Dragger";
 import NewFolder from "../FileUpload/NewFolder";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import Spinner from "../Spinner/Spinner";
 
 const ActionBar = () => {
 	// props
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [openedModal, setOpenedModal] = useState(null);
 	const [folderName, setFolderName] = useState("");
+    const [isLoading, setLoading] = useState(false);
 	let { pathname } = useLocation();
 
 	if (pathname === "/") {
@@ -47,9 +49,14 @@ const ActionBar = () => {
 	// create folder
 	const createFolder = async () => {
 		const body = { name: folderName };
+        setLoading(true);
 		try {
 			await axios.post("http://localhost:5050/user/file/folder/create", body, { params: {pathname} });
-			handleCancel();
+            setLoading(false);
+            setFolderName("");
+			setTimeout(() => {
+                handleCancel();
+            }, 500);
 		} catch (error) {
 			console.log(error);
 		}
@@ -84,20 +91,16 @@ const ActionBar = () => {
 				footer={[
 					openedModal === "folder"
 						? [
-								<Button
-									onClick={handleCancel}
-									type="default"
-									danger
-								>
-									Cancel
-								</Button>,
-								<Button
-									type="primary"
-									disabled={folderName === ""}
-									onClick={createFolder}
-								>
-									Make
-								</Button>,
+								<Space>
+									{isLoading && (<Spinner />)},
+									<Button
+										type="primary"
+										disabled={folderName === ""}
+										onClick={createFolder}
+									>
+										Make
+									</Button>
+								</Space>,
 						  ]
 						: "",
 				]}
