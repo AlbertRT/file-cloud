@@ -11,7 +11,7 @@ export async function createDir(path) {
     }
 }
 
-function getItemInfo(itemPath) {
+export function getItemInfo(itemPath) {
     return new Promise((resolve, reject) => {
         fs.stat(itemPath, (err, stats) => {
             if (err) {
@@ -53,7 +53,7 @@ export async function rename(path, newPath) {
 }
 export async function rmFolder(path) {
     try {
-        await fs.promises.rmdir(path);
+        await fs.promises.rm(path, { force: true, recursive: true });
 
         return 1;
     } catch (error) {

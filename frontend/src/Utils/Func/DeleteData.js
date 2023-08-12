@@ -11,7 +11,6 @@ const deleteData = async (record) => {
 
     try {
         await axios.delete(url, { data: { id } });
-        mutate();
     } catch (error) {
         console.log(error);
     }

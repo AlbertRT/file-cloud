@@ -1,6 +1,7 @@
 import { readDir, createDir, rename, rmFolder } from "../utils/fs.js";
 import User from "../mongodb/models/User.js";
 import Folder from "../mongodb/models/Folder.js";
+import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
 import fs from 'fs';
 import moment from 'moment';
@@ -121,8 +122,15 @@ export async function deleteFolder (req, res) {
     }
 
     try {
-        await rmFolder(folder.directory);
+        const files = await readDir(folder.directory);
+        const filteredFileName = files.filter(item => !item.includes("."));
+        
+        filteredFileName.map(async id => {
+            await Folder.deleteOne({ name: id })
+        })
+        await File.deleteMany({ folderId: id })
         await Folder.deleteOne({ id });
+        await rmFolder(folder.directory);
 
         return res.status(200).json({
             ok: true,

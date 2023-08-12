@@ -23,6 +23,11 @@ const fileSchema = new Schema({
     author: {
         type: String,
         required: true
+    },
+    folderId: {
+        type: String,
+        required: false,
+        default: ""
     }
 });
 

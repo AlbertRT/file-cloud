@@ -76,10 +76,12 @@ export async function details (req, res) {
 export async function uploadFile (req, res) {
     const { originalname, path, filename, size, mimetype } = req.file;
     const key = req.key;
+    let folderId
 
     User
     const user = await User.findOne({ key });
-    const id = random_string(32)
+    const id = random_string(32);
+    const folder = await Folder.findOne({ directory: req.location });
 
     if (!user) {
         return res.status(404).json({
@@ -92,7 +94,14 @@ export async function uploadFile (req, res) {
     let newUserStorage = user.storage + size;
     let downloadURL = `http://localhost:5050/download/file/${id}`
 
+    if (req.location !== `src/folders/${user.user_folder}`) {
+        folderId = folder.id;
+    } else {
+        folderId = ""
+    }
+    
     try {
+
         
         await File.create({
             id,
@@ -105,7 +114,8 @@ export async function uploadFile (req, res) {
             date_modified: moment().unix(),
             url: downloadURL,
             author: user.username,
-            directory: `${req.location}/${filename}`
+            directory: `${req.location}/${filename}`,
+            folderId
         });
         await User.updateOne({
             key
@@ -190,8 +200,8 @@ export async function deleteFile(req, res) {
     }
 
     try {
-        await unlinkFile(file.path);
-        await File.deleteOne({ path: file.path });
+        await unlinkFile(file.directory);
+        await File.deleteOne({ directory: file.directory });
 
         const newStorageSize = storage - file.size;
 
