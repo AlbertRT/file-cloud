@@ -5,10 +5,13 @@ const fileSchema = new Schema({
         type: String,
         required: true
     },
-    originalName: String,
+    originalname: String,
     mimetype: String,
-    fileName: String,
-    path: String,
+    filename: String,
+    directory: {
+        type: String,
+        required: true
+    },
     size: Number,
     userId: {
         type: Schema.Types.ObjectId,
@@ -20,11 +23,6 @@ const fileSchema = new Schema({
     author: {
         type: String,
         required: true
-    },
-    folderId: {
-        type: Schema.Types.ObjectId,
-        required: false,
-        ref: 'folders'
     }
 });
 

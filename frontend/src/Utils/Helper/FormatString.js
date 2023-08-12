@@ -1,5 +1,4 @@
 const formatStr = (str) => {
-    let res = "";
     let strSplit = str.split("");
     
     if (strSplit.length < 22) {

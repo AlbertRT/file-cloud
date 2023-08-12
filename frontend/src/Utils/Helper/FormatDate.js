@@ -14,7 +14,7 @@ export default function formatUnixDate(unixTimestamp) {
                 : 'A few minutes ago'
             : 'A few hours ago';
     } else if (date.isSame(now, 'day')) {
-        return `Today at ${date.format('DD MM')}`;
+        return `Today at ${date.format('hh:mm A')}`;
     } else if (date.isSame(now.clone().subtract(1, 'day'), 'day')) {
         return 'Yesterday';
     } else if (date.isSame(now, 'week')) {
@@ -22,7 +22,7 @@ export default function formatUnixDate(unixTimestamp) {
     } else if (date.isSame(now.clone().subtract(1, 'week'), 'week')) {
         return 'Last Week';
     } else if (date.year() === now.year()) {
-        return date.format('DD MM');
+        return date.format('DD:MM');
     } else {
         return date.format('DD MMM YYYY');
     }

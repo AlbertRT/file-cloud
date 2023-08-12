@@ -36,15 +36,7 @@ function getItemInfo(itemPath) {
 export async function readDir(folderPath) {
     try {
         const files = await fs.promises.readdir(folderPath);
-        const items = [];
-
-        for (const file of files) {
-            const itemPath = path.join(folderPath, file);
-            const item = await getItemInfo(itemPath);
-            items.push(item);
-        }
-
-        return items;
+        return files;
     } catch (err) {
         throw new Error(err);
     }

@@ -2,34 +2,39 @@ import Folder from "../mongodb/models/Folder.js";
 import User from "../mongodb/models/User.js";
 import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
-import { rename, unlinkFile } from "../utils/fs.js";
+import { readDir, rename, unlinkFile } from "../utils/fs.js";
 import path from 'path';
 import moment from 'moment';
 
 export async function ls (req, res) {
-    const {location} = req.params;
-    const { user_folder, _id } = await User.findOne({ key: req.key });
-    
-    let path = `src/folders/`;
-    let data = []
+    let location = req.location;
+    const { user_folder } = await User.findOne({ key: req.key });
 
+    let directory
     if (location === 'root') {
-        path = `src/folders/${user_folder}`;
+        directory = `src/folders/${user_folder}`;
     } else {
-        const {name} = await Folder.findOne({ id: location });
-        path = `src/folders/${user_folder}/${name}`
+        directory = location;
     }
+    
 
     try {
-        const folder = await Folder.find({ userId:  _id});
-        const file =  await File.find({ userId: _id });
-        
-        data = [...file, ...folder];
+        const files = await readDir(directory);
+        const folder = await Promise.all(files.map(async (file) => {
+            const folder = await Folder.findOne({ directory: `${directory}/${file}`, mimetype: 'folder' });
+            return folder
+        }));
+        const file = await Promise.all(files.map(async (file) => {
+            const _file = await File.findOne({ directory: `${directory}/${file}`, mimetype: 'image'});
+            return _file;
+        }));
+        const filteredFolder = folder.filter(item => item !== null);
+        const filteredFile = file.filter(item => item !== null);
 
         return res.status(200).json({
             ok: true,
             error: false,
-            data
+            data: [...filteredFolder, ...filteredFile]
         });
     } catch (error) {
         return res.status(400).json({
@@ -69,46 +74,44 @@ export async function details (req, res) {
 }
 
 export async function uploadFile (req, res) {
-    // const { originalname, path, filename, size, mimetype } = req.file;
+    const { originalname, path, filename, size, mimetype } = req.file;
     const key = req.key;
 
-    // User
-    // const user = await User.findOne({ key });
-    // const id = random_string(32)
+    User
+    const user = await User.findOne({ key });
+    const id = random_string(32)
 
-    // if (!user) {
-    //     return res.status(404).json({
-    //         error: true,
-    //         ok: false,
-    //         msg: "User Not Found!"
-    //     });
-    // }
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "User Not Found!"
+        });
+    }
 
-    // const folder = await Folder.findOne({ name: req.body.folder_name });
-
-    // let newUserStorage = user.storage + size;
-    // let downloadURL = `http://localhost:5050/download/file/${id}`
+    let newUserStorage = user.storage + size;
+    let downloadURL = `http://localhost:5050/download/file/${id}`
 
     try {
         
-        // await File.create({
-        //     id,
-        //     fileName: filename,
-        //     mimetype,
-        //     originalName: originalname,
-        //     path,
-        //     size,
-        //     userId: user._id,
-        //     date_modified: moment().unix(),
-        //     url: downloadURL,
-        //     author: user.username,
-        //     folderId: folder?._id
-        // });
-        // await User.updateOne({
-        //     key
-        // }, {
-        //     storage: newUserStorage
-        // });
+        await File.create({
+            id,
+            filename: filename,
+            mimetype: mimetype.split('/')[0],
+            originalname: originalname,
+            path,
+            size,
+            userId: user._id,
+            date_modified: moment().unix(),
+            url: downloadURL,
+            author: user.username,
+            directory: `${req.location}/${filename}`
+        });
+        await User.updateOne({
+            key
+        }, {
+            storage: newUserStorage
+        });
 
         return res.status(200).json({
             ok: true,

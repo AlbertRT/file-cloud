@@ -9,7 +9,7 @@ const folderSchema = new Schema({
         type: String,
         required: true
     },
-    originalName: {
+    originalname: {
         type: String,
         required: true,
     },

@@ -1,6 +1,6 @@
 import { Space, Table, Button, Dropdown, Drawer, Image } from "antd";
 import useSWR from "swr";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
 import { formatBytes } from "../../Utils/Helper/DataConverter";
 import formatUnixDate from "../../Utils/Helper/FormatDate";
@@ -12,36 +12,40 @@ import deleteData from "../../Utils/Func/DeleteData";
 import Fetcher from '../../Utils/Helper/Fetcher';
 import './File.scss';
 import Properties from "./Properties";
+import axios from "axios";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
     const [properties, setProperties] = useState(null)
 	let { pathname } = useLocation();
+    const { folderName } = useParams();
 
 	if (pathname === "/") {
-		pathname = "/root";
-	} else {
-        pathname = `/${pathname.split("/")[2]}`;
+		pathname = "root";
+	}
+    const fetcher = async (url) => {
+        const data = await axios.get(url, { params: {pathname}  });
+        return data
     }
 
 	const {
 		data: files,
 		isLoading,
 		mutate,
+        error
 	} = useSWR(
-		[`http://localhost:5050/user/file${pathname}`, "get"],
-		Fetcher,
+		`http://localhost:5050/user/file`,
+		fetcher,
 		{
 			revalidateOnMount: true,
 			revalidateOnFocus: true,
-			refreshInterval: 500,
+            refreshInterval: 300
 		}
 	);
 
 	if (isLoading) {
 		return <div>Loading..</div>;
 	}
-
 	// properties
     const onClose = () => {
         setOpen(false);
@@ -145,8 +149,8 @@ export const Files = () => {
 			},
 		},
 	];
-
-	const file = files.data.map((file) => {
+    
+	const file = files.data.data.map((file) => {
 		return {
 			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
 			name:
@@ -154,12 +158,12 @@ export const Files = () => {
 					<Space>
 						<ImagePreview
 							preview={file.url}
-							name={formatStr(file.originalName)}
+							name={formatStr(file.originalname)}
 						/>
 					</Space>
 				) : (
 					<Space>
-						<Link to={`folder/${file.id}`}>{file.originalName}</Link>
+						<Link to={!folderName ? `/folder/${file.name}` : `${pathname}/${file.name}`}>{file.originalname}</Link>
 					</Space>
 				),
 			size: file.size ? formatBytes(file.size) : "-",
@@ -167,9 +171,9 @@ export const Files = () => {
 			date_modified: formatUnixDate(file.date_modified),
 			author: file.author,
 			key: file.id,
-			url: file.url,
 		};
 	});
+    
 	const dataSource = [...file];
 	return (
 		<>
