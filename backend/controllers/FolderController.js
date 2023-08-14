@@ -112,6 +112,9 @@ export async function deleteFolder (req, res) {
     const { id } = req.body 
 
     const folder = await Folder.findOne({ id });
+    const sizes = await File.find({ folderId: id })
+    const totalFileSize = sizes.reduce((total, { size }) => total + size, 0);
+    const { storage } = await User.findOne({ key: req.key });
 
     if (!folder) {
         return res.status(404).json({
@@ -131,6 +134,7 @@ export async function deleteFolder (req, res) {
         await File.deleteMany({ folderId: id })
         await Folder.deleteOne({ id });
         await rmFolder(folder.directory);
+        await User.updateOne({ key: req.key }, { storage: storage - totalFileSize });
 
         return res.status(200).json({
             ok: true,

@@ -1,4 +1,4 @@
-import { Space, Table, Button, Dropdown, Drawer, Image } from "antd";
+import { Space, Table, Button, Dropdown, Drawer, Image, Modal } from "antd";
 import useSWR from "swr";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
@@ -9,48 +9,70 @@ import ImagePreview from "./ImagePreview/ImagePreview";
 import { useState } from "react";
 import downloadFile from "../../Utils/Func/DownloadFile";
 import deleteData from "../../Utils/Func/DeleteData";
-import Fetcher from '../../Utils/Helper/Fetcher';
-import './File.scss';
+import Fetcher from "../../Utils/Helper/Fetcher";
+import "./File.scss";
 import Properties from "./Properties";
 import axios from "axios";
+import Confirm from "./Confirm";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
-    const [properties, setProperties] = useState(null)
+	const [properties, setProperties] = useState(null);
+	const [openConfirmDelete, setConfirmDelete] = useState(false);
+	const [deleting, setDeleting] = useState(false);
+	const [selectedData, setSelectedData] = useState(null);
+
 	let { pathname } = useLocation();
-    const { folderName } = useParams();
+	const { folderName } = useParams();
 
 	if (pathname === "/") {
 		pathname = "root";
 	}
-    const fetcher = async (url) => {
-        const data = await axios.get(url, { params: {pathname}  });
-        return data
-    }
+	const fetcher = async (url) => {
+		const data = await axios.get(url, { params: { pathname } });
+		return data;
+	};
 
 	const {
 		data: files,
 		isLoading,
 		mutate,
-        error
-	} = useSWR(
-		`http://localhost:5050/user/file`,
-		fetcher,
-		{
-			revalidateOnMount: true,
-			revalidateOnFocus: true,
-            refreshInterval: 300
-		}
-	);
+		error,
+	} = useSWR(`http://localhost:5050/user/file`, fetcher, {
+		revalidateOnMount: true,
+		revalidateOnFocus: true,
+		refreshInterval: 300,
+	});
 
 	if (isLoading) {
 		return <div>Loading..</div>;
 	}
-	// properties
-    const onClose = () => {
-        setOpen(false);
-        setProperties(null);
-    }
+
+	// *properties
+	const onClose = () => {
+		setOpen(false);
+		setProperties(null);
+	};
+
+	// * modal
+	const onCancel = () => {
+		setConfirmDelete(false)
+		setSelectedData(null);
+	};
+	const onOk = async () => {
+		setDeleting(true);
+		try {
+			deleteData(selectedData);
+			setDeleting(false);
+			onCancel()
+		} catch (error) {
+            console.log(error);
+			setDeleting(false);
+		}
+	};
+	const confirm = () => {
+		setConfirmDelete(true);
+	};
 
 	const items = [
 		{
@@ -64,22 +86,26 @@ export const Files = () => {
 			key: "2",
 			label: "Properties",
 			onClick: async (event) => {
-                try {
-                    const {data} = await Fetcher([`http://localhost:5050/user/file/details/${event.record.key}`, 'get']);
-                    setProperties(data);
-                } catch (error) {
-                    console.log(error);
-                }
+				try {
+					const { data } = await Fetcher([
+						`http://localhost:5050/user/file/details/${event.record.key}`,
+						"get",
+					]);
+					setProperties(data);
+				} catch (error) {
+					console.log(error);
+				}
 
-                setOpen(true);
-            },
+				setOpen(true);
+			},
 		},
 		{
 			key: "3",
 			label: "Delete",
 			danger: true,
 			onClick: (event) => {
-				deleteData(event.record);
+				confirm()
+                setSelectedData(event.record);
 			},
 		},
 	];
@@ -149,7 +175,7 @@ export const Files = () => {
 			},
 		},
 	];
-    
+
 	const file = files.data.data.map((file) => {
 		return {
 			icon: file.mimetype !== "folder" ? <LuImage /> : <LuFolder />,
@@ -163,7 +189,15 @@ export const Files = () => {
 					</Space>
 				) : (
 					<Space>
-						<Link to={!folderName ? `/folder/${file.name}` : `${pathname}/${file.name}`}>{file.originalname}</Link>
+						<Link
+							to={
+								!folderName
+									? `/folder/${file.name}`
+									: `${pathname}/${file.name}`
+							}
+						>
+							{file.originalname}
+						</Link>
 					</Space>
 				),
 			size: file.size ? formatBytes(file.size) : "-",
@@ -173,7 +207,7 @@ export const Files = () => {
 			key: file.id,
 		};
 	});
-    
+
 	const dataSource = [...file];
 	return (
 		<>
@@ -186,7 +220,14 @@ export const Files = () => {
 				size="small"
 				pagination={false}
 			/>
-            <Properties open={open} onClose={onClose} properties={properties} />
+			<Properties open={open} onClose={onClose} properties={properties} />
+			<Confirm
+				open={openConfirmDelete}
+				onCancel={onCancel}
+				onOk={onOk}
+				loading={deleting}
+				title={"Delete?"}
+			/>
 		</>
 	);
 };

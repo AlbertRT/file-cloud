@@ -92,7 +92,7 @@ const ActionBar = () => {
 					openedModal === "folder"
 						? [
 								<Space>
-									{isLoading && (<Spinner />)},
+									{isLoading && (<Spinner />)}
 									<Button
 										type="primary"
 										disabled={folderName === ""}
@@ -100,9 +100,9 @@ const ActionBar = () => {
 									>
 										Make
 									</Button>
-								</Space>,
+								</Space>
 						  ]
-						: "",
+						: ""
 				]}
 			>
 				{openedModal === "file" ? (

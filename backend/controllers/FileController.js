@@ -123,7 +123,7 @@ export async function uploadFile (req, res) {
             storage: newUserStorage
         });
 
-        return res.status(200).json({
+        return res.status(202).json({
             ok: true,
             error: false,
             msg: "Successfully upload one image"

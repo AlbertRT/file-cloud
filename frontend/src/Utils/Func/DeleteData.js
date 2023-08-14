@@ -1,16 +1,16 @@
 import axios from 'axios';
-const deleteData = async (record) => {
-    const id = record.key;
+const deleteData = async ({ key, type }) => {
     let url;
 
-    if (record.type !== "folder") {
+    if (type !== "folder") {
         url = "http://localhost:5050/user/file/delete";
     } else {
         url = "http://localhost:5050/user/file/folder/delete";
     }
 
     try {
-        await axios.delete(url, { data: { id } });
+        await axios.delete(url, { data: { id: key } });
+        return true
     } catch (error) {
         console.log(error);
     }
