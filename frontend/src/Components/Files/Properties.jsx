@@ -13,7 +13,7 @@ const Properties = ({ open, onClose, properties }) => {
 						<div className="metadata">
 							<div className="data">
 								<p>Name</p>
-								<span>{properties.originalName}</span>
+								<span>{properties.originalname}</span>
 							</div>
 							<div className="data">
 								<p>Type</p>

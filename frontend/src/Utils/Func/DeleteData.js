@@ -10,7 +10,7 @@ const deleteData = async ({ key, type }) => {
 
     try {
         await axios.delete(url, { data: { id: key } });
-        return true
+        return 1
     } catch (error) {
         console.log(error);
     }

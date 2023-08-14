@@ -1,4 +1,4 @@
-import { Space, Table, Button, Dropdown, Drawer, Image, Modal } from "antd";
+import { Space, Table, Button, Dropdown } from "antd";
 import useSWR from "swr";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
@@ -14,6 +14,7 @@ import "./File.scss";
 import Properties from "./Properties";
 import axios from "axios";
 import Confirm from "./Confirm";
+import Rename from "./Rename";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -21,6 +22,8 @@ export const Files = () => {
 	const [openConfirmDelete, setConfirmDelete] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [selectedData, setSelectedData] = useState(null);
+	const [renameBox, setOpenRenameBox] = useState(false);
+	const [fileKey, setFileKey] = useState(null);
 
 	let { pathname } = useLocation();
 	const { folderName } = useParams();
@@ -54,24 +57,34 @@ export const Files = () => {
 		setProperties(null);
 	};
 
-	// * modal
+	// * delete confirm
 	const onCancel = () => {
-		setConfirmDelete(false)
-		setSelectedData(null);
+		setConfirmDelete(false);
+		setSelectedData(null)
 	};
 	const onOk = async () => {
 		setDeleting(true);
 		try {
 			deleteData(selectedData);
 			setDeleting(false);
-			onCancel()
+			onCancel();
 		} catch (error) {
-            console.log(error);
+			console.log(error);
 			setDeleting(false);
+            setSelectedData(null)
 		}
 	};
 	const confirm = () => {
 		setConfirmDelete(true);
+	};
+
+	// * rename
+	const openRenameBox = () => {
+		setOpenRenameBox(true);
+	};
+	const closeRenameBox = () => {
+		setOpenRenameBox(false);
+		setFileKey(null);
 	};
 
 	const items = [
@@ -84,6 +97,14 @@ export const Files = () => {
 		},
 		{
 			key: "2",
+			label: "Rename",
+			onClick: (event) => {
+				setFileKey(event.record.key);
+				openRenameBox();
+			},
+		},
+		{
+			key: "3",
 			label: "Properties",
 			onClick: async (event) => {
 				try {
@@ -100,12 +121,12 @@ export const Files = () => {
 			},
 		},
 		{
-			key: "3",
+			key: "4",
 			label: "Delete",
 			danger: true,
 			onClick: (event) => {
-				confirm()
-                setSelectedData(event.record);
+				confirm();
+				setSelectedData(event.record)
 			},
 		},
 	];
@@ -227,6 +248,11 @@ export const Files = () => {
 				onOk={onOk}
 				loading={deleting}
 				title={"Delete?"}
+			/>
+			<Rename
+				open={renameBox}
+				data={fileKey}
+				cancel={closeRenameBox}
 			/>
 		</>
 	);
