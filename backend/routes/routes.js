@@ -1,10 +1,9 @@
 import express from 'express';
 import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
-import { createFolder, deleteFolder, renameFolder } from '../controllers/FolderController.js';
+import { createFolder, deleteFolder, detailsFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
-import path from 'path';
 import {download} from '../controllers/DownloadController.js';
 import location from '../middleware/location.js';
 
@@ -20,7 +19,8 @@ Route.delete('/user/logout', cookieValidation, logout);
 
 // folders manager
 Route.post('/user/file/folder/create', cookieValidation, location, createFolder);
-Route.patch('/user/file/folder/rename', cookieValidation, renameFolder);
+Route.get('/user/file/folder/details/:folderId', cookieValidation, detailsFolder);
+Route.patch('/user/file/folder/rename/:id', cookieValidation, location, renameFolder);
 Route.delete('/user/file/folder/delete', cookieValidation, deleteFolder);
 
 
@@ -43,7 +43,7 @@ const upload = multer({ storage: storage });
 Route.get('/user/file/', cookieValidation, location, ls);
 Route.get('/user/file/details/:id', cookieValidation, details);
 Route.post('/user/file/upload', cookieValidation, location, upload.single("image"), uploadFile);
-Route.patch('/user/file/rename', cookieValidation, renameFile);
+Route.patch('/user/file/rename/:id', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);
 
 // download manager

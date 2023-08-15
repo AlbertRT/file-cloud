@@ -4,7 +4,6 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
 import { formatBytes } from "../../Utils/Helper/DataConverter";
 import formatUnixDate from "../../Utils/Helper/FormatDate";
-import formatStr from "../../Utils/Helper/FormatString";
 import ImagePreview from "./ImagePreview/ImagePreview";
 import { useState } from "react";
 import downloadFile from "../../Utils/Func/DownloadFile";
@@ -15,6 +14,7 @@ import Properties from "./Properties";
 import axios from "axios";
 import Confirm from "./Confirm";
 import Rename from "./Rename";
+import { formatStr, toUpperCase } from "../../Utils/Helper/String";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -28,9 +28,6 @@ export const Files = () => {
 	let { pathname } = useLocation();
 	const { folderName } = useParams();
 
-	if (pathname === "/") {
-		pathname = "root";
-	}
 	const fetcher = async (url) => {
 		const data = await axios.get(url, { params: { pathname } });
 		return data;
@@ -60,7 +57,7 @@ export const Files = () => {
 	// * delete confirm
 	const onCancel = () => {
 		setConfirmDelete(false);
-		setSelectedData(null)
+		setSelectedData(null);
 	};
 	const onOk = async () => {
 		setDeleting(true);
@@ -71,7 +68,7 @@ export const Files = () => {
 		} catch (error) {
 			console.log(error);
 			setDeleting(false);
-            setSelectedData(null)
+			setSelectedData(null);
 		}
 	};
 	const confirm = () => {
@@ -84,7 +81,7 @@ export const Files = () => {
 	};
 	const closeRenameBox = () => {
 		setOpenRenameBox(false);
-		setFileKey(null);
+		setSelectedData(null);
 	};
 
 	const items = [
@@ -99,7 +96,7 @@ export const Files = () => {
 			key: "2",
 			label: "Rename",
 			onClick: (event) => {
-				setFileKey(event.record.key);
+				setSelectedData(event.record);
 				openRenameBox();
 			},
 		},
@@ -107,11 +104,13 @@ export const Files = () => {
 			key: "3",
 			label: "Properties",
 			onClick: async (event) => {
+				let url;
+
+				event.record.type.toLowerCase() === "folder"
+					? (url = `http://localhost:5050/user/file/folder/details/${event.record.key}`)
+					: url = `http://localhost:5050/user/file/details/${event.record.key}`;
 				try {
-					const { data } = await Fetcher([
-						`http://localhost:5050/user/file/details/${event.record.key}`,
-						"get",
-					]);
+					const { data } = await Fetcher([url, "get"]);
 					setProperties(data);
 				} catch (error) {
 					console.log(error);
@@ -126,7 +125,7 @@ export const Files = () => {
 			danger: true,
 			onClick: (event) => {
 				confirm();
-				setSelectedData(event.record)
+				setSelectedData(event.record);
 			},
 		},
 	];
@@ -222,7 +221,7 @@ export const Files = () => {
 					</Space>
 				),
 			size: file.size ? formatBytes(file.size) : "-",
-			type: file.mimetype,
+			type: toUpperCase(file.mimetype),
 			date_modified: formatUnixDate(file.date_modified),
 			author: file.author,
 			key: file.id,
@@ -241,20 +240,25 @@ export const Files = () => {
 				size="small"
 				pagination={false}
 			/>
-			<Properties open={open} onClose={onClose} properties={properties} key={1} />
+			<Properties
+				open={open}
+				onClose={onClose}
+				properties={properties}
+				key={1}
+			/>
 			<Confirm
 				open={openConfirmDelete}
 				onCancel={onCancel}
 				onOk={onOk}
 				loading={deleting}
 				title={"Delete?"}
-                key={2}
+				key={2}
 			/>
 			<Rename
 				open={renameBox}
-				data={fileKey}
+				data={selectedData}
 				cancel={closeRenameBox}
-                key={3}
+				key={3}
 			/>
 		</>
 	);

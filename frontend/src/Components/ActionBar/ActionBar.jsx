@@ -16,10 +16,6 @@ const ActionBar = () => {
     const [isLoading, setLoading] = useState(false);
 	let { pathname } = useLocation();
 
-	if (pathname === "/") {
-		pathname = "root";
-	}
-
 	// Ant Modals
 	const showModal = (type) => {
 		setOpenedModal(type);

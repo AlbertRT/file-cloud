@@ -1,43 +1,71 @@
 import { Button, Input, Modal } from "antd";
 import axios from "axios";
 import { useState } from "react";
+import { details } from "../../../../backend/controllers/FileController.js";
+import { useLocation } from "react-router-dom";
 
 const Rename = ({ open, data, cancel }) => {
-    const [oldFileName, setOldFilename] = useState("");
+	const [oldFileName, setOldFilename] = useState("");
 	const [fileName, setFileName] = useState("");
 	const [fileExtension, setFileExtension] = useState("");
 
+	let url;
+	let detailsUrl;
+
+	const { pathname } = useLocation();
+
+	if (!data) {
+		return;
+	}
+
+	if (data.type === "folder") {
+		url = `http://localhost:5050/user/file/folder/rename/${data.key}`;
+		detailsUrl = `http://localhost:5050/user/file/folder/details/${data.key}`;
+	} else {
+		url = `http://localhost:5050/user/file/rename/${data.key}`;
+		detailsUrl = `http://localhost:5050/user/file/details/${data.key}`;
+	}
+
 	const getFileName = async () => {
 		try {
-			const res = await axios.get(
-				`http://localhost:5050/user/file/details/${data}`
-			);
+			const res = await axios.get(detailsUrl);
 
-            setOldFilename(res.data.data.originalname);
-			setFileExtension(res.data.data.originalname.split(".")[1]);
+			setOldFilename(res.data.data.originalname);
+
+			data.type !== "folder" &&
+				setFileExtension(res.data.data.originalname.split(".")[1]);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	if (!data) {
-        return
-    }
-    getFileName()
+	getFileName();
 
-    const rename = async () => {
-        const newFileName = `${fileName}.${fileExtension}`
-
-        try {
-            await axios.patch('http://localhost:5050/user/file/rename', {
-                oldName: oldFileName,
-                newName: newFileName
-            });
-            cancel()
-        } catch (error) {
-            console.log(error);
-        }
-    }
+	const rename = async () => {
+		try {
+			if (data.type.toLowerCase() === 'folder') {
+				await axios.patch(
+					url,
+					{
+						newName: fileName,
+					},
+					{
+						params: {
+							pathname,
+						},
+					}
+				);
+			} else {
+                await axios.patch(url, {
+					oldName: oldFileName,
+					newName: `${fileName}.${fileExtension}`,
+				});
+            }
+			cancel();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Modal

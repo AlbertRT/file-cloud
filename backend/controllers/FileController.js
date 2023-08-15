@@ -139,11 +139,11 @@ export async function uploadFile (req, res) {
 }
 
 export async function renameFile(req, res) {
-    let { oldName, newName } = req.body;
-    console.log(oldName);
+    let { newName } = req.body;
+    const { id } = req.params
 
     const file = await File.findOne({
-        originalname: oldName
+        id
     });
 
     if (!file) {
@@ -156,7 +156,7 @@ export async function renameFile(req, res) {
 
     try {
         await File.updateOne({
-            originalname: oldName
+            id
         }, {
             originalname: newName,
         });

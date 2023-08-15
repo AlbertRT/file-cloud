@@ -2,10 +2,16 @@ import User from "../mongodb/models/User.js";
 import random_string from "../utils/random_string.js";
 
 export default async function location(req, res, next) {
-    const {pathname} = req.query;
+    let {pathname} = req.query;
     const key = req.key;
     const { user_folder } = await User.findOne({ key });
     let location
+
+    if (pathname === '/') {
+        pathname = 'root'
+    } else {
+        pathname = pathname
+    }
 
     if (pathname !== 'root') {
         location = `src/folders/${user_folder}${pathname.split('/folder')[1]}`;

@@ -3,8 +3,36 @@ import User from "../mongodb/models/User.js";
 import Folder from "../mongodb/models/Folder.js";
 import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
-import fs from 'fs';
 import moment from 'moment';
+
+export async function detailsFolder(req, res) {
+    const { folderId } = req.params
+
+    const folder = await Folder.findOne({ id: folderId })
+
+    if (!folder) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "Folder not Found"
+        });
+    }
+    const { originalname, mimetype, name, directory, author, date_modified, id } = folder
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data: {
+            originalname,
+            mimetype,
+            name,
+            directory,
+            author,
+            date_modified,
+            id
+        }
+    })
+}
 
 export async function createFolder (req, res) {
     let { name } = req.body;
@@ -63,38 +91,36 @@ export async function createFolder (req, res) {
 }
 
 export async function renameFolder (req, res) {
-    let { name, newName } = req.body;
+    let { newName } = req.body;
+    const { id } = req.params
 
-    // original name
-    const originalName = newName;
+    const folder = await Folder.findOne({
+        id
+    })
+    // new properties
+    const newId = random_string(32)
+    const newDirectory = `${req.location}/${newId}`
+    console.log(newDirectory);
 
-    // replace " " with "_" and make all string to lowercase
-    name = name.replace(" ", "_").toLowerCase();
-    newName = newName.replace(" ", "_").toLowerCase();
-
-    const key = req.key;
-    const user = await User.findOne({ key });
-
-
-    // check if name is duplicate
-    const isDuplicate = fs.existsSync(`src/folders/${user.user_folder}/${newName}`);
-
-    if (isDuplicate) {
-        return res.status(400).json({
+    if (!folder) {
+        return res.status(404).json({
             error: true,
             ok: false,
-            msg: `${newName} is already in use, please use other name`
+            msg: "File not Found"
         });
     }
+
     try {
-        await rename(`src/folders/${user.user_folder}/${name}`, `src/folders/${user.user_folder}/${newName}`);
+        await rename(folder.directory, newDirectory)
         await Folder.updateOne({
-            userId: user._id
+            id
         }, {
-            name: newName,
-            originalName,
-            directory: `src/folders/${user.user_folder}/${newName}`,
-        });
+            originalname: newName,
+            id: newId,
+            name: newId,
+            directory: newDirectory
+        })
+
         return res.status(200).json({
             ok: true,
             error: false,
