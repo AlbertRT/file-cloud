@@ -15,6 +15,7 @@ import axios from "axios";
 import Confirm from "./Confirm";
 import Rename from "./Rename";
 import { formatStr, toUpperCase } from "../../Utils/Helper/String";
+import Spinner from '../Spinner/Spinner'
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -23,7 +24,7 @@ export const Files = () => {
 	const [deleting, setDeleting] = useState(false);
 	const [selectedData, setSelectedData] = useState(null);
 	const [renameBox, setOpenRenameBox] = useState(false);
-	const [fileKey, setFileKey] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	let { pathname } = useLocation();
 	const { folderName } = useParams();
@@ -45,7 +46,7 @@ export const Files = () => {
 	});
 
 	if (isLoading) {
-		return <div>Loading..</div>;
+        return <Spinner />
 	}
 
 	// *properties
@@ -89,7 +90,7 @@ export const Files = () => {
 			key: "1",
 			label: "Download",
 			onClick: (event) => {
-				downloadFile(event.record);
+				event.type !== "folder" && downloadFile(event.record);
 			},
 		},
 		{
