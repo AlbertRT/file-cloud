@@ -3,7 +3,8 @@ import axios from "axios";
 import { useState } from "react";
 
 const Rename = ({ open, data, cancel }) => {
-	const [filename, setFilename] = useState("");
+    const [oldFileName, setOldFilename] = useState("");
+	const [fileName, setFileName] = useState("");
 	const [fileExtension, setFileExtension] = useState("");
 
 	const getFileName = async () => {
@@ -12,7 +13,7 @@ const Rename = ({ open, data, cancel }) => {
 				`http://localhost:5050/user/file/details/${data}`
 			);
 
-			setFilename(res.data.data.originalname.split(".")[0]);
+            setOldFilename(res.data.data.originalname);
 			setFileExtension(res.data.data.originalname.split(".")[1]);
 		} catch (error) {
 			console.log(error);
@@ -24,30 +25,48 @@ const Rename = ({ open, data, cancel }) => {
     }
     getFileName()
 
+    const rename = async () => {
+        const newFileName = `${fileName}.${fileExtension}`
+
+        try {
+            await axios.patch('http://localhost:5050/user/file/rename', {
+                oldName: oldFileName,
+                newName: newFileName
+            });
+            cancel()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 	return (
 		<Modal
 			open={open}
 			onCancel={cancel}
 			title="Rename"
-			footer={[<Button onClick={cancel}>Cancel</Button>, <Button type="primary">Rename</Button>]}
+			footer={[
+				<Button onClick={cancel}>Cancel</Button>,
+				<Button type="primary" onClick={rename}>
+					Rename
+				</Button>,
+			]}
 		>
-			{filename && (
-				<div
-					className="Rename"
-					style={{ display: "flex", alignItems: "center" }}
+			<div
+				className="Rename"
+				style={{ display: "flex", alignItems: "center" }}
+			>
+				<Input
+					value={fileName}
+					placeholder={oldFileName.split(".")[0]}
+					onInput={(e) => setFileName(e.target.value)}
+				/>
+				<p
+					className="filename-extension"
+					style={{ marginLeft: "1rem" }}
 				>
-					<Input
-						value={filename.split(".")[0]}
-						onChange={(e) => setFilename(e.target.value)}
-					/>
-					<p
-						className="filename-extension"
-						style={{ marginLeft: "1rem" }}
-					>
-						.{fileExtension}
-					</p>
-				</div>
-			)}
+					.{fileExtension}
+				</p>
+			</div>
 		</Modal>
 	);
 };

@@ -139,35 +139,28 @@ export async function uploadFile (req, res) {
 }
 
 export async function renameFile(req, res) {
-    // let { oldName, newName } = req.body;
-    // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    let { oldName, newName } = req.body;
+    console.log(oldName);
 
-    // const file = await File.findOne({
-    //     originalName: oldName
-    // });
-    // const { user_folder } = await User.findOne({ key: req.key });
+    const file = await File.findOne({
+        originalname: oldName
+    });
 
-    // if (!file) {
-    //     return res.status(404).json({
-    //         error: true,
-    //         ok: false,
-    //         msg: "File not Found"
-    //     });
-    // }
+    if (!file) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "File not Found"
+        });
+    }
 
     try {
-        // const newUniqName = `images-${uniqueSuffix}.${file.originalName.split(".")[1]}`
-
-        // await rename(file.path, path.join(`src/folders/${user_folder}`, newUniqName));
-        // await File.updateOne({
-        //     originalName: oldName
-        // }, {
-        //     originalName: newName,
-        //     fileName: newUniqName,
-        //     path: `src/folders/${user_folder}/${newUniqName}`
-        // });
+        await File.updateOne({
+            originalname: oldName
+        }, {
+            originalname: newName,
+        });
         
-
         return res.status(200).json({
             ok: true,
             error: false,

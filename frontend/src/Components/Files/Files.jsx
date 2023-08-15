@@ -241,18 +241,20 @@ export const Files = () => {
 				size="small"
 				pagination={false}
 			/>
-			<Properties open={open} onClose={onClose} properties={properties} />
+			<Properties open={open} onClose={onClose} properties={properties} key={1} />
 			<Confirm
 				open={openConfirmDelete}
 				onCancel={onCancel}
 				onOk={onOk}
 				loading={deleting}
 				title={"Delete?"}
+                key={2}
 			/>
 			<Rename
 				open={renameBox}
 				data={fileKey}
 				cancel={closeRenameBox}
+                key={3}
 			/>
 		</>
 	);
