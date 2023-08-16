@@ -1,6 +1,7 @@
-import { Avatar, Button, Space } from "antd";
+import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
-const PPHome = ({ pp, onClick }) => {
+import UserAvatar from "../../../../../Components/Avatar/Avatar";
+const PPHome = ({ data, onClick }) => {
 	return (
 		<>
 			<p>
@@ -8,7 +9,7 @@ const PPHome = ({ pp, onClick }) => {
 				on social media. It helps others recognize them.
 			</p>
 			<div className="pp">
-				<Avatar src={pp} size={130} />
+				<UserAvatar src={{ initial: data.fullName.split("")[0], picture: data.profile_picture }} size={130} />
 			</div>
 			<div className="buttons">
 				<Button type="default" onClick={onClick}>

@@ -12,7 +12,7 @@ export async function cookieValidation(req, res, next) {
         });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ 'contactInfo.email': email });
     if (!user) {
         return res.status(404).json({
             error: true,
@@ -22,7 +22,7 @@ export async function cookieValidation(req, res, next) {
     }
 
     // validate the key that sent from client with key in database
-    const compared = await bcrypt.compare(key, user.key);
+    const compared = await bcrypt.compare(key, user.loginInfo.key);
     
     if (!compared) {
         return res.status(401).json({
@@ -32,7 +32,7 @@ export async function cookieValidation(req, res, next) {
         });
     }
 
-    req.key = user.key;
-    req.folder_name = user.user_folder;
+    req.key = user.loginInfo.key;
+    req.folder_name = user.basicInfo.user_folder;
     next();
 }

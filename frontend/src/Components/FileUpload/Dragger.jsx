@@ -39,6 +39,7 @@ export const FileDragger = () => {
 			onSuccess("Ok");
 		} catch (error) {
 			onError(error);
+            console.log(error);
 		}
 	};
 	return (

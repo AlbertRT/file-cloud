@@ -1,6 +1,6 @@
-import { Avatar, Button, Dropdown, Tooltip } from "antd";
-import pp from "../../Assets/20230718_151947.jpg";
+import { Button, Dropdown, Tooltip } from "antd";
 import { Link } from "react-router-dom";
+import UserAvatar from "../Avatar/Avatar";
 
 const Account = ({ data }) => {
 	const items = [
@@ -15,8 +15,13 @@ const Account = ({ data }) => {
 	];
 	return (
 		<Dropdown menu={{ items }} trigger={"click"}>
-			<Tooltip title={data.username}>
-				<Avatar src={pp} />
+			<Tooltip title={data.fullName}>
+				<UserAvatar
+					src={{
+						initial: data.fullName.split("")[0],
+						picture: data.profile_picture,
+					}}
+				/>
 			</Tooltip>
 		</Dropdown>
 	);

@@ -4,7 +4,9 @@ import random_string from "../utils/random_string.js";
 export default async function location(req, res, next) {
     let {pathname} = req.query;
     const key = req.key;
-    const { user_folder } = await User.findOne({ key });
+    const { basicInfo } = await User.findOne({ 'loginInfo.key': key });
+    const { user_folder } = basicInfo
+    
     let location
 
     if (pathname === '/') {

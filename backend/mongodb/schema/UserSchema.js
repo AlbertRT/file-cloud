@@ -1,23 +1,27 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import moment from "moment";
 
-const UserSchema = new mongoose.Schema({
-    id: {
+
+const BasicInfo = new mongoose.Schema({
+    fullName: {
         type: String,
         required: true
     },
     username: {
         type: String,
-        required: true
+        default: ""
     },
-    password: {
+    birthday: {
         type: String,
-        required: true,
+        default: ""
     },
-    email: {
+    gender: {
         type: String,
-        required: false,
-        uniqe: true
+        default: ""
+    },
+    profile_pictures: {
+        type: String,
+        default: null
     },
     default_storage: {
         type: Number,
@@ -30,10 +34,69 @@ const UserSchema = new mongoose.Schema({
     user_folder: {
         type: String,
         required: true
+    }
+})
+const ContactInfo = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        uniqe: true
     },
+    phone: {
+        type: String, 
+        default: ""
+    }
+})
+const AddressInfo = new mongoose.Schema({
+    homeAddress: {
+        type: String,
+        default: null
+    },
+    workAddress: {
+        type: String, 
+        default: null
+    }
+})
+const LoginInfo = new mongoose.Schema({
     key: {
+        type: String, 
+        default: ""
+    },
+    last_login: {
         type: String,
         default: ""
+    }
+})
+const Password = new mongoose.Schema({
+    password: {
+        type: String,
+        required: true
+    },
+    last_change: {
+        type: String,
+         default: moment().unix()
+    }
+})
+
+const UserSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    basicInfo: {
+        type: BasicInfo
+    },
+    contactInfo: {
+        type: ContactInfo
+    },
+    addressInfo: {
+        type: AddressInfo
+    },
+    loginInfo: {
+        type: LoginInfo
+    },
+    password: {
+        type: Password
     },
     created_on: {
         type: String,

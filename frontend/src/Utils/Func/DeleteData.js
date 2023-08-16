@@ -2,7 +2,7 @@ import axios from 'axios';
 const deleteData = async ({ key, type }) => {
     let url;
 
-    if (type !== "folder") {
+    if (type.toLowerCase() !== "folder") {
         url = "http://localhost:5050/user/file/delete";
     } else {
         url = "http://localhost:5050/user/file/folder/delete";

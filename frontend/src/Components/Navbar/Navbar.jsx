@@ -6,12 +6,10 @@ import {
 	LuSearch,
 	LuX
 } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
 import Account from "./Account";
 import { Link } from "react-router-dom";
 
 const Navbar = ({ data }) => {
-    const navigate = useNavigate();
 	const [searchValue, setSearchValue] = useState("");
 
 	return (

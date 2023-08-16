@@ -34,7 +34,7 @@ const Me = () => {
 					<LuHome /> Home
 				</Space>
 			),
-			children: <HomePages />,
+			children: <HomePages data={response.data} />,
 		},
 		{
 			key: 2,

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 
 const Register = () => {
-	const [username, setUsername] = useState("");
+	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirm_password, setConfirmPassword] = useState("");
@@ -17,13 +17,13 @@ const Register = () => {
 
 	const submit = async () => {
 		const data = {
-			username,
+			name,
 			email,
 			password,
 			confirm_password,
 		};
 
-        if (data.username === "" || data.email === "" || data.password === "" || data.confirm_password === "") {
+        if (data.name === "" || data.email === "" || data.password === "" || data.confirm_password === "") {
             return toast.error("Please fill the required field!");
         }
 
@@ -47,6 +47,7 @@ const Register = () => {
             navigate('/login');
         } catch (error) {
             toast.error(error.message);
+            console.log(error);
         }
 	};
 
@@ -64,17 +65,17 @@ const Register = () => {
 					<div className="title">Register</div>
 					<div className="form">
 						<div className="input">
-							<label htmlFor="username" className="username">
-								<span>Username</span>
+							<label htmlFor="name" className="name">
+								<span>Name</span>
 								<LuUser />
 							</label>
 							<input
 								type="text"
-								id="username"
-								className="username"
+								id="name"
+								className="name"
 								placeholder="John Doe"
-								value={username}
-								onInput={(e) => setUsername(e.target.value)}
+								value={name}
+								onInput={(e) => setName(e.target.value)}
 							/>
 						</div>
 						<div className="input">

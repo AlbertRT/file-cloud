@@ -41,7 +41,7 @@ export async function createFolder (req, res) {
     let path = `${req.location}/${id}`;
     const key = req.key;
     
-    const user = await User.findOne({ key });
+    const user = await User.findOne({ 'loginInfo.key': key });
 
     // checking the name if name === root, rejected
     if (name === 'root') {
@@ -72,7 +72,7 @@ export async function createFolder (req, res) {
             directory: path,
             mimetype: "folder",
             date_modified: moment().unix(),
-            author: user.username,
+            author: user.basicInfo.fullName,
             userId: user._id
         });
 
@@ -100,7 +100,6 @@ export async function renameFolder (req, res) {
     // new properties
     const newId = random_string(32)
     const newDirectory = `${req.location}/${newId}`
-    console.log(newDirectory);
 
     if (!folder) {
         return res.status(404).json({
@@ -140,7 +139,7 @@ export async function deleteFolder (req, res) {
     const folder = await Folder.findOne({ id });
     const sizes = await File.find({ folderId: id })
     const totalFileSize = sizes.reduce((total, { size }) => total + size, 0);
-    const { storage } = await User.findOne({ key: req.key });
+    const { basicInfo } = await User.findOne({ 'loginInfo.key': req.key });
 
     if (!folder) {
         return res.status(404).json({
@@ -160,7 +159,7 @@ export async function deleteFolder (req, res) {
         await File.deleteMany({ folderId: id })
         await Folder.deleteOne({ id });
         await rmFolder(folder.directory);
-        await User.updateOne({ key: req.key }, { storage: storage - totalFileSize });
+        await User.updateOne({ 'loginInfo.key': req.key }, { 'basicInfo.storage': basicInfo.storage - totalFileSize });
 
         return res.status(200).json({
             ok: true,
