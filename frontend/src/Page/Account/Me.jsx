@@ -1,10 +1,32 @@
-import { Space, Tabs } from 'antd'
-import React from 'react'
-import { LuHome, LuUser } from 'react-icons/lu'
-import "./Me.scss";
+import { Space, Tabs } from "antd";
+import React from "react";
+import { LuHome, LuUser } from "react-icons/lu";
+import HomePages from "./TabPages/HomePages/HomePages";
+import PersonalInfoPages from "./TabPages/PersonalInfoPages/PersonalInfoPages";
+import Navbar from "../../Components/Navbar/Navbar";
+import useSWR from "swr";
+import Fetcher from "../../Utils/Helper/Fetcher";
 
 const Me = () => {
-    const items = [
+	const {
+		data: response,
+		error,
+		mutate,
+		isLoading,
+	} = useSWR(["http://localhost:5050/user/me", "get"], Fetcher, {
+		revalidateOnMount: true,
+		revalidateOnFocus: true,
+		refreshInterval: 500,
+	});
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	if (error) {
+		navigate("/login");
+	}
+
+	const items = [
 		{
 			key: 1,
 			label: (
@@ -12,7 +34,7 @@ const Me = () => {
 					<LuHome /> Home
 				</Space>
 			),
-			children: `Content of Tab Pane 1`,
+			children: <HomePages />,
 		},
 		{
 			key: 2,
@@ -21,14 +43,15 @@ const Me = () => {
 					<LuUser /> Personal Info
 				</Space>
 			),
-			children: `Content of Tab Pane 2`,
+			children: <PersonalInfoPages />,
 		},
 	];
-  return (
-    <div className="Me">
-        <Tabs items={items} defaultActiveKey='1' tabPosition='left' />
-    </div>
-  )
-}
+	return (
+		<div className="Me">
+			<Navbar data={response} />
+			<Tabs items={items} defaultActiveKey="1" tabPosition="left" />
+		</div>
+	);
+};
 
-export default Me
+export default Me;

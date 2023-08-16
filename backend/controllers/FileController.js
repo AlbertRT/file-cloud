@@ -2,8 +2,7 @@ import Folder from "../mongodb/models/Folder.js";
 import User from "../mongodb/models/User.js";
 import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
-import { readDir, rename, unlinkFile } from "../utils/fs.js";
-import path from 'path';
+import { readDir, unlinkFile } from "../utils/fs.js";
 import moment from 'moment';
 
 export async function ls (req, res) {

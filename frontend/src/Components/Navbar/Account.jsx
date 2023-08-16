@@ -3,7 +3,6 @@ import pp from "../../Assets/20230718_151947.jpg";
 import { Link } from "react-router-dom";
 
 const Account = ({ data }) => {
-    console.log(data);
 	const items = [
 		{
 			key: 1,

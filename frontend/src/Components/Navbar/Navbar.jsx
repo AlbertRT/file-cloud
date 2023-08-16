@@ -6,26 +6,17 @@ import {
 	LuSearch,
 	LuX
 } from "react-icons/lu";
-import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
 import Account from "./Account";
+import { Link } from "react-router-dom";
 
 const Navbar = ({ data }) => {
     const navigate = useNavigate();
 	const [searchValue, setSearchValue] = useState("");
 
-    const onLogout = async () => {
-        try {
-            await Fetcher(['http://localhost:5050/user/logout', 'delete']);
-            navigate('/login');
-        } catch (error) {
-            return
-        }
-    } 
-
 	return (
 		<nav className="navbar">
-			<div className="logo">File Cloud</div>
+			<Link className="logo" to={'/'}>File Cloud</Link>
 			<div className="Bar">
 				<div className="search-bar">
 					<input
