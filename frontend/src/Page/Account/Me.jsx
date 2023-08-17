@@ -1,6 +1,6 @@
 import { Space, Tabs } from "antd";
 import React from "react";
-import { LuHome, LuUser } from "react-icons/lu";
+import { LuCog, LuHome, LuUser } from "react-icons/lu";
 import HomePages from "./TabPages/HomePages/HomePages";
 import PersonalInfoPages from "./TabPages/PersonalInfoPages/PersonalInfoPages";
 import Navbar from "../../Components/Navbar/Navbar";
@@ -41,6 +41,15 @@ const Me = () => {
 			label: (
 				<Space>
 					<LuUser /> Personal Info
+				</Space>
+			),
+			children: <PersonalInfoPages />,
+		},
+		{
+			key: 3,
+			label: (
+				<Space>
+					<LuCog /> Settings
 				</Space>
 			),
 			children: <PersonalInfoPages />,

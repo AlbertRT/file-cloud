@@ -1,10 +1,7 @@
-import { Avatar, Modal } from "antd";
 import React, { useState } from "react";
-import pp from "../../../../Assets/20230718_151947.jpg";
 import "./HomePages.scss";
-import PPHome from "./Components/PPHome";
-import ChangePP from "./Components/ChangePP/ChangePP";
 import UserAvatar from "../../../../Components/Avatar/Avatar";
+import ProfilePictureModal from "../../../../Components/ProfilePictureModal/ProfilePicturesModal";
 
 const HomePages = ({ data }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,24 +30,13 @@ const HomePages = ({ data }) => {
 					size={170}
 					onClick={openModal}
 				/>
-				<Modal
+				<ProfilePictureModal
 					open={isModalOpen}
 					onCancel={onCancel}
-					footer={[]}
-					title="Your Profile Picture"
-				>
-					{!ppChanging ? (
-						<PPHome
-							data={{
-								fullName: data.fullName,
-								profile_picture: data.profile_picture,
-							}}
-							onClick={onChangeProfilePictures}
-						/>
-					) : (
-						<ChangePP />
-					)}
-				</Modal>
+					onChangeProfilePictures={onChangeProfilePictures}
+                    ppChanging={ppChanging}
+                    data={data}
+				/>
 				<p>
 					Welcome back, <b>{data.fullName}</b>
 				</p>

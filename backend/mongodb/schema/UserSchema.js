@@ -68,11 +68,11 @@ const ContactInfo = new mongoose.Schema({
 const AddressInfo = new mongoose.Schema({
     homeAddress: {
         type: String,
-        default: null
+        default: ""
     },
     workAddress: {
         type: String, 
-        default: null
+        default: ""
     }
 })
 const LoginInfo = new mongoose.Schema({

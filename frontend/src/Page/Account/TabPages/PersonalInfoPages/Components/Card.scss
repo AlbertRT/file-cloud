@@ -1,0 +1,46 @@
+@import "../../../../../variables.scss";
+
+.accountInfo-card {
+	border: 1px solid $medium_gray_2;
+	border-radius: 5px;
+    height: max-content;
+
+	.card-header {
+		padding: 1rem;
+		.card-title {
+			font-size: 1.1rem;
+			user-select: none;
+		}
+	}
+	.card-body {
+		.data-display {
+            .display {
+                height: max-content;
+				padding: 1rem;
+				display: flex;
+				width: 100%;
+				align-items: center;
+				border-bottom: 1px solid $medium_gray_2;
+
+				.title {
+					flex: 0.3;
+					font-size: 0.8rem;
+					color: $medium_gray_2;
+					font-weight: bold;
+					user-select: none;
+					text-transform: capitalize;
+				}
+				.data {
+					font-weight: 500;
+					flex: 1;
+                    display: flex;
+                    align-items: center;
+
+                    &.end {
+                        justify-content: end;
+                    }
+				}
+			}
+		}
+	}
+}

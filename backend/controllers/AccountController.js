@@ -2,7 +2,46 @@ import User from "../mongodb/models/User.js"
 import { unlinkFile } from "../utils/fs.js";
 
 export async function accountDetails(req, res) {
+    const { key } = req
+    const user = await User.findOne({ 'loginInfo.key': key })
+    
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "User not Found"
+        })
+    }
 
+    const { basicInfo, contactInfo, addressInfo, password, id } = user
+
+    const basic_info = {
+        fullName: basicInfo?.fullName,
+        username: basicInfo?.username,
+        birthday: basicInfo?.birthday,
+        gender: basicInfo?.gender,
+        profile_picture: basicInfo?.profile_pictures
+    }
+    const contact_info = {
+        email: contactInfo?.email,
+        phone: contactInfo?.phone
+    }
+    const addresses = {
+        home: addressInfo?.homeAddress,
+        work: addressInfo?.workAddress
+    }
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data: {
+            basic_info,
+            contact_info,
+            addresses,
+            id
+            
+        }
+    })
 }
 
 export async function editInfo(req, res) {
