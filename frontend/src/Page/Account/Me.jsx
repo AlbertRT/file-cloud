@@ -48,7 +48,7 @@ const Me = () => {
 	];
 	return (
 		<div className="Me">
-			<Navbar data={response} />
+			<Navbar data={response.data} />
 			<Tabs items={items} defaultActiveKey="1" tabPosition="left" />
 		</div>
 	);

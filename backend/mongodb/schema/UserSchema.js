@@ -1,6 +1,25 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import moment from "moment";
 
+
+const ProfilePicture = new mongoose.Schema({
+    id: {
+        type: String,
+        default: ""
+    },
+    filename: {
+        type: String,
+        default: ""
+    },
+    downloadURL: {
+        type: String,
+        default: ""
+    },
+    path: {
+        type: String,
+        default: ""
+    }
+})
 
 const BasicInfo = new mongoose.Schema({
     fullName: {
@@ -20,8 +39,7 @@ const BasicInfo = new mongoose.Schema({
         default: ""
     },
     profile_pictures: {
-        type: String,
-        default: null
+        type: ProfilePicture,
     },
     default_storage: {
         type: Number,

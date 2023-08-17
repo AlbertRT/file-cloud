@@ -15,14 +15,12 @@ const Account = ({ data }) => {
 	];
 	return (
 		<Dropdown menu={{ items }} trigger={"click"}>
-			<Tooltip title={data.fullName}>
-				<UserAvatar
-					src={{
-						initial: data.fullName.split("")[0],
-						picture: data.profile_picture,
-					}}
-				/>
-			</Tooltip>
+			<UserAvatar
+				src={{
+					initial: data.fullName.charAt(0),
+					picture: data.profile_picture,
+				}}
+			/>
 		</Dropdown>
 	);
 };

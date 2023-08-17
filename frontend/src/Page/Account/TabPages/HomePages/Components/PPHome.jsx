@@ -1,7 +1,16 @@
 import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
 import UserAvatar from "../../../../../Components/Avatar/Avatar";
+import axios from 'axios'
+
 const PPHome = ({ data, onClick }) => {
+    const ppRemove = async () => {
+        try {
+            await axios.delete('http://localhost:5050/account/delete/profile_pictures')
+        } catch (error) {
+            console.log(error);
+        }
+    }
 	return (
 		<>
 			<p>
@@ -17,7 +26,7 @@ const PPHome = ({ data, onClick }) => {
 						<LuEdit3 /> Change
 					</Space>
 				</Button>
-				<Button type="default" danger>
+				<Button type="default" danger onClick={ppRemove}>
 					<Space>
 						<LuTrash />
 						Remove

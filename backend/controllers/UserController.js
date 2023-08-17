@@ -33,6 +33,7 @@ export async function register(req, res) {
     const folderName = `${userId}`;
 
     await createDir(`src/folders/${folderName}`);
+    await createDir(`src/folders/${folderName}/details`);
 
     try {
         await User.create({

@@ -1,7 +1,7 @@
 import { Space, Tabs } from 'antd'
 import React from 'react'
 import { LuCloud, LuLaptop2 } from 'react-icons/lu'
-import {FileDragger} from '../../../../../../Components/FileUpload/Dragger';
+import LocalTabs from './LocalTabs';
 
 const ChangePP = () => {
     const items = [
@@ -22,7 +22,7 @@ const ChangePP = () => {
 					Local
 				</Space>
 			),
-			children: <FileDragger />,
+			children: <LocalTabs />,
 		},
 	];
   return (

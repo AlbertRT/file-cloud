@@ -43,7 +43,7 @@ const HomePages = ({ data }) => {
 						<PPHome
 							data={{
 								fullName: data.fullName,
-								profile_picture: data.profile_pictures,
+								profile_picture: data.profile_picture,
 							}}
 							onClick={onChangeProfilePictures}
 						/>

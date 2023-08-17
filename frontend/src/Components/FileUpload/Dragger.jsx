@@ -14,16 +14,7 @@ export const FileDragger = () => {
 		const { onSuccess, onError, file } = options;
 
 		const fmData = new FormData();
-		const config = {
-			headers: { "content-type": "multipart/form-data" },
-		};
 		fmData.append("image", file);
-        fmData.append("pathname", pathname)
-
-        const data = {
-            pathname,
-            fmData
-        }
 
 		try {
 			await axios.post(

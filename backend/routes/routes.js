@@ -4,8 +4,9 @@ import { cookieValidation } from '../middleware/cookieValidation.js';
 import { createFolder, deleteFolder, detailsFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
-import {download} from '../controllers/DownloadController.js';
+import { download } from '../controllers/DownloadController.js';
 import location from '../middleware/location.js';
+import { accountDetails, deleteAccount, deleteProfilePicture, editInfo, getProfilePicture, profile_picture_update } from '../controllers/AccountController.js';
 
 const Route = express.Router();
 
@@ -28,7 +29,7 @@ Route.delete('/user/file/folder/delete', cookieValidation, deleteFolder);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const location = req.location;
-        
+
         cb(null, location);
     },
     filename: function (req, file, cb) {
@@ -49,6 +50,31 @@ Route.delete('/user/file/delete', cookieValidation, deleteFile);
 // download manager
 Route.get('/download/:type/:id', download)
 
+// testing api
 Route.get('/', cookieValidation, (req, res) => res.json({ ok: true }));
+
+// Account API
+
+// Account Multer config
+const accountInfo = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const path = `${req.location}/details`
+        cb(null, path)
+    },
+    filename: (req, file, cb) => {
+        const filename = `pp_${req.userId}.${file.originalname.split(".")[1]}`
+        cb(null, filename);
+    }
+})
+
+const profile_pictures_upload = multer({ storage: accountInfo })
+
+Route.get('/account/details', cookieValidation, accountDetails);
+Route.patch('/account/edit', cookieValidation, editInfo);
+// Profile Picture
+Route.post('/account/edit/profile_pictures', cookieValidation, location, profile_pictures_upload.single("profile_picture"), profile_picture_update);
+Route.get('/pp/:fileName', getProfilePicture);
+Route.delete('/account/delete/profile_pictures', cookieValidation, deleteProfilePicture)
+Route.delete('/account/delete', cookieValidation, deleteAccount);
 
 export default Route;
