@@ -6,6 +6,7 @@ import { Files } from "../../Components/Files/Files";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Components/Loading/Loading";
 const Folder = () => {
 	const navigate = useNavigate();
 
@@ -20,7 +21,7 @@ const Folder = () => {
 		refreshInterval: 500,
 	});
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <Loading />
 	}
 
 	if (error) {

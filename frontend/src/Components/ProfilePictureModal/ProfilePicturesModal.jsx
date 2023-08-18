@@ -1,6 +1,6 @@
 import { Modal } from "antd";
-import PPHome from "../../Page/Account/TabPages/HomePages/Components/PPHome";
-import ChangePP from "../../Page/Account/TabPages/HomePages/Components/ChangePP/ChangePP";
+import PPHome from "./Components/PPHome";
+import ChangePP from "./Components/ChangePP/ChangePP";
 const ProfilePictureModal = ({open, onCancel, ppChanging, onChangeProfilePictures, data}) => {
 	return (
 		<Modal

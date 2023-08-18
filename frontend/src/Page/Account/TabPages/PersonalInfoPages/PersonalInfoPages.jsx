@@ -5,6 +5,7 @@ import "./PersonalInfo.scss";
 import BasicInfo from "./Components/BasicInfo";
 import ContactInfo from "./Components/ContactInfo";
 import AddressInfo from "./Components/AddressInfo";
+import Loading from "../../../../Components/Loading/Loading";
 
 const PersonalInfoPages = () => {
 	const { data: response, error, isLoading } = useSWR(
@@ -12,7 +13,7 @@ const PersonalInfoPages = () => {
 		Fetcher
 	);
     if (isLoading) {
-        return <div>Loading...</div>
+        return <Loading />
     }
 
 	return (

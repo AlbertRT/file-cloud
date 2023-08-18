@@ -1,6 +1,6 @@
 import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
-import UserAvatar from "../../../../../Components/Avatar/Avatar";
+import UserAvatar from "../../Avatar/Avatar";
 import axios from 'axios'
 
 const PPHome = ({ data, onClick }) => {

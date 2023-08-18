@@ -6,12 +6,12 @@ import PersonalInfoPages from "./TabPages/PersonalInfoPages/PersonalInfoPages";
 import Navbar from "../../Components/Navbar/Navbar";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Helper/Fetcher";
+import Loading from "../../Components/Loading/Loading";
 
 const Me = () => {
 	const {
 		data: response,
 		error,
-		mutate,
 		isLoading,
 	} = useSWR(["http://localhost:5050/user/me", "get"], Fetcher, {
 		revalidateOnMount: true,
@@ -19,7 +19,7 @@ const Me = () => {
 		refreshInterval: 500,
 	});
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <Loading />
 	}
 
 	if (error) {

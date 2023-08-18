@@ -7,6 +7,7 @@ import Fetcher from "../../Utils/Helper/Fetcher";
 import { useNavigate } from "react-router-dom";
 import ActionBar from "../../Components/ActionBar/ActionBar";
 import {Files} from '../../Components/Files/Files';
+import Loading from "../../Components/Loading/Loading";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Home = () => {
         refreshInterval: 500
 	});
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <Loading />
 	}
 
 	if (error) {
