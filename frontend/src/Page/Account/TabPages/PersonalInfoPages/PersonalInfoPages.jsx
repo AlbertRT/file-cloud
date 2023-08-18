@@ -10,7 +10,10 @@ import Loading from "../../../../Components/Loading/Loading";
 const PersonalInfoPages = () => {
 	const { data: response, error, isLoading } = useSWR(
 		["http://localhost:5050/account/details"],
-		Fetcher
+		Fetcher,
+        {
+            refreshInterval: 500
+        }
 	);
     if (isLoading) {
         return <Loading />
