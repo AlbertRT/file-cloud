@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ActionBar from "../../Components/ActionBar/ActionBar";
 import {Files} from '../../Components/Files/Files';
 import Loading from "../../Components/Loading/Loading";
+import ChangeView from "../../Components/ChangeView/ChangeView";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -40,7 +41,10 @@ const Home = () => {
 				<div className="content">
 					<section id="home" className="home">
 						<ActionBar />
-						<div className="section-title">Home</div>
+						<div className="section-title">
+                            <span>Home</span>
+                            <ChangeView />
+                        </div>
 						<Files />
 					</section>
 				</div>

@@ -5,8 +5,10 @@ import Login from "./Page/Login/Login";
 import Register from "./Page/Register/Register";
 import Folder from "./Page/Folder/Folder";
 import Me from "./Page/Account/Me";
+import getDataView from "./Utils/Helper/getDataView";
 
 function App() {
+    getDataView()
 	return (
 		<div className="Apps">
 			<Routes>

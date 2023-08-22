@@ -5,8 +5,10 @@ import ActionBar from "../../Components/ActionBar/ActionBar";
 import { Files } from "../../Components/Files/Files";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Helper/Fetcher";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
+import ChangeView from '../../Components/ChangeView/ChangeView'
+
 const Folder = () => {
 	const navigate = useNavigate();
 
@@ -28,16 +30,19 @@ const Folder = () => {
 		navigate("/login");
 	}
 	return (
-		<div className="Home">
+		<div className="Folder">
 			<Navbar data={response.data} />
 			<section id="Main">
 				<div className="sidebar">
 					<Sidebar data={response.data} />
 				</div>
 				<div className="content">
-					<section id="home" className="home">
+					<section id="folder" className="folder">
 						<ActionBar />
-						<div className="section-title">Folder</div>
+						<div className="section-title">
+                            <span>Folder</span>
+                            <ChangeView />
+                        </div>
 						<Files />
 					</section>
 				</div>

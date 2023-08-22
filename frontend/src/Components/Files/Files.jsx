@@ -1,7 +1,18 @@
 import { Space, Table, Button, Dropdown } from "antd";
 import useSWR from "swr";
 import { Link, useLocation, useParams } from "react-router-dom";
-import {LuFile, LuFolder, LuImage, LuMoreVertical, LuUnlock, LuLock, LuDownload, LuInfo, LuTextCursorInput, LuTrash} from 'react-icons/lu';
+import {
+	LuFile,
+	LuFolder,
+	LuImage,
+	LuMoreVertical,
+	LuUnlock,
+	LuLock,
+	LuDownload,
+	LuInfo,
+	LuTextCursorInput,
+	LuTrash,
+} from "react-icons/lu";
 import { formatBytes } from "../../Utils/Helper/DataConverter";
 import formatUnixDate from "../../Utils/Helper/FormatDate";
 import ImagePreview from "./ImagePreview/ImagePreview";
@@ -14,7 +25,8 @@ import Confirm from "./Confirm";
 import Rename from "./Rename";
 import { formatStr, toUpperCase } from "../../Utils/Helper/String";
 import Spinner from "../Spinner/Spinner";
-import downloadFile from '../../Utils/Func/DownloadFile';
+import downloadFile from "../../Utils/Func/DownloadFile";
+import DataCard from "../DataCard/DataCard";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -84,14 +96,22 @@ export const Files = () => {
 	const items = [
 		{
 			key: "1",
-			label: <Space><LuDownload /> Download</Space>,
+			label: (
+				<Space>
+					<LuDownload /> Download
+				</Space>
+			),
 			onClick: (event) => {
 				event.type !== "folder" && downloadFile(event.record);
 			},
 		},
 		{
 			key: "2",
-			label: <Space><LuTextCursorInput/> Rename</Space>,
+			label: (
+				<Space>
+					<LuTextCursorInput /> Rename
+				</Space>
+			),
 			onClick: (event) => {
 				setSelectedData(event.record);
 				openRenameBox();
@@ -99,7 +119,11 @@ export const Files = () => {
 		},
 		{
 			key: "3",
-			label: <Space><LuInfo /> Properties</Space>,
+			label: (
+				<Space>
+					<LuInfo /> Properties
+				</Space>
+			),
 			onClick: (event) => {
 				setSelectedData(event.record);
 				setOpen(true);
@@ -107,7 +131,11 @@ export const Files = () => {
 		},
 		{
 			key: "4",
-			label: <Space><LuTrash /> Delete</Space>,
+			label: (
+				<Space>
+					<LuTrash /> Delete
+				</Space>
+			),
 			danger: true,
 			onClick: (event) => {
 				confirm();
@@ -225,15 +253,19 @@ export const Files = () => {
 	const dataSource = [...file];
 	return (
 		<>
-			<Table
-				dataSource={dataSource}
-				columns={columns}
-				scroll={{
-					y: 340,
-				}}
-				size="small"
-				pagination={false}
-			/>
+			{localStorage.getItem("view") === "default" ? (
+				<Table
+					dataSource={dataSource}
+					columns={columns}
+					scroll={{
+						y: 340,
+					}}
+					size="small"
+					pagination={false}
+				/>
+			) : (
+				<DataCard data={files.data.data} />
+			)}
 			<Properties
 				open={open}
 				onClose={onClose}

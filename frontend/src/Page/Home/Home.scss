@@ -11,6 +11,9 @@
         overflow: auto;
 
         .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             user-select: none;
             font-size: 1.2rem;
             font-weight: bold;
