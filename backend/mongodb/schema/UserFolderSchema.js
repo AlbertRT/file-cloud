@@ -28,6 +28,11 @@ const folderSchema = new Schema({
         type: String,
         required: true
     },
+    access: {
+        type: String,
+        required: true,
+        default: "private"
+    },
     userId: {
         type: Schema.Types.ObjectId,
         required: true,

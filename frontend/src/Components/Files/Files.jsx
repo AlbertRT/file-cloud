@@ -1,21 +1,27 @@
 import { Space, Table, Button, Dropdown } from "antd";
 import useSWR from "swr";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { LuFile, LuFolder, LuImage, LuMoreVertical } from "react-icons/lu";
+import {
+	LuFile,
+	LuFolder,
+	LuImage,
+	LuMoreVertical,
+	LuUnlock,
+	LuLock,
+} from "react-icons/lu";
 import { formatBytes } from "../../Utils/Helper/DataConverter";
 import formatUnixDate from "../../Utils/Helper/FormatDate";
 import ImagePreview from "./ImagePreview/ImagePreview";
 import { useState } from "react";
-import downloadFile from "../../Utils/Func/DownloadFile";
 import deleteData from "../../Utils/Func/DeleteData";
-import Fetcher from "../../Utils/Helper/Fetcher";
 import "./File.scss";
 import Properties from "./Properties";
 import axios from "axios";
 import Confirm from "./Confirm";
 import Rename from "./Rename";
 import { formatStr, toUpperCase } from "../../Utils/Helper/String";
-import Spinner from '../Spinner/Spinner'
+import Spinner from "../Spinner/Spinner";
+import items from "./DropdownCol";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -43,7 +49,7 @@ export const Files = () => {
 	});
 
 	if (isLoading) {
-        return <Spinner />
+		return <Spinner />;
 	}
 
 	// *properties
@@ -82,40 +88,7 @@ export const Files = () => {
 		setSelectedData(null);
 	};
 
-	const items = [
-		{
-			key: "1",
-			label: "Download",
-			onClick: (event) => {
-				event.type !== "folder" && downloadFile(event.record);
-			},
-		},
-		{
-			key: "2",
-			label: "Rename",
-			onClick: (event) => {
-				setSelectedData(event.record);
-				openRenameBox();
-			},
-		},
-		{
-			key: "3",
-			label: "Properties",
-			onClick: (event) => {
-                setSelectedData(event.record)
-                setOpen(true)
-			},
-		},
-		{
-			key: "4",
-			label: "Delete",
-			danger: true,
-			onClick: (event) => {
-				confirm();
-				setSelectedData(event.record);
-			},
-		},
-	];
+	
 
 	// tables
 	const columns = [
@@ -129,6 +102,29 @@ export const Files = () => {
 			title: "Name",
 			dataIndex: "name",
 			key: "name",
+		},
+		{
+			title: "",
+			dataIndex: "action",
+			key: "action",
+			width: "6%",
+			render: (text, record) => (
+				<Dropdown
+					menu={{
+						items: items.map((item) => ({
+							...item,
+							onClick:
+								item.onClick &&
+								(() => item.onClick({ item, record })),
+						})),
+					}}
+					trigger={"click"}
+				>
+					<Button type="text">
+						<LuMoreVertical />
+					</Button>
+				</Dropdown>
+			),
 		},
 		{
 			title: "Size",
@@ -146,6 +142,7 @@ export const Files = () => {
 			title: "Date Modified",
 			dataIndex: "date_modified",
 			key: "date_modified",
+			width: "25%",
 		},
 		{
 			title: "Author",
@@ -154,32 +151,10 @@ export const Files = () => {
 			width: "10%",
 		},
 		{
-			title: "",
-			dataIndex: "action",
-			key: "action",
-			width: 100,
-			fixed: "right",
-			render: (text, record) => {
-				return (
-					<Space>
-						<Dropdown
-							menu={{
-								items: items.map((item) => ({
-									...item,
-									onClick:
-										item.onClick &&
-										(() => item.onClick({ item, record })),
-								})),
-							}}
-							trigger={"click"}
-						>
-							<Button type="text">
-								<LuMoreVertical />
-							</Button>
-						</Dropdown>
-					</Space>
-				);
-			},
+			title: "Access",
+			dataIndex: "access",
+			key: "access",
+			width: "10%",
 		},
 	];
 
@@ -211,6 +186,12 @@ export const Files = () => {
 			type: toUpperCase(file.mimetype),
 			date_modified: formatUnixDate(file.date_modified),
 			author: file.author,
+			access: (
+				<Space>
+					{file.access !== "private" ? <LuUnlock /> : <LuLock />}
+					{toUpperCase(file.access)}
+				</Space>
+			),
 			key: file.id,
 		};
 	});
@@ -231,7 +212,7 @@ export const Files = () => {
 				open={open}
 				onClose={onClose}
 				key={1}
-                data={selectedData}
+				data={selectedData}
 			/>
 			<Confirm
 				open={openConfirmDelete}

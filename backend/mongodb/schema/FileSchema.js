@@ -24,6 +24,11 @@ const fileSchema = new Schema({
         type: String,
         required: true
     },
+    access: {
+        type: String,
+        required: true,
+        default: 'private'
+    },
     folderId: {
         type: String,
         required: false,
