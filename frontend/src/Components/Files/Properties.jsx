@@ -8,11 +8,18 @@ import Fetcher from "../../Utils/Helper/Fetcher";
 
 const Properties = ({ open, onClose, data }) => {
 	if (!data) return;
+    let detailsUrl;
+
+	if (data.type.toLowerCase() === "folder") {
+		detailsUrl = `http://localhost:5050/user/file/folder/details/${data.key}`;
+	} else {
+		detailsUrl = `http://localhost:5050/user/file/details/${data.key}`;
+	}
 
 	const {
 		data: properties,
 		isLoading
-	} = useSWR([`http://localhost:5050/user/file/details/${data.key}`], Fetcher);
+	} = useSWR([detailsUrl], Fetcher);
 
 	if (isLoading) {
 		return <Spinner />;

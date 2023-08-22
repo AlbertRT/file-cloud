@@ -1,14 +1,7 @@
 import { Space, Table, Button, Dropdown } from "antd";
 import useSWR from "swr";
 import { Link, useLocation, useParams } from "react-router-dom";
-import {
-	LuFile,
-	LuFolder,
-	LuImage,
-	LuMoreVertical,
-	LuUnlock,
-	LuLock,
-} from "react-icons/lu";
+import {LuFile, LuFolder, LuImage, LuMoreVertical, LuUnlock, LuLock, LuDownload, LuInfo, LuTextCursorInput, LuTrash} from 'react-icons/lu';
 import { formatBytes } from "../../Utils/Helper/DataConverter";
 import formatUnixDate from "../../Utils/Helper/FormatDate";
 import ImagePreview from "./ImagePreview/ImagePreview";
@@ -21,7 +14,7 @@ import Confirm from "./Confirm";
 import Rename from "./Rename";
 import { formatStr, toUpperCase } from "../../Utils/Helper/String";
 import Spinner from "../Spinner/Spinner";
-import items from "./DropdownCol";
+import downloadFile from '../../Utils/Func/DownloadFile';
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -88,7 +81,40 @@ export const Files = () => {
 		setSelectedData(null);
 	};
 
-	
+	const items = [
+		{
+			key: "1",
+			label: <Space><LuDownload /> Download</Space>,
+			onClick: (event) => {
+				event.type !== "folder" && downloadFile(event.record);
+			},
+		},
+		{
+			key: "2",
+			label: <Space><LuTextCursorInput/> Rename</Space>,
+			onClick: (event) => {
+				setSelectedData(event.record);
+				openRenameBox();
+			},
+		},
+		{
+			key: "3",
+			label: <Space><LuInfo /> Properties</Space>,
+			onClick: (event) => {
+				setSelectedData(event.record);
+				setOpen(true);
+			},
+		},
+		{
+			key: "4",
+			label: <Space><LuTrash /> Delete</Space>,
+			danger: true,
+			onClick: (event) => {
+				confirm();
+				setSelectedData(event.record);
+			},
+		},
+	];
 
 	// tables
 	const columns = [
