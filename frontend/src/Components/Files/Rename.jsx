@@ -1,7 +1,6 @@
 import { Button, Input, Modal } from "antd";
 import axios from "axios";
 import { useState } from "react";
-import { details } from "../../../../backend/controllers/FileController.js";
 import { useLocation } from "react-router-dom";
 
 const Rename = ({ open, data, cancel }) => {

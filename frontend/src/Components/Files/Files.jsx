@@ -19,12 +19,10 @@ import Spinner from '../Spinner/Spinner'
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
-	const [properties, setProperties] = useState(null);
 	const [openConfirmDelete, setConfirmDelete] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [selectedData, setSelectedData] = useState(null);
 	const [renameBox, setOpenRenameBox] = useState(false);
-	const [loading, setLoading] = useState(false);
 
 	let { pathname } = useLocation();
 	const { folderName } = useParams();
@@ -37,7 +35,6 @@ export const Files = () => {
 	const {
 		data: files,
 		isLoading,
-		mutate,
 		error,
 	} = useSWR(`http://localhost:5050/user/file`, fetcher, {
 		revalidateOnMount: true,
@@ -52,7 +49,7 @@ export const Files = () => {
 	// *properties
 	const onClose = () => {
 		setOpen(false);
-		setProperties(null);
+		setSelectedData(null);
 	};
 
 	// * delete confirm
@@ -104,20 +101,9 @@ export const Files = () => {
 		{
 			key: "3",
 			label: "Properties",
-			onClick: async (event) => {
-				let url;
-
-				event.record.type.toLowerCase() === "folder"
-					? (url = `http://localhost:5050/user/file/folder/details/${event.record.key}`)
-					: url = `http://localhost:5050/user/file/details/${event.record.key}`;
-				try {
-					const { data } = await Fetcher([url, "get"]);
-					setProperties(data);
-				} catch (error) {
-					console.log(error);
-				}
-
-				setOpen(true);
+			onClick: (event) => {
+                setSelectedData(event.record)
+                setOpen(true)
 			},
 		},
 		{
@@ -244,8 +230,8 @@ export const Files = () => {
 			<Properties
 				open={open}
 				onClose={onClose}
-				properties={properties}
 				key={1}
+                data={selectedData}
 			/>
 			<Confirm
 				open={openConfirmDelete}
