@@ -5,7 +5,6 @@ import {
 	LuFile,
 	LuFolder,
 	LuImage,
-	LuMoreVertical,
 	LuUnlock,
 	LuLock,
 	LuDownload,
@@ -27,6 +26,7 @@ import { formatStr, toUpperCase } from "../../Utils/Helper/String";
 import Spinner from "../Spinner/Spinner";
 import downloadFile from "../../Utils/Func/DownloadFile";
 import DataCard from "../DataCard/DataCard";
+import VerticalMenu from "../VerticalMenu/VerticalMenu";
 
 export const Files = () => {
 	const [open, setOpen] = useState(false);
@@ -163,21 +163,7 @@ export const Files = () => {
 			key: "action",
 			width: "6%",
 			render: (text, record) => (
-				<Dropdown
-					menu={{
-						items: items.map((item) => ({
-							...item,
-							onClick:
-								item.onClick &&
-								(() => item.onClick({ item, record })),
-						})),
-					}}
-					trigger={"click"}
-				>
-					<Button type="text">
-						<LuMoreVertical />
-					</Button>
-				</Dropdown>
+				<VerticalMenu record={record} items={items} />
 			),
 		},
 		{

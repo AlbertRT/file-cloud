@@ -5,15 +5,18 @@ import { LuFolderOpen } from "react-icons/lu";
 import useSWR from "swr";
 import Spinner from "../Spinner/Spinner";
 import Fetcher from "../../Utils/Helper/Fetcher";
+import { formatStr } from "../../Utils/Helper/String";
 
 const Properties = ({ open, onClose, data }) => {
 	if (!data) return;
     let detailsUrl;
+    let key = data?.key || data?.id
+    let type = data?.type || data?.mimetype
 
-	if (data.type.toLowerCase() === "folder") {
-		detailsUrl = `http://localhost:5050/user/file/folder/details/${data.key}`;
+	if (type.toLowerCase() === "folder") {
+		detailsUrl = `http://localhost:5050/user/file/folder/details/${key}`;
 	} else {
-		detailsUrl = `http://localhost:5050/user/file/details/${data.key}`;
+		detailsUrl = `http://localhost:5050/user/file/details/${key}`;
 	}
 
 	const {
@@ -39,7 +42,7 @@ const Properties = ({ open, onClose, data }) => {
 				<div className="metadata">
 					<div className="data">
 						<p>Name</p>
-						<span>{properties.data.originalname}</span>
+						<span>{formatStr(properties.data.originalname, 32)}</span>
 					</div>
 					<div className="data">
 						<p>Type</p>

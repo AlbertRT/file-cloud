@@ -1,6 +1,9 @@
 import axios from 'axios';
-const deleteData = async ({ key, type }) => {
+const deleteData = async (data) => {
     let url;
+
+    let type = data?.type || data?.mimetype
+    let key = data?.key || data?.id
 
     if (type.toLowerCase() !== "folder") {
         url = "http://localhost:5050/user/file/delete";

@@ -12,13 +12,15 @@ const Rename = ({ open, data, cancel }) => {
     
 	let url;
 	let detailsUrl;
+    let type = data?.type || data?.mimetype
+    let key = data?.key || data?.id
     
-	if (data.type.toLowerCase() === "folder") {
-		url = `http://localhost:5050/user/file/folder/rename/${data.key}`;
-		detailsUrl = `http://localhost:5050/user/file/folder/details/${data.key}`;
+	if (type.toLowerCase() === "folder") {
+		url = `http://localhost:5050/user/file/folder/rename/${key}`;
+		detailsUrl = `http://localhost:5050/user/file/folder/details/${key}`;
 	} else {
-		url = `http://localhost:5050/user/file/rename/${data.key}`;
-		detailsUrl = `http://localhost:5050/user/file/details/${data.key}`;
+		url = `http://localhost:5050/user/file/rename/${key}`;
+		detailsUrl = `http://localhost:5050/user/file/details/${key}`;
 	}
 
 	const getFileName = async () => {
@@ -27,7 +29,7 @@ const Rename = ({ open, data, cancel }) => {
 
 			setOldFilename(res.data.data.originalname);
 
-			data.type !== "folder" &&
+			type !== "folder" &&
 				setFileExtension(res.data.data.originalname.split(".")[1]);
 		} catch (error) {
 			console.log(error);
@@ -38,7 +40,7 @@ const Rename = ({ open, data, cancel }) => {
 
 	const rename = async () => {
 		try {
-			if (data.type.toLowerCase() === 'folder') {
+			if (type.toLowerCase() === 'folder') {
 				await axios.patch(
 					url,
 					{

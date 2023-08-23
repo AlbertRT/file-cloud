@@ -1,10 +1,10 @@
-export const formatStr = (str) => {
+export const formatStr = (str, len = 22) => {
     let strSplit = str.split("");
 
-    if (strSplit.length < 22) {
+    if (strSplit.length < len) {
         return str
     }
-    const truncatedString = strSplit.slice(0, 22).join('');
+    const truncatedString = strSplit.slice(0, len).join('');
     return truncatedString + '...';
 }
 
