@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    document.title = 'Login to your Account'
 	const [email, setEmail] = useState("");
 
     const navigate = useNavigate();

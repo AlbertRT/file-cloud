@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 
 const Register = () => {
+    document.title = 'Register your Account'
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

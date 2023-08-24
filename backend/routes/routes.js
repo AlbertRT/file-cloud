@@ -4,9 +4,10 @@ import { cookieValidation } from '../middleware/cookieValidation.js';
 import { createFolder, deleteFolder, detailsFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
-import { download } from '../controllers/DownloadController.js';
+import { download, share } from '../controllers/DownloadController.js';
 import location from '../middleware/location.js';
 import { accountDetails, deleteAccount, deleteProfilePicture, editInfo, getProfilePicture, profile_picture_update } from '../controllers/AccountController.js';
+import { fileAccess } from '../middleware/fileAccess.js';
 
 const Route = express.Router();
 
@@ -49,6 +50,7 @@ Route.delete('/user/file/delete', cookieValidation, deleteFile);
 
 // download manager
 Route.get('/download/:type/:id', download)
+Route.get('/share/details/:type/:fileId', fileAccess, share)
 
 // testing api
 Route.get('/', cookieValidation, (req, res) => res.json({ ok: true }));

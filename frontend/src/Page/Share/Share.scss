@@ -1,0 +1,37 @@
+.Share {
+	.Bar {
+		height: 40px;
+		width: 100%;
+		padding: 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.Buttons_Groups {
+			display: flex;
+			align-items: center;
+			flex: 1;
+		}
+		.File_Name {
+			flex: 1;
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	.Preview {
+		.type {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			&.image {
+				height: calc(100vh - 40px - 2rem);
+                overflow: hidden;
+                
+                img {
+                    height: 100%;
+                }
+			}
+		}
+	}
+}

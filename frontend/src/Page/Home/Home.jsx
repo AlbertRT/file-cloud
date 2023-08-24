@@ -11,8 +11,8 @@ import Loading from "../../Components/Loading/Loading";
 import ChangeView from "../../Components/ChangeView/ChangeView";
 
 const Home = () => {
-	const navigate = useNavigate();
-
+    const navigate = useNavigate();
+    
 	const {
 		data: response,
 		error,
@@ -26,11 +26,12 @@ const Home = () => {
 	if (isLoading) {
 		return <Loading />
 	}
-
+    
 	if (error) {
 		navigate("/login");
 	}
-
+    document.title = `Drive - ${response.data.fullName}`
+    
 	return (
 		<div className="Home">
 			<Navbar data={response.data} />

@@ -1,6 +1,6 @@
-import {Empty, Image, Space} from 'antd';
-import {LuFolder, LuImage, LuMoreVertical, LuDownload, LuInfo, LuTextCursorInput, LuTrash, LuUnlock, LuLock} from 'react-icons/lu';
-import {formatStr, toUpperCase} from '../../Utils/Helper/String';
+import {Empty, Image, Space, message} from 'antd';
+import {LuFolder, LuImage, LuDownload, LuInfo, LuTextCursorInput, LuTrash, LuUnlock, LuLock, LuShare2, LuLink} from 'react-icons/lu';
+import {formatStr} from '../../Utils/Helper/String';
 import { Link, useLocation, useParams } from "react-router-dom";
 import {CardVerticalMenu} from '../VerticalMenu/VerticalMenu';
 import {useState} from 'react';
@@ -9,10 +9,8 @@ import downloadFile from '../../Utils/Func/DownloadFile';
 import Properties from '../Files/Properties';
 import Confirm from '../Files/Confirm';
 import Rename from '../Files/Rename';
-import {formatBytes} from '../../Utils/Helper/DataConverter';
-import formatUnixDate from '../../Utils/Helper/FormatDate';
-import ImagePreview from '../Files/ImagePreview/ImagePreview';
 import "./DataCard.scss";
+import share from '../../Utils/Func/Share';
 
 const DataCard = ({ data }) => {
 	const [open, setOpen] = useState(false);
@@ -20,6 +18,7 @@ const DataCard = ({ data }) => {
 	const [deleting, setDeleting] = useState(false);
 	const [selectedData, setSelectedData] = useState(null);
 	const [renameBox, setOpenRenameBox] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage()
 
 	const { pathname } = useLocation();
 	const { folderName } = useParams();
@@ -74,6 +73,7 @@ const DataCard = ({ data }) => {
 			),
 			onClick: (event) => {
 				event.data.mimetype !== "folder" && downloadFile(event.data);
+                downloadFile(event.data)
 			},
 		},
 		{
@@ -92,6 +92,21 @@ const DataCard = ({ data }) => {
 			key: "3",
 			label: (
 				<Space>
+					<LuLink /> Share URL
+				</Space>
+			),
+			onClick: (event) => {
+				const msg = share(event.data.id, event.data.mimetype)
+                messageApi.open({
+                    type: "success",
+                    content: msg
+                })
+			},
+		},
+		{
+			key: "4",
+			label: (
+				<Space>
 					<LuInfo /> Properties
 				</Space>
 			),
@@ -101,7 +116,7 @@ const DataCard = ({ data }) => {
 			},
 		},
 		{
-			key: "4",
+			key: "5",
 			label: (
 				<Space>
 					<LuTrash /> Delete
@@ -117,6 +132,7 @@ const DataCard = ({ data }) => {
 
 	return (
 		<div className="DataCardsDisplayContainer">
+            {contextHolder}
 			<div className="DataCards">
 				<div className="Container">
 					{data

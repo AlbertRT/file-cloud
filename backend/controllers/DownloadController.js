@@ -24,3 +24,31 @@ export async function download (req, res) {
         })
     }
 }
+
+export async function share (req, res) {
+    const { type, fileId } = req.params;
+
+    const { id, originalname, author, size, url, mimetype } = await File.findOne({ id: fileId });
+
+    if (!originalname) {
+        return res.status(404).json({
+            error: true,
+            ok: false,
+            msg: "File not Find"
+        });
+    }
+
+    return res.status(200).json({
+        ok: true,
+        error: false,
+        data: {
+            id,
+            originalname,
+            author,
+            size,
+            url,
+            mimetype
+        }
+    })
+
+}
