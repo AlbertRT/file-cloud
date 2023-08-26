@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./HomePages.scss";
 import UserAvatar from "../../../../Components/Avatar/Avatar";
 import ProfilePictureModal from "../../../../Components/ProfilePictureModal/ProfilePicturesModal";
+import getGreetingMessage from '../../../../Utils/Helper/GreetingMessages';
 
 const HomePages = ({ data }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +39,7 @@ const HomePages = ({ data }) => {
                     data={data}
 				/>
 				<p>
-					Welcome back, <b>{data.fullName}</b>
+					{getGreetingMessage()}, <b>{data.fullName}</b>
 				</p>
 				<span className="subtitle">Manage your info</span>
 			</div>

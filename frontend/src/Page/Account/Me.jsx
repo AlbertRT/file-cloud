@@ -7,6 +7,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Helper/Fetcher";
 import Loading from "../../Components/Loading/Loading";
+import SettingsPages from "./TabPages/SettingsPages/SettingsPages";
 
 const Me = () => {
 	const {
@@ -25,6 +26,8 @@ const Me = () => {
 	if (error) {
 		navigate("/login");
 	}
+
+    document.title = 'Your Account'
 
 	const items = [
 		{
@@ -52,7 +55,7 @@ const Me = () => {
 					<LuCog /> Settings
 				</Space>
 			),
-			children: <PersonalInfoPages />,
+			children: <SettingsPages />,
 		},
 	];
 	return (
