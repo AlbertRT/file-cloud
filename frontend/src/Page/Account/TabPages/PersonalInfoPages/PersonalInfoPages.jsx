@@ -28,9 +28,6 @@ const PersonalInfoPages = () => {
     const onCancel = () => {
         setEdit(false)
     }
-    const onOk = () => {
-        
-    }
  
 	return (
 		<div className="PersonalInfo">

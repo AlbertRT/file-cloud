@@ -1,6 +1,7 @@
 import User from "../mongodb/models/User.js"
 import { unlinkFile } from "../utils/fs.js";
 import validator from 'validator'
+import moment from 'moment'
 
 export async function accountDetails(req, res) {
     const { key } = req
@@ -49,11 +50,13 @@ export async function editInfo(req, res) {
    
     let usn = basicInfo.username
     let regex = /^@/
+    const isEmail = validator.isEmail(contactInfo.email)
+    const isPhone = validator.isMobilePhone(contactInfo.phone)
+
+    // validation
     if (!regex.test(usn)) {
         usn = `@${usn}`
     }
-    const isEmail = validator.isEmail(contactInfo.email)
-    const isPhone = validator.isMobilePhone(contactInfo.phone)
     if (!isEmail) {
         return res.status(400).json({
             error: true,
@@ -74,7 +77,7 @@ export async function editInfo(req, res) {
             'basicInfo.fullName': basicInfo.fullName,
             'basicInfo.username': usn,
             'basicInfo.gender': basicInfo.gender,
-            'basicInfo.birthday': basicInfo.birthday,
+            'basicInfo.birthday': moment(basicInfo.birthday).format("MMMM DD, YYYY"),
             'contactInfo.email': contactInfo.email,
             'contactInfo.phone': contactInfo.phone
         })

@@ -80,18 +80,14 @@ const Edit = ({ open, onCancel, data }) => {
 										id="fullName"
 										value={basicInfo.fullName}
 										onChange={(e) =>
-											setBasicInfo([
-												{
-													fullName: e.target.value,
-													username:
-														basicInfo.username,
-													gender: basicInfo.gender,
-													birthday:
-														basicInfo.birthday,
-												},
-											])
+											setBasicInfo({
+												fullName: e.target.value,
+												username: basicInfo.username,
+												gender: basicInfo.gender,
+												birthday: basicInfo.birthday,
+											})
 										}
-                                        autoComplete="off"
+										autoComplete="off"
 									/>
 								</div>
 							</Col>
@@ -102,16 +98,12 @@ const Edit = ({ open, onCancel, data }) => {
 										id="username"
 										value={basicInfo.username}
 										onChange={(e) => {
-											setBasicInfo([
-												{
-													fullName:
-														basicInfo.fullName,
-													username: e.target.value,
-													gender: basicInfo.gender,
-													birthday:
-														basicInfo.birthday,
-												},
-											]);
+											setBasicInfo({
+												fullName: basicInfo.fullName,
+												username: e.target.value,
+												gender: basicInfo.gender,
+												birthday: basicInfo.birthday,
+											});
 										}}
 										autoComplete="off"
 									/>
@@ -140,17 +132,12 @@ const Edit = ({ open, onCancel, data }) => {
 										style={{ width: "200px" }}
 										defaultValue={data.basic_info.gender}
 										onChange={(value) => {
-											setBasicInfo([
-												{
-													fullName:
-														basicInfo.fullName,
-													username:
-														basicInfo.username,
-													gender: value,
-													birthday:
-														basicInfo.birthday,
-												},
-											]);
+											setBasicInfo({
+												fullName: basicInfo.fullName,
+												username: e.target.value,
+												gender: basicInfo.gender,
+												birthday: basicInfo.birthday,
+											});
 										}}
 									/>
 								</div>
@@ -161,63 +148,59 @@ const Edit = ({ open, onCancel, data }) => {
 									<DatePicker
 										style={{ width: "200px" }}
 										onChange={(date, dateString) => {
-											setBasicInfo([
-												{
-													fullName:
-														basicInfo.fullName,
-													username:
-														basicInfo.username,
-													gender: basicInfo.gender,
-													birthday: dateString,
-												},
-											]);
+											setBasicInfo({
+												fullName: basicInfo.fullName,
+												username: basicInfo.username,
+												gender: basicInfo.gender,
+												birthday: dateString,
+											});
 										}}
-                                        format={dateFormat}
+										format={dateFormat}
 									/>
 								</div>
 							</Col>
 						</Row>
 					</div>
 				</section>
-                <section className="contact_info">
-                    <div className="title">Contact Info</div>
-                    <div className="info">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <div className="email">
+				<section className="contact_info">
+					<div className="title">Contact Info</div>
+					<div className="info">
+						<Row gutter={16}>
+							<Col span={12}>
+								<div className="email">
 									<label htmlFor="email">Email</label>
 									<Input
 										id="email"
 										value={contactInfo.email}
 										onChange={(e) =>
 											setContactInfo({
-                                                email: e.target.value,
-                                                phone: contactInfo.phone
-                                            })
+												email: e.target.value,
+												phone: contactInfo.phone,
+											})
 										}
-                                        autoComplete="off"
+										autoComplete="off"
 									/>
 								</div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="phone">
+							</Col>
+							<Col span={12}>
+								<div className="phone">
 									<label htmlFor="phone">Phone Number</label>
 									<Input
 										id="phone"
 										value={contactInfo.phone}
 										onChange={(e) =>
 											setContactInfo({
-                                                email: contactInfo.email,
-                                                phone: e.target.value
-                                            })
+												email: contactInfo.email,
+												phone: e.target.value,
+											})
 										}
-                                        autoComplete="off"
+										autoComplete="off"
 									/>
 								</div>
-                            </Col>
-                        </Row>
-                    </div>
-                </section>
+							</Col>
+						</Row>
+					</div>
+				</section>
 			</section>
 		</Modal>
 	);
