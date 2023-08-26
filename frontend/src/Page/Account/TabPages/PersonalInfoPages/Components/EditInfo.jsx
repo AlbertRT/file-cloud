@@ -15,14 +15,17 @@ import dayjs from "dayjs";
 
 const Edit = ({ open, onCancel, data }) => {
 	if (!open) return;
-	const [basicInfo, setBasicInfo] = useState([
-		{
-			fullName: data.basic_info.fullName,
-			username: data.basic_info.username,
-			gender: data.basic_info.gender,
-			birthday: data.basic_info.birthday,
-		},
-	]);
+	const [basicInfo, setBasicInfo] = useState({
+		fullName: data.basic_info.fullName,
+		username: data.basic_info.username,
+		gender: data.basic_info.gender,
+		birthday: data.basic_info.birthday,
+	});
+    const [contactInfo, setContactInfo] = useState({
+        email: data.contact_info.email,
+        phone: data.contact_info.phone
+    })
+
 	const [isLoading, setLoading] = useState(false);
 	const [api, contextHolder] = notification.useNotification();
     const dateFormat = "YYYY/MM/DD";
@@ -31,7 +34,8 @@ const Edit = ({ open, onCancel, data }) => {
 		setLoading(true);
 		try {
 			await axios.patch("http://localhost:5050/account/edit", {
-				basicInfo: basicInfo[0],
+				basicInfo,
+                contactInfo
 			});
 			setLoading(false);
 			api.success({
@@ -74,20 +78,20 @@ const Edit = ({ open, onCancel, data }) => {
 									<label htmlFor="fullName">Full Name</label>
 									<Input
 										id="fullName"
-										placeholder={data.basic_info.fullName}
-										value={basicInfo[0].fullName}
+										value={basicInfo.fullName}
 										onChange={(e) =>
 											setBasicInfo([
 												{
 													fullName: e.target.value,
 													username:
-														basicInfo[0].username,
-													gender: basicInfo[0].gender,
+														basicInfo.username,
+													gender: basicInfo.gender,
 													birthday:
-														basicInfo[0].birthday,
+														basicInfo.birthday,
 												},
 											])
 										}
+                                        autoComplete="off"
 									/>
 								</div>
 							</Col>
@@ -96,17 +100,16 @@ const Edit = ({ open, onCancel, data }) => {
 									<label htmlFor="username">Username</label>
 									<Input
 										id="username"
-										placeholder={data.basic_info.username}
-										value={basicInfo[0].username}
+										value={basicInfo.username}
 										onChange={(e) => {
 											setBasicInfo([
 												{
 													fullName:
-														basicInfo[0].fullName,
+														basicInfo.fullName,
 													username: e.target.value,
-													gender: basicInfo[0].gender,
+													gender: basicInfo.gender,
 													birthday:
-														basicInfo[0].birthday,
+														basicInfo.birthday,
 												},
 											]);
 										}}
@@ -140,12 +143,12 @@ const Edit = ({ open, onCancel, data }) => {
 											setBasicInfo([
 												{
 													fullName:
-														basicInfo[0].fullName,
+														basicInfo.fullName,
 													username:
-														basicInfo[0].username,
+														basicInfo.username,
 													gender: value,
 													birthday:
-														basicInfo[0].birthday,
+														basicInfo.birthday,
 												},
 											]);
 										}}
@@ -161,10 +164,10 @@ const Edit = ({ open, onCancel, data }) => {
 											setBasicInfo([
 												{
 													fullName:
-														basicInfo[0].fullName,
+														basicInfo.fullName,
 													username:
-														basicInfo[0].username,
-													gender: basicInfo[0].gender,
+														basicInfo.username,
+													gender: basicInfo.gender,
 													birthday: dateString,
 												},
 											]);
@@ -176,6 +179,45 @@ const Edit = ({ open, onCancel, data }) => {
 						</Row>
 					</div>
 				</section>
+                <section className="contact_info">
+                    <div className="title">Contact Info</div>
+                    <div className="info">
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <div className="email">
+									<label htmlFor="email">Email</label>
+									<Input
+										id="email"
+										value={contactInfo.email}
+										onChange={(e) =>
+											setContactInfo({
+                                                email: e.target.value,
+                                                phone: contactInfo.phone
+                                            })
+										}
+                                        autoComplete="off"
+									/>
+								</div>
+                            </Col>
+                            <Col span={12}>
+                                <div className="phone">
+									<label htmlFor="phone">Phone Number</label>
+									<Input
+										id="phone"
+										value={contactInfo.phone}
+										onChange={(e) =>
+											setContactInfo({
+                                                email: contactInfo.email,
+                                                phone: e.target.value
+                                            })
+										}
+                                        autoComplete="off"
+									/>
+								</div>
+                            </Col>
+                        </Row>
+                    </div>
+                </section>
 			</section>
 		</Modal>
 	);

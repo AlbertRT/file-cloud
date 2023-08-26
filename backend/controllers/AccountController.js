@@ -1,5 +1,6 @@
 import User from "../mongodb/models/User.js"
 import { unlinkFile } from "../utils/fs.js";
+import validator from 'validator'
 
 export async function accountDetails(req, res) {
     const { key } = req
@@ -40,8 +41,7 @@ export async function accountDetails(req, res) {
 }
 
 export async function editInfo(req, res) {
-    const { basicInfo } = req.body
-    console.log(basicInfo);
+    const { basicInfo, contactInfo } = req.body
 
     const me = await User.findOne({ 'loginInfo.key': req.key })
 
@@ -52,13 +52,31 @@ export async function editInfo(req, res) {
     if (!regex.test(usn)) {
         usn = `@${usn}`
     }
+    const isEmail = validator.isEmail(contactInfo.email)
+    const isPhone = validator.isMobilePhone(contactInfo.phone)
+    if (!isEmail) {
+        return res.status(400).json({
+            error: true,
+            ok: false,
+            msg: "Email is not valid"
+        })
+    }
+    if (!isPhone) {
+        return res.status(400).json({
+            error: true,
+            ok: false,
+            msg: "Phone Number is not valid"
+        })
+    }
 
     try {
         await User.updateOne({ 'loginInfo.key': req.key }, {
             'basicInfo.fullName': basicInfo.fullName,
             'basicInfo.username': usn,
             'basicInfo.gender': basicInfo.gender,
-            'basicInfo.birthday': basicInfo.birthday
+            'basicInfo.birthday': basicInfo.birthday,
+            'contactInfo.email': contactInfo.email,
+            'contactInfo.phone': contactInfo.phone
         })
         return res.status(200).json({
             ok: true,
