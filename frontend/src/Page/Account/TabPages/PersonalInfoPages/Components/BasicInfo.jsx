@@ -69,14 +69,7 @@ const BasicInfo = ({ data }) => {
 						<div className="display" key={key}>
 							<div className="title">{key}</div>
 							<div className="data">
-								<div className="value">
-									<Input value={info[key]} readOnly />
-								</div>
-								<div className="Edit">
-									<Button>
-										<LuEdit3 />
-									</Button>
-								</div>
+								<span>{info[key]}</span>
 							</div>
 						</div>
 					))}

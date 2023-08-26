@@ -14,14 +14,7 @@ const ContactInfo = ({ data }) => {
 						<div className="display" key={key}>
 							<div className="title">{key}</div>
 							<div className="data">
-								<div className="value">
-									<Input value={data[key]} readOnly />
-								</div>
-								<div className="Edit">
-									<Button>
-										<LuEdit3 />
-									</Button>
-								</div>
+								<span>{data[key]}</span>
 							</div>
 						</div>
 					))}

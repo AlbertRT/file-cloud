@@ -13,7 +13,7 @@ export async function accountDetails(req, res) {
         })
     }
 
-    const { basicInfo, contactInfo, addressInfo, password, id } = user
+    const { basicInfo, contactInfo, password, id } = user
 
     const basic_info = {
         fullName: basicInfo?.fullName,
@@ -26,10 +26,6 @@ export async function accountDetails(req, res) {
         email: contactInfo?.email,
         phone: contactInfo?.phone
     }
-    const addresses = {
-        home: addressInfo?.homeAddress,
-        work: addressInfo?.workAddress
-    }
 
     return res.status(200).json({
         ok: true,
@@ -37,7 +33,6 @@ export async function accountDetails(req, res) {
         data: {
             basic_info,
             contact_info,
-            addresses,
             id
             
         }
@@ -45,7 +40,38 @@ export async function accountDetails(req, res) {
 }
 
 export async function editInfo(req, res) {
+    const { basicInfo } = req.body
+    console.log(basicInfo);
 
+    const me = await User.findOne({ 'loginInfo.key': req.key })
+
+    if (!me) return res.status(404).json({ error: true, ok: false, msg: 'User not Found' })
+   
+    let usn = basicInfo.username
+    let regex = /^@/
+    if (!regex.test(usn)) {
+        usn = `@${usn}`
+    }
+
+    try {
+        await User.updateOne({ 'loginInfo.key': req.key }, {
+            'basicInfo.fullName': basicInfo.fullName,
+            'basicInfo.username': usn,
+            'basicInfo.gender': basicInfo.gender,
+            'basicInfo.birthday': basicInfo.birthday
+        })
+        return res.status(200).json({
+            ok: true,
+            error: true,
+            msg: 'Successfully Update user'
+        })
+    } catch (error) {
+        return res.status(400).json({
+            error: true,
+            ok: false,
+            msg: error.message
+        })
+    }
 }
 
 export async function profile_picture_update(req, res) {

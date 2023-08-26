@@ -17,6 +17,7 @@
     "antd-img-crop": "^4.12.2",
     "axios": "^1.4.0",
     "boxicons": "^2.1.4",
+    "dayjs": "^1.11.9",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "react": "^18.2.0",

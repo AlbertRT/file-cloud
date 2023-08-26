@@ -65,16 +65,6 @@ const ContactInfo = new mongoose.Schema({
         default: ""
     }
 })
-const AddressInfo = new mongoose.Schema({
-    homeAddress: {
-        type: String,
-        default: ""
-    },
-    workAddress: {
-        type: String, 
-        default: ""
-    }
-})
 const LoginInfo = new mongoose.Schema({
     key: {
         type: String, 
@@ -106,9 +96,6 @@ const UserSchema = new mongoose.Schema({
     },
     contactInfo: {
         type: ContactInfo
-    },
-    addressInfo: {
-        type: AddressInfo
     },
     loginInfo: {
         type: LoginInfo

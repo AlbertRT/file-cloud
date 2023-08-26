@@ -1,0 +1,19 @@
+@import "../../../../../variables.scss";
+
+.data {
+    .basic_info {
+        margin-bottom: 1rem;
+        .title {
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .info {
+            label {
+                font-weight: 500;
+                margin-bottom: 1rem;
+                color: $dark_gray_1;
+            }
+        }
+    }
+}
