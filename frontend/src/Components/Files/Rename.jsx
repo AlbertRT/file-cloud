@@ -1,6 +1,7 @@
 import { Button, Input, Modal } from "antd";
 import axios from "axios";
 import { useState } from "react";
+import { revalidateLiveQueries } from '../../Utils/Func/RevalidateLiveQueries'
 
 const Rename = ({ open, data, cancel }) => {
 	if (!data) {
@@ -9,6 +10,7 @@ const Rename = ({ open, data, cancel }) => {
 	const [oldFileName, setOldFilename] = useState("");
 	const [fileName, setFileName] = useState("");
 	const [fileExtension, setFileExtension] = useState("");
+    const [isLoading, setLoading] = useState(false)
     
 	let url;
 	let detailsUrl;
@@ -39,6 +41,7 @@ const Rename = ({ open, data, cancel }) => {
 	getFileName();
 
 	const rename = async () => {
+        setLoading(true)
 		try {
 			if (type.toLowerCase() === 'folder') {
 				await axios.patch(
@@ -58,6 +61,8 @@ const Rename = ({ open, data, cancel }) => {
 					newName: `${fileName}.${fileExtension}`,
 				});
             }
+            await revalidateLiveQueries();
+            setLoading(false)
 			cancel();
 		} catch (error) {
 			console.log(error);
@@ -71,7 +76,7 @@ const Rename = ({ open, data, cancel }) => {
 			title="Rename"
 			footer={[
 				<Button onClick={cancel}>Cancel</Button>,
-				<Button type="primary" onClick={rename}>
+				<Button type="primary" onClick={rename} loading={isLoading} >
 					Rename
 				</Button>,
 			]}

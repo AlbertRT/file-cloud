@@ -22,7 +22,7 @@ const Properties = ({ open, onClose, data }) => {
 	const {
 		data: properties,
 		isLoading
-	} = useSWR([detailsUrl], Fetcher);
+	} = useSWR(detailsUrl, Fetcher.get);
 
 	if (isLoading) {
 		return <Spinner />;
