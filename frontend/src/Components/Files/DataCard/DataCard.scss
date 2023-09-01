@@ -1,4 +1,4 @@
-@import "../../variables.scss";
+@import "../../../variables.scss";
 
 .DataCardsDisplayContainer {
     height: 61vh;
@@ -7,7 +7,7 @@
 	.DataCards {
         .Container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
         }
 		margin: 1rem 0;
@@ -21,6 +21,7 @@
 		.Card {
 			padding: 0.5rem 1rem;
 			border-radius: 5px;
+            width: auto;
 
             .Head {
                 display: flex;
@@ -61,7 +62,6 @@
 
             &.file {
                 background: $light_gray_2;
-                height: 230px;
 
                 .Preview {
                     max-height: 200px;

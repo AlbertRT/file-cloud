@@ -2,6 +2,7 @@ import { Upload } from "antd";
 import { LuInbox } from "react-icons/lu";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { revalidateLiveQueries } from "../../Utils/Func/RevalidateLiveQueries"
 
 export const FileDragger = () => {
 	let { pathname } = useLocation();
@@ -28,6 +29,8 @@ export const FileDragger = () => {
                  }
 			);
 			onSuccess("Ok");
+
+            await revalidateLiveQueries()
 		} catch (error) {
 			onError(error);
             console.log(error);

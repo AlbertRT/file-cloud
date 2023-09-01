@@ -1,16 +1,16 @@
 import {Empty, Image, Space, message} from 'antd';
-import {LuFolder, LuImage, LuDownload, LuInfo, LuTextCursorInput, LuTrash, LuUnlock, LuLock, LuShare2, LuLink} from 'react-icons/lu';
-import {formatStr} from '../../Utils/Helper/String';
+import {LuFolder, LuImage, LuDownload, LuInfo, LuTextCursorInput, LuTrash, LuLink} from 'react-icons/lu';
+import {formatStr} from '../../../Utils/Helper/String';
 import { Link, useLocation, useParams } from "react-router-dom";
-import {CardVerticalMenu} from '../VerticalMenu/VerticalMenu';
+import {CardVerticalMenu} from '../../VerticalMenu/VerticalMenu';
 import {useState} from 'react';
-import deleteData from '../../Utils/Func/DeleteData';
-import downloadFile from '../../Utils/Func/DownloadFile';
-import Properties from '../Files/Properties';
-import Confirm from '../Files/Confirm';
-import Rename from '../Files/Rename';
+import deleteData from '../../../Utils/Func/DeleteData';
+import downloadFile from '../../../Utils/Func/DownloadFile';
+import Properties from '../Properties';
+import Confirm from '../Confirm';
+import Rename from '../Rename';
 import "./DataCard.scss";
-import share from '../../Utils/Func/Share';
+import share from '../../../Utils/Func/Share';
 
 const DataCard = ({ data }) => {
 	const [open, setOpen] = useState(false);

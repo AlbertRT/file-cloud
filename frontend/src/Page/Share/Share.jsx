@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
-import Fetcher from "../../Utils/Helper/Fetcher";
+import Fetcher from "../../Utils/Func/Fetcher";
 import Spinner from "../../Components/Spinner/Spinner";
 import { Button, Image, Space, message } from "antd";
 import {
@@ -26,8 +26,8 @@ const Share = () => {
 		isLoading,
 		error,
 	} = useSWR(
-		[`http://localhost:5050/share/details/${type}/${id}`, "get"],
-		Fetcher
+		`http://localhost:5050/share/details/${type}/${id}`,
+		Fetcher.get
 	);
 
 	if (isLoading) return <Spinner />;

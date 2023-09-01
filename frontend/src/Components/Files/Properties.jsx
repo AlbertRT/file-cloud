@@ -4,7 +4,7 @@ import moment from "moment";
 import { LuFolderOpen } from "react-icons/lu";
 import useSWR from "swr";
 import Spinner from "../Spinner/Spinner";
-import Fetcher from "../../Utils/Helper/Fetcher";
+import Fetcher from "../../Utils/Func/Fetcher";
 import { formatStr } from "../../Utils/Helper/String";
 
 const Properties = ({ open, onClose, data }) => {

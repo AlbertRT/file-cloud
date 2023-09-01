@@ -11,7 +11,7 @@ import {
 import "./EditInfo.scss";
 import { useState } from "react";
 import axios from "axios";
-import dayjs from "dayjs";
+import { revalidateLiveQueries } from '../../../../../Utils/Func/RevalidateLiveQueries'
 
 const Edit = ({ open, onCancel, data }) => {
 	if (!open) return;
@@ -42,6 +42,7 @@ const Edit = ({ open, onCancel, data }) => {
 				message: "Success",
 				description: "Successfully update your profile!",
 			});
+            await revalidateLiveQueries()
 			setTimeout(() => {
 				onCancel();
 			}, 1000);

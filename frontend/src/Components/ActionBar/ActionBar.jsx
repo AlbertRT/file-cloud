@@ -7,6 +7,7 @@ import NewFolder from "../FileUpload/NewFolder";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../Spinner/Spinner";
+import { mutate } from "swr";
 
 const ActionBar = () => {
 	// props
@@ -48,6 +49,7 @@ const ActionBar = () => {
         setLoading(true);
 		try {
 			await axios.post("http://localhost:5050/user/file/folder/create", body, { params: {pathname} });
+            await mutate('http://localhost:5050/user/file')
             setLoading(false);
             setFolderName("");
 			setTimeout(() => {

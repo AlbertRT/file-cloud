@@ -2,11 +2,13 @@ import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
 import UserAvatar from "../../Avatar/Avatar";
 import axios from 'axios'
+import { revalidateLiveQueries } from "../../../Utils/Func/RevalidateLiveQueries";
 
 const PPHome = ({ data, onClick }) => {
     const ppRemove = async () => {
         try {
             await axios.delete('http://localhost:5050/account/delete/profile_pictures')
+            await revalidateLiveQueries()
         } catch (error) {
             console.log(error);
         }

@@ -3,6 +3,7 @@ import axios from 'axios';
 import {LuInbox} from 'react-icons/lu';
 import ImgCrop from 'antd-img-crop'
 import { mutate } from 'swr'
+import { revalidateLiveQueries } from "../../../../Utils/Func/RevalidateLiveQueries";
 
 const LocalTabs = () => {
     const pathname = "root"
@@ -39,7 +40,7 @@ const LocalTabs = () => {
 				}
 			);
 			onSuccess("Ok");
-            mutate("http://localhost:5050/user/me");
+            await revalidateLiveQueries()
 		} catch (error) {
 			onError(error);
             console.log(error);

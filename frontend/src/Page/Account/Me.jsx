@@ -5,20 +5,19 @@ import HomePages from "./TabPages/HomePages/HomePages";
 import PersonalInfoPages from "./TabPages/PersonalInfoPages/PersonalInfoPages";
 import Navbar from "../../Components/Navbar/Navbar";
 import useSWR from "swr";
-import Fetcher from "../../Utils/Helper/Fetcher";
+import Fetcher from "../../Utils/Func/Fetcher";
 import Loading from "../../Components/Loading/Loading";
 import SettingsPages from "./TabPages/SettingsPages/SettingsPages";
+import { useNavigate } from "react-router-dom";
 
 const Me = () => {
+    const navigate = useNavigate()
+
 	const {
 		data: response,
 		error,
 		isLoading,
-	} = useSWR(["http://localhost:5050/user/me", "get"], Fetcher, {
-		revalidateOnMount: true,
-		revalidateOnFocus: true,
-		refreshInterval: 500,
-	});
+	} = useSWR("http://localhost:5050/user/me", Fetcher.get);
 	if (isLoading) {
 		return <Loading />
 	}

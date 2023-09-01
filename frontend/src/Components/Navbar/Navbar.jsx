@@ -8,7 +8,6 @@ import {
 } from "react-icons/lu";
 import Account from "./Account";
 import { Link } from "react-router-dom";
-import { Tooltip } from "antd";
 
 const Navbar = ({ data }) => {
 	const [searchValue, setSearchValue] = useState("");

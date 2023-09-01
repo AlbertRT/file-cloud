@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { revalidateLiveQueries } from './RevalidateLiveQueries';
 const deleteData = async (data) => {
     let url;
 
@@ -13,6 +14,7 @@ const deleteData = async (data) => {
 
     try {
         await axios.delete(url, { data: { id: key } });
+        await revalidateLiveQueries()
         return 1
     } catch (error) {
         console.log(error);

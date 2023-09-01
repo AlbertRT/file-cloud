@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import useSWR from "swr";
-import Fetcher from "../../../../Utils/Helper/Fetcher";
+import Fetcher from "../../../../Utils/Func/Fetcher";
 import "./PersonalInfo.scss";
 import BasicInfo from "./Components/BasicInfo";
 import ContactInfo from "./Components/ContactInfo";
 import Loading from "../../../../Components/Loading/Loading";
-import { Button, Modal, Space } from "antd";
-import { LuEdit3, LuSave } from "react-icons/lu";
+import { Button, Space } from "antd";
+import { LuEdit3 } from "react-icons/lu";
 import Edit from "./Components/EditInfo";
 
 const PersonalInfoPages = () => {
     const [isEditing, setEdit] = useState(false)
 
 	const { data: response, error, isLoading } = useSWR(
-		["http://localhost:5050/account/details"],
-		Fetcher,
-        {
-            refreshInterval: 500
-        }
+		"http://localhost:5050/account/details",
+		Fetcher.get
 	);
     if (isLoading) {
         return <Loading />
