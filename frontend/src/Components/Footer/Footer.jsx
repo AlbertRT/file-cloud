@@ -11,7 +11,7 @@ const Footer = () => {
             </div>
             <div className="version">
                 <div className="channel">Alpha</div>
-                <div className="version">0.0.1</div>
+                <div className="version">1.0.0</div>
             </div>
         </div>
     </div>

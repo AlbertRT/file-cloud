@@ -9,6 +9,7 @@ import getDataView from "./Utils/Helper/getDataView";
 import Share from "./Page/Share/Share";
 import { SWRConfig } from "swr";
 import { trackLiveQueries } from "./Utils/Func/RevalidateLiveQueries";
+import './index.css'
 
 function App() {
     getDataView()
