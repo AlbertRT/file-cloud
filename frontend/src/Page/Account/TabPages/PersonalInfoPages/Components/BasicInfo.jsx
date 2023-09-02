@@ -1,9 +1,8 @@
 import "./Card.scss";
-import UserAvatar from "../../../../../Components/Avatar/Avatar";
 import { useState } from "react";
 import ProfilePictureModal from "../../../../../Components/ProfilePictureModal/ProfilePicturesModal";
-import { Button, Input } from "antd";
-import { LuEdit3 } from "react-icons/lu";
+import { Avatar } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 
 const BasicInfo = ({ data }) => {
 	const photo_profile = data.profile_picture;
@@ -17,21 +16,8 @@ const BasicInfo = ({ data }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [ppChanging, setPPChanging] = useState(false);
     const [isEditing, setEditing] = useState(false)
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     
-    const onEditing = () => {
-        setEditing(true)
-    }
-    const onNotEditing = () => {
-        setEditing(false)
-    }
-	const onCancel = () => {
-		setIsModalOpen(false);
-		setPPChanging(false);
-	};
-	const openModal = () => {
-		setIsModalOpen(true);
-	};
-
 	const onChangeProfilePictures = () => {
 		setPPChanging(true);
 	};
@@ -46,22 +32,19 @@ const BasicInfo = ({ data }) => {
 					<div className="display">
 						<div className="title">Profile Pictures</div>
 						<div className="data end">
-							<UserAvatar
-								src={{
-									initial: data.fullName.charAt(0),
-									picture: photo_profile,
-								}}
-								onClick={openModal}
-								size={50}
+							<Avatar
+								isBordered
+								color="secondary"
+								src={photo_profile.downloadURL}
+								onClick={onOpen}
+                                as="button"
 							/>
 							<ProfilePictureModal
-								open={isModalOpen}
-								onCancel={onCancel}
-								onChangeProfilePictures={
-									onChangeProfilePictures
-								}
-								ppChanging={ppChanging}
-								data={data}
+								isOpen={isOpen}
+                                onOpenChange={onOpenChange}
+                                onChangeProfilePictures={onChangeProfilePictures}
+                                ppChanging={ppChanging}
+                                data={data}
 							/>
 						</div>
 					</div>

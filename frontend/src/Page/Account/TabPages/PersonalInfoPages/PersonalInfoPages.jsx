@@ -29,10 +29,6 @@ const PersonalInfoPages = () => {
 	return (
 		<div className="PersonalInfo">
 			<section className="hero">
-				<div className="title">Personal Info</div>
-				<div className="subtitle">
-					Info about you, and your preferences
-				</div>
 				<div className="actions">
 					<ul>
 						<li>

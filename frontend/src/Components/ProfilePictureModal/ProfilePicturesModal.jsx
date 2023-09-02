@@ -1,25 +1,40 @@
-import { Modal } from "antd";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button } from "@nextui-org/react";
 import PPHome from "./Components/PPHome";
 import ChangePP from "./Components/ChangePP/ChangePP";
-const ProfilePictureModal = ({open, onCancel, ppChanging, onChangeProfilePictures, data}) => {
+const ProfilePictureModal = ({
+	isOpen,
+	onOpenChange,
+	ppChanging,
+	onChangeProfilePictures,
+    data
+}) => {
 	return (
-		<Modal
-			open={open}
-			onCancel={onCancel}
-			footer={[]}
-			title="Your Profile Picture"
-		>
-			{!ppChanging ? (
-				<PPHome
-					data={{
-						fullName: data.fullName,
-						profile_picture: data.profile_picture,
-					}}
-					onClick={onChangeProfilePictures}
-				/>
-			) : (
-				<ChangePP />
-			)}
+		<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<ModalContent>
+				{(onClose) => (
+					<>
+						<ModalHeader className="flex flex-col gap-1">
+							Change your profile pictures
+						</ModalHeader>
+						<ModalBody>
+							{!ppChanging ? (
+								<PPHome
+									data={{
+										fullName: data.fullName,
+										profile_picture: data.profile_picture,
+									}}
+									onClick={onChangeProfilePictures}
+								/>
+							) : (
+								<ChangePP />
+							)}
+						</ModalBody>
+                        <ModalFooter>
+                            
+                        </ModalFooter>
+					</>
+				)}
+			</ModalContent>
 		</Modal>
 	);
 };

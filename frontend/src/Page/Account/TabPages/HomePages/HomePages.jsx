@@ -1,20 +1,12 @@
 import React, { useState } from "react";
 import "./HomePages.scss";
-import UserAvatar from "../../../../Components/Avatar/Avatar";
 import ProfilePictureModal from "../../../../Components/ProfilePictureModal/ProfilePicturesModal";
 import getGreetingMessage from '../../../../Utils/Helper/GreetingMessages';
+import {Avatar, useDisclosure} from '@nextui-org/react';
 
 const HomePages = ({ data }) => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [ppChanging, setPPChanging] = useState(false);
-
-	const onCancel = () => {
-		setIsModalOpen(false);
-		setPPChanging(false);
-	};
-	const openModal = () => {
-		setIsModalOpen(true);
-	};
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	const onChangeProfilePictures = () => {
 		setPPChanging(true);
@@ -23,20 +15,19 @@ const HomePages = ({ data }) => {
 	return (
 		<div className="HomePages">
 			<div className="hero">
-				<UserAvatar
-					src={{
-						initial: data.fullName.split("")[0],
-						picture: data.profile_picture,
-					}}
-					size={170}
-					onClick={openModal}
+				<Avatar
+					isBordered
+					color="secondary"
+					src={data.profile_picture.downloadURL}
+					className="w-24 h-24"
+					onClick={onOpen}
 				/>
 				<ProfilePictureModal
-					open={isModalOpen}
-					onCancel={onCancel}
+					isOpen={isOpen}
+					onOpenChange={onOpenChange}
 					onChangeProfilePictures={onChangeProfilePictures}
-                    ppChanging={ppChanging}
-                    data={data}
+					ppChanging={ppChanging}
+					data={data}
 				/>
 				<p>
 					{getGreetingMessage()}, <b>{data.fullName}</b>

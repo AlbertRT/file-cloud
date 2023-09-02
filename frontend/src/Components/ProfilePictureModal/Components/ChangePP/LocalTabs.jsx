@@ -2,7 +2,6 @@ import { Upload } from "antd"
 import axios from 'axios';
 import {LuInbox} from 'react-icons/lu';
 import ImgCrop from 'antd-img-crop'
-import { mutate } from 'swr'
 import { revalidateLiveQueries } from "../../../../Utils/Func/RevalidateLiveQueries";
 
 const LocalTabs = () => {

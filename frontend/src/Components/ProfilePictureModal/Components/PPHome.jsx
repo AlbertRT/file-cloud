@@ -1,6 +1,5 @@
 import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
-import UserAvatar from "../../Avatar/Avatar";
 import axios from 'axios'
 import { revalidateLiveQueries } from "../../../Utils/Func/RevalidateLiveQueries";
 
@@ -20,7 +19,6 @@ const PPHome = ({ data, onClick }) => {
 				on social media. It helps others recognize them.
 			</p>
 			<div className="pp">
-				<UserAvatar src={{ initial: data.fullName.split("")[0], picture: data.profile_picture }} size={130} />
 			</div>
 			<div className="buttons">
 				<Button type="default" onClick={onClick}>

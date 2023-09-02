@@ -1,4 +1,4 @@
-import Navbar from "../../Components/Navbar/Navbar";
+import NavBar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import Footer from "../../Components/Footer/Footer";
 import ActionBar from "../../Components/ActionBar/ActionBar";
@@ -30,7 +30,7 @@ const Folder = () => {
 	}
 	return (
 		<div className="Folder">
-			<Navbar data={response.data} />
+			<NavBar data={response.data} />
 			<section id="Main">
 				<div className="sidebar">
 					<Sidebar data={response.data} />
