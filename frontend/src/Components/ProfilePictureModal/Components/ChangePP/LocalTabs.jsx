@@ -1,7 +1,4 @@
-import { Upload } from "antd"
 import axios from 'axios';
-import {LuInbox} from 'react-icons/lu';
-import ImgCrop from 'antd-img-crop'
 import { revalidateLiveQueries } from "../../../../Utils/Func/RevalidateLiveQueries";
 
 const LocalTabs = () => {
@@ -47,25 +44,26 @@ const LocalTabs = () => {
 	};
 
     return (
-		<ImgCrop rotationSlider showReset aspectSlider>
-			<Upload.Dragger
-				maxCount={1}
-				customRequest={uploadImage}
-				accept="image/*"
-				onPreview={onPreview}
-			>
-				<p className="upload-drag-icons">
-					<LuInbox />
-				</p>
-				<p className="ant-upload-text">
-					Click or drag file to this area to upload
-				</p>
-				<p className="ant-upload-hint">
-					Support for a single or bulk upload. Strictly prohibited
-					from uploading company data or other banned files.
-				</p>
-			</Upload.Dragger>
-		</ImgCrop>
+		// <ImgCrop rotationSlider showReset aspectSlider>
+		// 	<Upload.Dragger
+		// 		maxCount={1}
+		// 		customRequest={uploadImage}
+		// 		accept="image/*"
+		// 		onPreview={onPreview}
+		// 	>
+		// 		<p className="upload-drag-icons">
+		// 			<LuInbox />
+		// 		</p>
+		// 		<p className="ant-upload-text">
+		// 			Click or drag file to this area to upload
+		// 		</p>
+		// 		<p className="ant-upload-hint">
+		// 			Support for a single or bulk upload. Strictly prohibited
+		// 			from uploading company data or other banned files.
+		// 		</p>
+		// 	</Upload.Dragger>
+		// </ImgCrop>
+        <div>upload</div>
 	);
 }
 

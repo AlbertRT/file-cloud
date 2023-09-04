@@ -2,10 +2,10 @@
 
 .Sidebar {
 	width: 100%;
-	height: calc(92vh - 40px - 20px);
 	border-right: 1px solid $dark_gray_1;
 	padding: 1rem 1.5rem;
     background: $light_gray_2;
+    height: 100%;
 
 	.Menus {
 		height: 65vh;

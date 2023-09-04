@@ -1,4 +1,4 @@
-import { Upload } from "antd";
+// import { Upload } from "antd";
 import { LuInbox } from "react-icons/lu";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -37,21 +37,22 @@ export const FileDragger = () => {
 		}
 	};
 	return (
-		<Upload.Dragger
-			maxCount={1}
-			customRequest={uploadImage}
-			accept="image/*"
-		>
-			<p className="upload-drag-icons">
-				<LuInbox />
-			</p>
-			<p className="ant-upload-text">
-				Click or drag file to this area to upload
-			</p>
-			<p className="ant-upload-hint">
-				Support for a single or bulk upload. Strictly prohibited from
-				uploading company data or other banned files.
-			</p>
-		</Upload.Dragger>
+		// <Upload.Dragger
+		// 	maxCount={1}
+		// 	customRequest={uploadImage}
+		// 	accept="image/*"
+		// >
+		// 	<p className="upload-drag-icons">
+		// 		<LuInbox />
+		// 	</p>
+		// 	<p className="ant-upload-text">
+		// 		Click or drag file to this area to upload
+		// 	</p>
+		// 	<p className="ant-upload-hint">
+		// 		Support for a single or bulk upload. Strictly prohibited from
+		// 		uploading company data or other banned files.
+		// 	</p>
+		// </Upload.Dragger>
+        <div></div>
 	);
 };

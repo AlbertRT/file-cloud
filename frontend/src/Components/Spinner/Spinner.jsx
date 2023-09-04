@@ -1,16 +1,7 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
-const antIcon = (
-	<LoadingOutlined
-		style={{
-			fontSize: 24,
-		}}
-		spin
-	/>
-);
+import { Spinner } from "@nextui-org/react";
 
-const Spinner = () => {
-    return <Spin indicator={antIcon} />;
-}
+const Loader = () => {
+	return <Spinner size="lg" />;
+};
 
-export default Spinner;
+export default Loader;

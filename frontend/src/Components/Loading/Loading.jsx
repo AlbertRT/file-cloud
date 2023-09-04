@@ -1,4 +1,4 @@
-import Spinner from '../Spinner/Spinner'
+import Loader from '../Spinner/Spinner'
 
 const Loading = () => {
     const styles = {
@@ -9,7 +9,7 @@ const Loading = () => {
         justifyContent: 'center',
     }
     return <div className="Loading" style={styles}>
-        <Spinner />
+        <Loader />
     </div>
 }
 

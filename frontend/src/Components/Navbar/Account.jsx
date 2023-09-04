@@ -4,7 +4,9 @@ import {
 	DropdownTrigger,
 	DropdownMenu,
 	DropdownItem,
+	DropdownSection,
 	Avatar,
+	User,
 } from "@nextui-org/react";
 import axios from "axios";
 
@@ -18,19 +20,8 @@ const Account = ({ data }) => {
 			console.log(error);
 		}
 	};
-
-	// const items = [
-	// 	{
-	// 		key: 1,
-	// 		label: <Link to={`/account/${data.id}`}>View Account</Link>,
-	// 	},
-	// 	{
-	// 		key: 2,
-	// 		label: <Button danger onClick={onLogout}>Log Out</Button>,
-	// 	},
-	// ];
 	return (
-		<Dropdown>
+		<Dropdown showArrow>
 			<DropdownTrigger>
 				<Avatar
 					src={data.profile_picture.downloadURL}
@@ -41,18 +32,36 @@ const Account = ({ data }) => {
 					className="transition-transform ml-4"
 				/>
 			</DropdownTrigger>
-			<DropdownMenu aria-label="Profile Actions" variant="flat">
+			<DropdownMenu
+				aria-label="Profile Actions"
+				variant="flat"
+				disabledKeys={["profile"]}
+			>
+				<DropdownSection showDivider>
+					<DropdownItem
+						key="profile"
+						isReadOnly
+						className="opacity-100"
+					>
+						<User
+							name={data.fullName}
+							description={data?.email}
+							avatarProps={{
+								size: "sm",
+								src: data.profile_picture.downloadURL,
+							}}
+						/>
+					</DropdownItem>
+				</DropdownSection>
 				<DropdownItem key="my-profile">
 					<Link to={`/account/${data.id}`}>
-                        <p>My Profile</p>
-                    </Link>
+						<p>My Profile</p>
+					</Link>
 				</DropdownItem>
-                <DropdownItem key="settings">
-                    Settings
-                </DropdownItem>
-                <DropdownItem key="logout" onClick={onLogout} color="danger">
-                    Log Out
-                </DropdownItem>
+				<DropdownItem key="settings">Settings</DropdownItem>
+				<DropdownItem key="logout" onClick={onLogout} color="danger">
+					Log Out
+				</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>
 	);

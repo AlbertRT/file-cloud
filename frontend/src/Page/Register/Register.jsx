@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { LuMail, LuLock, LuUser } from "react-icons/lu";
 import "./Register.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

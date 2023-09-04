@@ -1,24 +1,8 @@
-import { Space, Table, Button, Dropdown } from "antd";
-import useSWR, { mutate } from "swr";
-import { Link, useLocation, useParams } from "react-router-dom";
-import {
-	LuFile,
-	LuFolder,
-	LuImage,
-	LuUnlock,
-	LuLock,
-	LuDownload,
-	LuInfo,
-	LuTextCursorInput,
-	LuTrash,
-} from "react-icons/lu";
-import { formatBytes } from "../../Utils/Helper/DataConverter";
-import formatUnixDate from "../../Utils/Helper/FormatDate";
-import "./File.scss";
+import useSWR from "swr";
 import axios from "axios";
-import Spinner from "../Spinner/Spinner";
+import Loader from "../Spinner/Spinner";
 import DataCard from "./DataCard/DataCard";
-import Fetcher from "../../Utils/Func/Fetcher";
+import { useLocation } from "react-router-dom";
 
 export const Files = () => {
 	let { pathname } = useLocation();
@@ -35,7 +19,7 @@ export const Files = () => {
 	} = useSWR('http://localhost:5050/user/file', fetcher);
 
 	if (isLoading) {
-		return <Spinner />;
+		return <Loader />;
 	}
 	return <DataCard data={files.data} />;
 };

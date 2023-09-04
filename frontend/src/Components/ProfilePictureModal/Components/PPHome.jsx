@@ -1,4 +1,3 @@
-import { Button, Space } from "antd";
 import { LuEdit3, LuTrash } from "react-icons/lu";
 import axios from 'axios'
 import { revalidateLiveQueries } from "../../../Utils/Func/RevalidateLiveQueries";
@@ -21,7 +20,7 @@ const PPHome = ({ data, onClick }) => {
 			<div className="pp">
 			</div>
 			<div className="buttons">
-				<Button type="default" onClick={onClick}>
+				{/* <Button type="default" onClick={onClick}>
 					<Space>
 						<LuEdit3 /> Change
 					</Space>
@@ -31,7 +30,7 @@ const PPHome = ({ data, onClick }) => {
 						<LuTrash />
 						Remove
 					</Space>
-				</Button>
+				</Button> */}
 			</div>
 		</>
 	);
