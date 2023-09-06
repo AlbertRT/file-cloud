@@ -105,7 +105,6 @@ export async function createFolder (req, res) {
             access,
             userId: user._id
         });
-        console.log(path);
 
         return res.status(201).json({
             ok: true,

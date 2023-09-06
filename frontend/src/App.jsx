@@ -20,6 +20,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/account" element={<Me />} />
+					<Route path="/board/:boardId" element={<Me />} />
 					<Route path="/share/:type/:id" element={<Share />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />

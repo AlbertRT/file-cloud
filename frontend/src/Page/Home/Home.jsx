@@ -30,6 +30,8 @@ const Home = () => {
 	const [imageTItle, setImageTitle] = useState("");
 	const [location, setLocation] = useState("");
 	const [isPublic, setPublic] = useState(false);
+	const [file, setFile] = useState(null);
+    const [isUploading, setUploading] = useState(false)
 
 	const {
 		data: response,
@@ -58,7 +60,7 @@ const Home = () => {
 		}
 	};
 	const onUpload = async () => {
-		let access;
+        let access;
 		!isPublic ? (access = "private") : (access = "public");
 		const data = {
 			imageTItle,
@@ -66,7 +68,32 @@ const Home = () => {
 			location,
 			access,
 		};
-		console.log(data);
+        
+		const formData = new FormData()
+        setUploading(true)
+
+        try {
+            formData.append('image', file)
+            Object.keys(data).forEach((key) => {
+                formData.append(key, data[key]);
+			});
+
+            await axios.post(
+				"http://localhost:5050/user/file/upload",
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			);
+            setUploading(false)
+            onClose()
+        } catch (error) {
+            setUploading(false)
+            console.log(error);
+            
+        }
 	};
 
 	return (
@@ -103,81 +130,92 @@ const Home = () => {
 				<ModalContent>
 					<ModalHeader>Upload your Photos</ModalHeader>
 					<ModalBody>
-						<div className="flex justify-end w-full">
-							<Select
-								label="Save to Board?"
-								labelPlacement="outside"
-								className="w-60"
-								placeholder="Select Board"
-								onChange={(e) => setLocation(e.target.value)}
-							>
-								{boards.map((board) => (
-									<SelectItem
-										value={board.directory}
-										key={board.directory}
-									>
-										{board.originalname}
-									</SelectItem>
-								))}
-							</Select>
-						</div>
-						<div className="flex mt-4">
-							<div className="flex-[0.6] mr-6">
-								<input type="file" className="bg-none border outline-none w-full" />
+						<form>
+							<div className="flex justify-end w-full">
+								<Select
+									label="Save to Board?"
+									labelPlacement="outside"
+									className="w-60"
+									placeholder="Select Board"
+									onChange={(e) =>
+										setLocation(e.target.value)
+									}
+								>
+									{boards.map((board) => (
+										<SelectItem
+											value={board.directory}
+											key={board.directory}
+										>
+											{board.originalname}
+										</SelectItem>
+									))}
+								</Select>
 							</div>
-							<div className="flex-1">
-								<div className="mb-4">
-									<Input
-										type="text"
-										variant="bordered"
-										placeholder="Add title to your image"
-										isClearable
-										size="lg"
-										value={imageTItle}
+							<div className="flex mt-4">
+								<div className="flex-[0.6] mr-6">
+									<input
+										type="file"
+										className="bg-none border outline-none w-full"
 										onChange={(e) =>
-											setImageTitle(e.target.value)
+											setFile(e.target.files[0])
 										}
 									/>
 								</div>
-								<div className="mb-4">
-									<p className="text-sm mb-3 select-none font-semibold text-gray-400">
-										Author
-									</p>
-									<User
-										name={basic_info.fullName}
-										description={basic_info?.username}
-										avatarProps={{
-											src: basic_info?.profile_picture
-												.downloadURL,
-										}}
-									/>
+								<div className="flex-1">
+									<div className="mb-4">
+										<Input
+											type="text"
+											variant="bordered"
+											placeholder="Add title to your image"
+											isClearable
+											size="lg"
+											value={imageTItle}
+											onChange={(e) =>
+												setImageTitle(e.target.value)
+											}
+										/>
+									</div>
+									<div className="mb-4">
+										<p className="text-sm mb-3 select-none font-semibold text-gray-400">
+											Author
+										</p>
+										<User
+											name={basic_info.fullName}
+											description={basic_info?.username}
+											avatarProps={{
+												src: basic_info?.profile_picture
+													.downloadURL,
+											}}
+										/>
+									</div>
+									<div className="mb-4">
+										<p className="text-sm mb-3 select-none font-semibold text-gray-400">
+											Alt Text
+										</p>
+										<Input
+											type="text"
+											variant="bordered"
+											placeholder="Add alt text to your image"
+											isClearable
+											value={altText}
+											onChange={(e) =>
+												setAltText(e.target.value)
+											}
+										/>
+									</div>
+									<Switch onValueChange={setPublic}>
+										Make your Public
+									</Switch>
 								</div>
-								<div className="mb-4">
-									<p className="text-sm mb-3 select-none font-semibold text-gray-400">
-										Alt Text
-									</p>
-									<Input
-										type="text"
-										variant="bordered"
-										placeholder="Add alt text to your image"
-										isClearable
-										value={altText}
-										onChange={(e) =>
-											setAltText(e.target.value)
-										}
-									/>
-								</div>
-								<Switch onValueChange={setPublic}>
-									Make your Public
-								</Switch>
 							</div>
-						</div>
+						</form>
 					</ModalBody>
 					<ModalFooter>
 						<Button
 							variant="flat"
 							color="primary"
 							onClick={onUpload}
+							isLoading={isUploading}
 						>
 							Upload
 						</Button>

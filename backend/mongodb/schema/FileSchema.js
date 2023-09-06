@@ -33,6 +33,14 @@ const fileSchema = new Schema({
         type: String,
         required: false,
         default: ""
+    },
+    title: {
+        type: String,
+        default: ""
+    },
+    altText: {
+        type: String,
+        default: ""
     }
 });
 

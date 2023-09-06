@@ -124,7 +124,7 @@ const Board = () => {
 					<Card isBlurred key={board.id}>
 						<CardBody className="block">
 							<div className="flex justify-between items-center w-full">
-								<Link to={``}>
+								<Link to={`/board/${board.originalname.replaceAll(" ", "-")}`}>
 									<p className="font-bold">
 										{formatStr(board.originalname)}
 									</p>

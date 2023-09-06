@@ -6,30 +6,16 @@ import { readDir, unlinkFile } from "../utils/fs.js";
 import moment from 'moment';
 
 export async function ls(req, res) {
-    let location = req.location;
     const { basicInfo } = await User.findOne({ 'loginInfo.key': req.key });
-    const { user_folder } = basicInfo
-
-    let directory
-    if (location === 'root') {
-        directory = `src/folders/${user_folder}`;
-    } else {
-        directory = location;
-    }
-
+    const { fullName } = basicInfo
 
     try {
-        const files = await readDir(directory);
-        const file = await Promise.all(files.map(async (file) => {
-            const _file = await File.findOne({ directory: `${directory}/${file}`, mimetype: 'image' });
-            return _file;
-        }));
-        const filteredFile = file.filter(item => item !== null);
+        const files = await File.find({ author: fullName });
 
         return res.status(200).json({
             ok: true,
             error: false,
-            data: [...filteredFile]
+            data: [...files]
         });
     } catch (error) {
         return res.status(400).json({
@@ -70,14 +56,12 @@ export async function details(req, res) {
 }
 
 export async function uploadFile(req, res) {
-    const { originalname, path, filename, size, mimetype } = req.file;
+    // const { originalname, path, filename, size, mimetype } = req.file;
+    const { imageTItle, altText, location, access } = req.body
     const key = req.key;
-    let folderId
 
-    User
     const user = await User.findOne({ 'loginInfo.key': key });
     const id = random_string(32);
-    const folder = await Folder.findOne({ directory: req.location });
 
     if (!user) {
         return res.status(404).json({
@@ -87,36 +71,12 @@ export async function uploadFile(req, res) {
         });
     }
 
-    let newUserStorage = user.basicInfo.storage + size;
+    // let newUserStorage = user.basicInfo.storage + size;
     let downloadURL = `http://localhost:5050/download/file/${id}`
-
-    if (req.location !== `src/folders/${user.basicInfo.user_folder}`) {
-        folderId = folder.id;
-    } else {
-        folderId = ""
-    }
+    console.log(req.body);
 
     try {
 
-        await File.create({
-            id,
-            filename: filename,
-            mimetype: mimetype.split('/')[0],
-            originalname: originalname,
-            path,
-            size,
-            userId: user._id,
-            date_modified: moment().unix(),
-            url: downloadURL,
-            author: user.basicInfo.fullName,
-            directory: `${req.location}/${filename}`,
-            folderId
-        });
-        await User.updateOne({
-            'loginInfo.key': key
-        }, {
-            'basicInfo.storage': newUserStorage 
-        });
 
         return res.status(202).json({
             ok: true,
