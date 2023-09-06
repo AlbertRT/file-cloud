@@ -5,6 +5,35 @@ import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
 import moment from 'moment';
 
+
+export async function lsFolder(req, res) {
+    const { basicInfo } = await User.findOne({ 'loginInfo.key': req.key });
+    const { user_folder } = basicInfo
+
+    const dir = `src/folders/${user_folder}`
+    
+    try {
+        const folders = await readDir(dir)
+        const folder = await Promise.all(folders.map(async (folder) => {
+            const _folder = await Folder.findOne({ directory: `${dir}/${folder}` })
+            return _folder
+        }))
+        const filteredFolder = folder.filter((item) => item !== null)
+
+        return res.status(200).json({
+            ok: true,
+            error: false,
+            data: filteredFolder
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            ok: false,
+            msg: error.message
+        })
+    }
+}
+
 export async function detailsFolder(req, res) {
     const { folderId } = req.params
 
@@ -35,13 +64,13 @@ export async function detailsFolder(req, res) {
 }
 
 export async function createFolder (req, res) {
-    let { name } = req.body;
+    let { name, access } = req.body;
 
     const id = random_string(32)
-    let path = `${req.location}/${id}`;
     const key = req.key;
     
     const user = await User.findOne({ 'loginInfo.key': key });
+    let path = `src/folders/${user.basicInfo.user_folder}/${id}`;
 
     // checking the name if name === root, rejected
     if (name === 'root') {
@@ -73,8 +102,10 @@ export async function createFolder (req, res) {
             mimetype: "folder",
             date_modified: moment().unix(),
             author: user.basicInfo.fullName,
+            access,
             userId: user._id
         });
+        console.log(path);
 
         return res.status(201).json({
             ok: true,
@@ -82,6 +113,7 @@ export async function createFolder (req, res) {
             msg: `${name} successfully created`
         });
     } catch (error) {
+        console.log(error);
         return res.status(400).json({
             error: true,
             ok: false,  

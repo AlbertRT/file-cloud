@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 	<BrowserRouter>
 		<React.StrictMode>
 			<NextUIProvider>
-				<main>
+				<main className="light text-foreground bg-background">
 					<App />
 				</main>
 			</NextUIProvider>

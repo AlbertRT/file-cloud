@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Func/Fetcher";
 import Spinner from "../../Components/Spinner/Spinner";
-import { Button, Image, Space, message } from "antd";
 import {
 	LuDownload,
 	LuFolder,
@@ -19,7 +18,6 @@ import share from "../../Utils/Func/Share";
 
 const Share = () => {
 	const { type, id } = useParams();
-    const [messageApi, contextHolder] = message.useMessage()
     
 	const {
 		data: response,
@@ -38,15 +36,10 @@ const Share = () => {
 	const { data } = response;
     document.title = data.originalname
 
-    const shareURL = () => {
-        const msg = share(data.id, data.mimetype)
-        messageApi.success(msg)
-    }
 
 	return (
 		<div className="Share">
-            {contextHolder}
-			<div className="Bar">
+			{/* <div className="Bar">
 				<div className="Buttons_Groups">
 					<div className="copy_url">
 						<Button type="text" onClick={shareURL}>
@@ -92,7 +85,7 @@ const Share = () => {
 						<div></div>
 					)}
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };

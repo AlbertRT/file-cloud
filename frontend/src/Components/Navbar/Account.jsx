@@ -45,7 +45,7 @@ const Account = ({ data }) => {
 					>
 						<User
 							name={data.fullName}
-							description={data?.email}
+							description={data?.username}
 							avatarProps={{
 								size: "sm",
 								src: data.profile_picture.downloadURL,
@@ -54,7 +54,7 @@ const Account = ({ data }) => {
 					</DropdownItem>
 				</DropdownSection>
 				<DropdownItem key="my-profile">
-					<Link to={`/account/${data.id}`}>
+					<Link to={`/account`}>
 						<p>My Profile</p>
 					</Link>
 				</DropdownItem>

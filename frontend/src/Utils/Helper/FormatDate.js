@@ -27,3 +27,11 @@ export default function formatUnixDate(unixTimestamp) {
         return date.format('DD MMM YYYY');
     }
 }
+
+export function timeFromX(time) {
+    const start = moment.unix(time).toArray()
+    const now = moment().toArray()
+    const end = moment(now)
+
+    return moment(start).fromNow(true);
+}

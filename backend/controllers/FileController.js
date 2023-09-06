@@ -20,21 +20,16 @@ export async function ls(req, res) {
 
     try {
         const files = await readDir(directory);
-        const folder = await Promise.all(files.map(async (file) => {
-            const folder = await Folder.findOne({ directory: `${directory}/${file}`, mimetype: 'folder' });
-            return folder
-        }));
         const file = await Promise.all(files.map(async (file) => {
             const _file = await File.findOne({ directory: `${directory}/${file}`, mimetype: 'image' });
             return _file;
         }));
-        const filteredFolder = folder.filter(item => item !== null);
         const filteredFile = file.filter(item => item !== null);
 
         return res.status(200).json({
             ok: true,
             error: false,
-            data: [...filteredFolder, ...filteredFile]
+            data: [...filteredFile]
         });
     } catch (error) {
         return res.status(400).json({
