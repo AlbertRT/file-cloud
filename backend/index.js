@@ -4,7 +4,6 @@ import Route from './routes/routes.js';
 import connect from './mongodb/connection.js';
 import cookieParser from 'cookie-parser'
 import cors from 'cors';
-import bodyParser from 'body-parser';
 
 config();
 
@@ -14,8 +13,8 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
 }));
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
 app.use(cookieParser());
 app.use(Route);
 

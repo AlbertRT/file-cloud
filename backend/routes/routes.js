@@ -8,6 +8,7 @@ import { download, share } from '../controllers/DownloadController.js';
 import location from '../middleware/location.js';
 import { accountDetails, deleteAccount, deleteProfilePicture, editInfo, getProfilePicture, profile_picture_update } from '../controllers/AccountController.js';
 import { fileAccess } from '../middleware/fileAccess.js';
+import random_string from '../utils/random_string.js';
 
 const Route = express.Router();
 
@@ -30,22 +31,18 @@ Route.delete('/user/board/delete', cookieValidation, deleteFolder);
 // multer config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const location = req.location;
-
-        cb(null, location);
+        cb(null, 'src/folders/test');
     },
     filename: function (req, file, cb) {
-        const file_name = req.file_name;
-
-        cb(null, `${file_name}.${file.originalname.split(".")[1]}`);
+        cb(null, `${random_string(32)}.${file.originalname.split(".")[1]}`);
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage }).single('image')
 
 // file manager
 Route.get('/user/file', cookieValidation, ls);
 Route.get('/user/file/details/:id', cookieValidation, details);
-Route.post('/user/file/upload', cookieValidation, uploadFile);
+Route.post('/user/file/upload', cookieValidation, location, uploadFile);
 Route.patch('/user/file/rename/:id', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);
 

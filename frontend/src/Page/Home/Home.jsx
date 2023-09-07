@@ -21,6 +21,7 @@ import {
 import { LuPlus } from "react-icons/lu";
 import axios from "axios";
 import { useState } from "react";
+import { revalidateLiveQueries } from '../../Utils/Func/RevalidateLiveQueries'
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Home = () => {
 	const [location, setLocation] = useState("");
 	const [isPublic, setPublic] = useState(false);
 	const [file, setFile] = useState(null);
-    const [isUploading, setUploading] = useState(false)
+	const [isUploading, setUploading] = useState(false);
 
 	const {
 		data: response,
@@ -60,7 +61,7 @@ const Home = () => {
 		}
 	};
 	const onUpload = async () => {
-        let access;
+		let access;
 		!isPublic ? (access = "private") : (access = "public");
 		const data = {
 			imageTItle,
@@ -68,17 +69,15 @@ const Home = () => {
 			location,
 			access,
 		};
-        
-		const formData = new FormData()
-        setUploading(true)
 
-        try {
-            formData.append('image', file)
-            Object.keys(data).forEach((key) => {
-                formData.append(key, data[key]);
-			});
+		const formData = new FormData();
+		setUploading(true);
 
-            await axios.post(
+		try {
+			formData.append('image', file);
+			formData.append('meta_data', JSON.stringify(data))
+
+			await axios.post(
 				"http://localhost:5050/user/file/upload",
 				formData,
 				{
@@ -87,13 +86,17 @@ const Home = () => {
 					},
 				}
 			);
-            setUploading(false)
-            onClose()
-        } catch (error) {
-            setUploading(false)
-            console.log(error);
-            
-        }
+            setAltText("")
+            setLocation("")
+            setPublic(false)
+            setImageTitle("")
+			setUploading(false);
+			onClose();
+            await revalidateLiveQueries()
+		} catch (error) {
+			setUploading(false);
+			console.log(error);
+		}
 	};
 
 	return (
@@ -130,85 +133,80 @@ const Home = () => {
 				<ModalContent>
 					<ModalHeader>Upload your Photos</ModalHeader>
 					<ModalBody>
-						<form>
-							<div className="flex justify-end w-full">
-								<Select
-									label="Save to Board?"
-									labelPlacement="outside"
-									className="w-60"
-									placeholder="Select Board"
-									onChange={(e) =>
-										setLocation(e.target.value)
-									}
-								>
-									{boards.map((board) => (
-										<SelectItem
-											value={board.directory}
-											key={board.directory}
-										>
-											{board.originalname}
-										</SelectItem>
-									))}
-								</Select>
+						<div className="flex justify-end w-full">
+							<Select
+								label="Save to Board?"
+								labelPlacement="outside"
+								className="w-60"
+								placeholder="Select Board"
+								onChange={(e) => setLocation(e.target.value)}
+							>
+								{boards.map((board) => (
+									<SelectItem
+										value={board.directory}
+										key={board.directory}
+									>
+										{board.originalname}
+									</SelectItem>
+								))}
+							</Select>
+						</div>
+						<div className="flex mt-4">
+							<div className="flex-[0.6] mr-6">
+								<input
+									type="file"
+									className="bg-none border outline-none w-full"
+									onChange={(e) => setFile(e.target.files[0])}
+                                    name="image"
+								/>
 							</div>
-							<div className="flex mt-4">
-								<div className="flex-[0.6] mr-6">
-									<input
-										type="file"
-										className="bg-none border outline-none w-full"
+							<div className="flex-1">
+								<div className="mb-4">
+									<Input
+										type="text"
+										variant="bordered"
+										placeholder="Add title to your image"
+										isClearable
+										size="lg"
+										value={imageTItle}
 										onChange={(e) =>
-											setFile(e.target.files[0])
+											setImageTitle(e.target.value)
 										}
 									/>
 								</div>
-								<div className="flex-1">
-									<div className="mb-4">
-										<Input
-											type="text"
-											variant="bordered"
-											placeholder="Add title to your image"
-											isClearable
-											size="lg"
-											value={imageTItle}
-											onChange={(e) =>
-												setImageTitle(e.target.value)
-											}
-										/>
-									</div>
-									<div className="mb-4">
-										<p className="text-sm mb-3 select-none font-semibold text-gray-400">
-											Author
-										</p>
-										<User
-											name={basic_info.fullName}
-											description={basic_info?.username}
-											avatarProps={{
-												src: basic_info?.profile_picture
-													.downloadURL,
-											}}
-										/>
-									</div>
-									<div className="mb-4">
-										<p className="text-sm mb-3 select-none font-semibold text-gray-400">
-											Alt Text
-										</p>
-										<Input
-											type="text"
-											variant="bordered"
-											placeholder="Add alt text to your image"
-											isClearable
-											value={altText}
-											onChange={(e) =>
-												setAltText(e.target.value)
-											}
-										/>
-									</div>
-									<Switch onValueChange={setPublic}>
-										Make your Public
-									</Switch>
+								<div className="mb-4">
+									<p className="text-sm mb-3 select-none font-semibold text-gray-400">
+										Author
+									</p>
+									<User
+										name={basic_info.fullName}
+										description={basic_info?.username}
+										avatarProps={{
+											src: basic_info?.profile_picture
+												.downloadURL,
+										}}
+									/>
 								</div>
+								<div className="mb-4">
+									<p className="text-sm mb-3 select-none font-semibold text-gray-400">
+										Alt Text
+									</p>
+									<Input
+										type="text"
+										variant="bordered"
+										placeholder="Add alt text to your image"
+										isClearable
+										value={altText}
+										onChange={(e) =>
+											setAltText(e.target.value)
+										}
+									/>
+								</div>
+								<Switch onValueChange={setPublic}>
+									Make your Public
+								</Switch>
 							</div>
-						</form>
+						</div>
 					</ModalBody>
 					<ModalFooter>
 						<Button

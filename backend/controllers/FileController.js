@@ -56,8 +56,8 @@ export async function details(req, res) {
 }
 
 export async function uploadFile(req, res) {
-    // const { originalname, path, filename, size, mimetype } = req.file;
-    const { imageTItle, altText, location, access } = req.body
+    const { originalname, path, filename, size, mimetype } = req.file;
+    const { altText, imageTitle, access } = req.meta_data
     const key = req.key;
 
     const user = await User.findOne({ 'loginInfo.key': key });
@@ -71,13 +71,27 @@ export async function uploadFile(req, res) {
         });
     }
 
-    // let newUserStorage = user.basicInfo.storage + size;
+    let newUserStorage = user.basicInfo.storage + size;
     let downloadURL = `http://localhost:5050/download/file/${id}`
-    console.log(req.body);
 
     try {
-
-
+        await User.updateOne({ id: user.id }, { 'basicInfo.storage': newUserStorage })
+        await File.create({
+            id,
+            originalname,
+            filename,
+            directory: path,
+            size,
+            date_modified: moment.unix(),
+            url: downloadURL,
+            author: user.basicInfo.fullName,
+            access,
+            title: imageTitle,
+            altText,
+            mimetype,
+            userId: user._id
+        })
+        
         return res.status(202).json({
             ok: true,
             error: false,
