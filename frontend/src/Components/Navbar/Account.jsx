@@ -58,7 +58,11 @@ const Account = ({ data }) => {
 						<p>My Profile</p>
 					</Link>
 				</DropdownItem>
-				<DropdownItem key="settings">Settings</DropdownItem>
+				<DropdownItem key="settings">
+                    <Link to={'/app/settings'}>
+                        <p>Settings</p>
+                    </Link>
+                </DropdownItem>
 				<DropdownItem key="logout" onClick={onLogout} color="danger">
 					Log Out
 				</DropdownItem>

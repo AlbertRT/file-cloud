@@ -5,7 +5,7 @@ import { createFolder, deleteFolder, detailsFolder, lsFolder, renameFolder } fro
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
 import { download, share } from '../controllers/DownloadController.js';
-import location from '../middleware/location.js';
+import upload from '../middleware/upload.js';
 import { accountDetails, deleteAccount, deleteProfilePicture, editInfo, getProfilePicture, profile_picture_update } from '../controllers/AccountController.js';
 import { fileAccess } from '../middleware/fileAccess.js';
 import random_string from '../utils/random_string.js';
@@ -27,22 +27,10 @@ Route.get('/user/board/details/:folderId', cookieValidation, detailsFolder);
 Route.patch('/user/board/rename/:id', cookieValidation, renameFolder);
 Route.delete('/user/board/delete', cookieValidation, deleteFolder);
 
-
-// multer config
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'src/folders/test');
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${random_string(32)}.${file.originalname.split(".")[1]}`);
-    }
-});
-const upload = multer({ storage: storage }).single('image')
-
 // file manager
 Route.get('/user/file', cookieValidation, ls);
 Route.get('/user/file/details/:id', cookieValidation, details);
-Route.post('/user/file/upload', cookieValidation, location, uploadFile);
+Route.post('/user/file/upload', cookieValidation, upload, uploadFile);
 Route.patch('/user/file/rename/:id', cookieValidation, renameFile);
 Route.delete('/user/file/delete', cookieValidation, deleteFile);
 
@@ -72,7 +60,7 @@ const profile_pictures_upload = multer({ storage: accountInfo })
 Route.get('/account/details', cookieValidation, accountDetails);
 Route.patch('/account/edit', cookieValidation, editInfo);
 // Profile Picture
-Route.post('/account/edit/profile_pictures', cookieValidation, location, profile_pictures_upload.single("profile_picture"), profile_picture_update);
+Route.post('/account/edit/profile_pictures', cookieValidation, profile_pictures_upload.single("profile_picture"), profile_picture_update);
 Route.get('/pp/:fileName', getProfilePicture);
 Route.delete('/account/delete/profile_pictures', cookieValidation, deleteProfilePicture)
 Route.delete('/account/delete', cookieValidation, deleteAccount);

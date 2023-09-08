@@ -9,6 +9,7 @@ import Share from "./Page/Share/Share";
 import { SWRConfig } from "swr";
 import { trackLiveQueries } from "./Utils/Func/RevalidateLiveQueries";
 import './index.css'
+import Settings from "./Page/Settings/Settings";
 
 function App() {
     getDataView()
@@ -22,6 +23,7 @@ function App() {
 					<Route path="/account" element={<Me />} />
 					<Route path="/board/:boardId" element={<Me />} />
 					<Route path="/share/:type/:id" element={<Share />} />
+					<Route path="/app/settings" element={<Settings />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
 				</Routes>

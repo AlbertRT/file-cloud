@@ -3,7 +3,7 @@ import random_string from "../utils/random_string.js";
 import formidable from 'formidable'
 import fs from 'fs/promises'
 
-export default async function location(req, res, next) {
+export default async function upload(req, res, next) {
     const user = await User.findOne({ 'loginInfo.key': req.key })
     const form = formidable({})
     form.parse(req, async (err, fields, files) => {
@@ -43,5 +43,4 @@ export default async function location(req, res, next) {
             console.log(error);
         }
     })
-
 }

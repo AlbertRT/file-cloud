@@ -8,11 +8,13 @@ import "./index.css";
 
 axios.defaults.withCredentials = true;
 
+const dark_mode = localStorage.getItem('dark_mode')
+
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<BrowserRouter>
 		<React.StrictMode>
 			<NextUIProvider>
-				<main className="light text-foreground bg-background">
+				<main className={`text-foreground bg-background`}>
 					<App />
 				</main>
 			</NextUIProvider>
