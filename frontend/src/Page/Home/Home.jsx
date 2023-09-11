@@ -22,6 +22,7 @@ import { LuPlus } from "react-icons/lu";
 import axios from "axios";
 import { useState } from "react";
 import { revalidateLiveQueries } from '../../Utils/Func/RevalidateLiveQueries'
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -63,6 +64,7 @@ const Home = () => {
 	const onUpload = async () => {
 		let access;
 		!isPublic ? (access = "private") : (access = "public");
+
 		const data = {
 			imageTitle,
 			altText,
@@ -91,6 +93,7 @@ const Home = () => {
             setPublic(false)
             setImageTitle("")
 			setUploading(false);
+            setFile(null)
 			onClose();
             await revalidateLiveQueries()
 		} catch (error) {
@@ -157,7 +160,7 @@ const Home = () => {
 									type="file"
 									className="bg-none border outline-none w-full"
 									onChange={(e) => setFile(e.target.files[0])}
-                                    name="image"
+									name="image"
 								/>
 							</div>
 							<div className="flex-1">
@@ -214,6 +217,7 @@ const Home = () => {
 							color="primary"
 							onClick={onUpload}
 							isLoading={isUploading}
+							disabled={file === null}
 						>
 							Upload
 						</Button>

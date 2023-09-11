@@ -1,5 +1,16 @@
-import { Card, CardBody, CardFooter, CardHeader, Image, Tooltip, User } from "@nextui-org/react";
-import {formatStr} from "../../../Utils/Helper/String"
+import {
+	Button,
+	Card,
+	CardFooter,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+	Image,
+	User,
+} from "@nextui-org/react";
+import { formatStr } from "../../../Utils/Helper/String";
+import { LuDownload, LuInfo, LuMoreVertical, LuShare, LuTrash } from "react-icons/lu";
 
 const DataCard = ({ data }) => {
 	const images = data.filter(({ mimetype }) => {
@@ -17,13 +28,28 @@ const DataCard = ({ data }) => {
 								? formatStr(img.title)
 								: formatStr(img.originalname)}
 						</p>
-						<User
-							avatarProps={{
-								size: "sm",
-                                src: img.author.photo
-							}}
-							name={img.author.name}
-						/>
+						<div className="flex justify-between items-center">
+							<User
+								avatarProps={{
+									size: "sm",
+									src: img.author.photo,
+								}}
+								name={img.author.name}
+							/>
+							<Dropdown>
+								<DropdownTrigger>
+									<Button isIconOnly size="sm">
+										<LuMoreVertical />
+									</Button>
+								</DropdownTrigger>
+								<DropdownMenu variant="flat">
+									<DropdownItem key="share" startContent={<LuShare />}>Share</DropdownItem>
+                                    <DropdownItem key="download" startContent={<LuDownload />}>Download</DropdownItem>
+                                    <DropdownItem key="info" startContent={<LuInfo />}>File Info</DropdownItem>
+                                    <DropdownItem key="delete" startContent={<LuTrash />} color="danger" className="text-danger">Delete</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
+						</div>
 					</CardFooter>
 				</Card>
 			))}
