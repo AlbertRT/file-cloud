@@ -2,15 +2,15 @@ import Folder from "../mongodb/models/Folder.js";
 import User from "../mongodb/models/User.js";
 import File from "../mongodb/models/File.js";
 import random_string from "../utils/random_string.js";
-import { readDir, unlinkFile } from "../utils/fs.js";
+import { unlinkFile } from "../utils/fs.js";
 import moment from 'moment';
 
 export async function ls(req, res) {
     const { basicInfo } = await User.findOne({ 'loginInfo.key': req.key });
-    const { fullName } = basicInfo
+    const { fullName, username } = basicInfo
 
     try {
-        const files = await File.find({ author: fullName });
+        const files = await File.find({ 'author.name': fullName});
 
         return res.status(200).json({
             ok: true,
@@ -82,16 +82,20 @@ export async function uploadFile(req, res) {
             filename,
             directory: path,
             size,
-            date_modified: moment.unix(),
+            date_modified: moment().unix(),
             url: downloadURL,
-            author: user.basicInfo.fullName,
+            author: {
+                id: user.id,
+                photo: user.basicInfo.profile_pictures.downloadURL,
+                name: user.basicInfo.fullName
+            },
             access,
             title: imageTitle,
             altText,
             mimetype,
             userId: user._id
         })
-        
+
         return res.status(202).json({
             ok: true,
             error: false,
@@ -99,6 +103,7 @@ export async function uploadFile(req, res) {
         })
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({
             error: true,
             ok: false,
@@ -170,7 +175,7 @@ export async function deleteFile(req, res) {
         await User.updateOne({
             'loginInfo.key': req.key
         }, {
-            'basicInfo.storage': newStorageSize 
+            'basicInfo.storage': newStorageSize
         });
 
         return res.status(200).json({

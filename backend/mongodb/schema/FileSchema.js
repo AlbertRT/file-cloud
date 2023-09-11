@@ -1,5 +1,20 @@
 import { Schema } from 'mongoose';
 
+const authorSchema = new Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    photo: {
+        type: String,
+        required: false
+    }
+})
+
 const fileSchema = new Schema({
     id: {
         type: String,
@@ -21,8 +36,7 @@ const fileSchema = new Schema({
     date_modified: String,
     url: String,
     author: {
-        type: String,
-        required: true
+        type: Object
     },
     access: {
         type: String,

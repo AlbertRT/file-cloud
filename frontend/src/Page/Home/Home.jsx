@@ -28,7 +28,7 @@ const Home = () => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const [boards, setBoards] = useState([]);
 	const [altText, setAltText] = useState("");
-	const [imageTItle, setImageTitle] = useState("");
+	const [imageTitle, setImageTitle] = useState("");
 	const [location, setLocation] = useState("");
 	const [isPublic, setPublic] = useState(false);
 	const [file, setFile] = useState(null);
@@ -64,7 +64,7 @@ const Home = () => {
 		let access;
 		!isPublic ? (access = "private") : (access = "public");
 		const data = {
-			imageTItle,
+			imageTitle,
 			altText,
 			location,
 			access,
@@ -168,7 +168,7 @@ const Home = () => {
 										placeholder="Add title to your image"
 										isClearable
 										size="lg"
-										value={imageTItle}
+										value={imageTitle}
 										onChange={(e) =>
 											setImageTitle(e.target.value)
 										}

@@ -4,8 +4,8 @@ import useSWR from "swr";
 import Fetcher from "../../Utils/Func/Fetcher";
 import Loading from "../../Components/Loading/Loading";
 import { useNavigate } from "react-router-dom";
-import { LuMoon, LuPalette } from "react-icons/lu";
-import { Accordion, AccordionItem, Chip, Select, SelectItem, Switch } from "@nextui-org/react";
+import { LuMoon, LuPalette, LuUser } from "react-icons/lu";
+import { Accordion, AccordionItem, Button, Chip, Select, SelectItem, Switch } from "@nextui-org/react";
 
 const Settings = () => {
 	const navigate = useNavigate();
@@ -77,6 +77,26 @@ const Settings = () => {
 						</div>
 						<div className="flex-1 flex items-center justify-end">
 							<Switch isDisabled />
+						</div>
+					</div>
+				</div>
+				<div className="mb-4">
+					<div className="mb-3">
+						<p className="text-sm font-semibold select-none">
+							Account
+						</p>
+					</div>
+					<div className="w-1/2 h-10 flex select-none mb-8">
+						<div className="flex-[0.5] flex items-center justify-between">
+							<div className="flex items-center">
+								<div className="flex items-center justify-center mr-4">
+									<LuUser />
+								</div>
+								Delete your Account
+							</div>
+						</div>
+						<div className="flex-1 flex items-center justify-end">
+							<Button color="danger" variant="flat">Delete Account</Button>
 						</div>
 					</div>
 				</div>
