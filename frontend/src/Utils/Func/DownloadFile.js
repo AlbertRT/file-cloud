@@ -1,6 +1,4 @@
-const downloadFile = async (record) => {
-    let key = record?.key || record?.id
-
+const downloadFile = async (key) => {
     const url = `http://localhost:5050/download/file/${key}`;
     const urlParts = url.split("/");
     const filename = urlParts[urlParts.length - 1];

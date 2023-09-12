@@ -10,7 +10,16 @@ import {
 	User,
 } from "@nextui-org/react";
 import { formatStr } from "../../../Utils/Helper/String";
-import { LuDownload, LuInfo, LuMoreVertical, LuShare, LuTrash } from "react-icons/lu";
+import {
+	LuDownload,
+	LuInfo,
+	LuMoreVertical,
+	LuShare,
+	LuTrash,
+} from "react-icons/lu";
+import downloadFile from "../../../Utils/Func/DownloadFile";
+import deleteData from "../../../Utils/Func/DeleteData";
+import share from '../../../Utils/Func/Share'
 
 const DataCard = ({ data }) => {
 	const images = data.filter(({ mimetype }) => {
@@ -43,10 +52,36 @@ const DataCard = ({ data }) => {
 									</Button>
 								</DropdownTrigger>
 								<DropdownMenu variant="flat">
-									<DropdownItem key="share" startContent={<LuShare />}>Share</DropdownItem>
-                                    <DropdownItem key="download" startContent={<LuDownload />}>Download</DropdownItem>
-                                    <DropdownItem key="info" startContent={<LuInfo />}>File Info</DropdownItem>
-                                    <DropdownItem key="delete" startContent={<LuTrash />} color="danger" className="text-danger">Delete</DropdownItem>
+									<DropdownItem
+										key="share"
+										startContent={<LuShare />}
+										onClick={() => share(img.id, img.mimetype)}
+									>
+										Share
+									</DropdownItem>
+									<DropdownItem
+										key="download"
+										startContent={<LuDownload />}
+										onClick={() => downloadFile(img.id)}
+										aria-label="download"
+									>
+										Download
+									</DropdownItem>
+									<DropdownItem
+										key="info"
+										startContent={<LuInfo />}
+									>
+										File Info
+									</DropdownItem>
+									<DropdownItem
+										key="delete"
+										startContent={<LuTrash />}
+										color="danger"
+										className="text-danger"
+										onClick={() => deleteData(img)}
+									>
+										Delete
+									</DropdownItem>
 								</DropdownMenu>
 							</Dropdown>
 						</div>
