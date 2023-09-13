@@ -1,4 +1,6 @@
 import User from "../mongodb/models/User.js"
+import File from "../mongodb/models/File.js";
+import Folder from "../mongodb/models/Folder.js";
 import { unlinkFile } from "../utils/fs.js";
 import validator from 'validator'
 import moment from 'moment'
@@ -42,16 +44,16 @@ export async function accountDetails(req, res) {
 }
 
 export async function editInfo(req, res) {
-    const { basicInfo, contactInfo } = req.body
+    const { basic_info, contact_info } = req.body
 
     const me = await User.findOne({ 'loginInfo.key': req.key })
 
     if (!me) return res.status(404).json({ error: true, ok: false, msg: 'User not Found' })
    
-    let usn = basicInfo.username
+    let usn = basic_info.username
     let regex = /^@/
-    const isEmail = validator.isEmail(contactInfo.email)
-    const isPhone = validator.isMobilePhone(contactInfo.phone)
+    const isEmail = validator.isEmail(contact_info.email)
+    const isPhone = validator.isMobilePhone(contact_info.phone)
 
     // validation
     if (!regex.test(usn)) {
@@ -74,13 +76,15 @@ export async function editInfo(req, res) {
 
     try {
         await User.updateOne({ 'loginInfo.key': req.key }, {
-            'basicInfo.fullName': basicInfo.fullName,
+            'basicInfo.fullName': basic_info.fullName,
             'basicInfo.username': usn,
-            'basicInfo.gender': basicInfo.gender,
-            'basicInfo.birthday': moment(basicInfo.birthday).format("MMMM DD, YYYY"),
-            'contactInfo.email': contactInfo.email,
-            'contactInfo.phone': contactInfo.phone
+            'basicInfo.gender': basic_info.gender,
+            'basicInfo.birthday': moment(basic_info.birthday).format("MMMM, DD YYYY"),
+            'contactInfo.email': contact_info.email,
+            'contactInfo.phone': contact_info.phone
         })
+        await File.updateMany({ 'author.name': me.basicInfo.fullName }, { 'author.name': basic_info.fullName })
+        await Folder.updateMany({ author: me.basicInfo.fullName }, { author: basic_info.fullName })
         return res.status(200).json({
             ok: true,
             error: true,
