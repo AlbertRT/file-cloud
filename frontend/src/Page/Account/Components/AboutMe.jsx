@@ -1,9 +1,9 @@
 import React from "react";
-import getGreetingMessage from '../../../../Utils/Helper/GreetingMessages';
+import getGreetingMessage from '../../../Utils/Helper/GreetingMessages';
 import {Avatar, Button} from '@nextui-org/react';
 import { Link } from "react-router-dom";
 
-const HomePages = ({ data }) => {
+const AboutMe = ({ data }) => {
 
 	return (
 		<div className="mt-4">
@@ -28,4 +28,4 @@ const HomePages = ({ data }) => {
 	);
 };
 
-export default HomePages;
+export default AboutMe;

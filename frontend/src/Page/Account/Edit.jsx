@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Func/Fetcher";
 import Loading from "../../Components/Loading/Loading";
 import NavBar from "../../Components/Navbar/Navbar";
 import {
-	Avatar,
 	Button,
-	Chip,
 	Input,
 	Popover,
 	PopoverContent,
@@ -21,15 +19,6 @@ import axios from "axios";
 import { revalidateLiveQueries } from "../../Utils/Func/RevalidateLiveQueries";
 import { useNavigate } from "react-router-dom";
 import ChangeAvatar from "./Components/ChangeAvatar";
-
-function isDisabled(basic_info) {
-    return (
-		basic_info.fullName !== "" &&
-		basic_info.username !== "" &&
-		basic_info.gender !== "" &&
-		basic_info.birthday !== null
-	);
-}
 
 const Edit = () => {
 	document.title = "Edit your Account";
@@ -153,8 +142,7 @@ const Edit = () => {
 						<div className="mt-10 flex items-center">
 							<ChangeAvatar
 								picture={
-									response.data.basic_info.profile_picture
-										.downloadURL
+									response.data.basic_info?.profile_picture?.downloadURL
 								}
 							/>
 						</div>

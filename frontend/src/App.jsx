@@ -11,6 +11,7 @@ import { trackLiveQueries } from "./Utils/Func/RevalidateLiveQueries";
 import './index.css'
 import Settings from "./Page/Settings/Settings";
 import Edit from "./Page/Account/Edit";
+import Board from "./Page/Board/Board";
 
 function App() {
     getDataView()
@@ -23,7 +24,7 @@ function App() {
 					<Route path="/" element={<Home />} />
 					<Route path="/account" element={<Me />} />
                     <Route path="/account/edit" element={<Edit />} />
-					<Route path="/board/:boardId" element={<Me />} />
+					<Route path="/board/:boardId" element={<Board />} />
 					<Route path="/share/:type/:id" element={<Share />} />
 					<Route path="/app/settings" element={<Settings />} />
 					<Route path="/login" element={<Login />} />

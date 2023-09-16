@@ -38,7 +38,7 @@ const BasicInfo = new mongoose.Schema({
         type: String,
         default: ""
     },
-    profile_pictures: {
+    profile_picture: {
         type: ProfilePicture,
     },
     default_storage: {

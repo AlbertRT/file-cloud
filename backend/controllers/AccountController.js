@@ -2,8 +2,6 @@ import User from "../mongodb/models/User.js"
 import File from "../mongodb/models/File.js";
 import Folder from "../mongodb/models/Folder.js";
 import { unlinkFile } from "../utils/fs.js";
-import validator from 'validator'
-import moment from 'moment'
 
 export async function accountDetails(req, res) {
     const { key } = req
@@ -24,7 +22,7 @@ export async function accountDetails(req, res) {
         username: basicInfo?.username,
         birthday: basicInfo?.birthday,
         gender: basicInfo?.gender,
-        profile_picture: basicInfo?.profile_pictures
+        profile_picture: basicInfo?.profile_picture
     }
     const contact_info = {
         email: contactInfo?.email,
@@ -85,9 +83,10 @@ export async function editInfo(req, res) {
 
 export async function profile_picture_update(req, res) {
     const downloadURL = `http://localhost:5050/pp/${req.file.filename.split(".")[0]}`
+    console.log(req.file);
 
     try {
-        await User.updateOne({ 'loginInfo.key': req.key }, { 'basicInfo.profile_pictures.downloadURL': downloadURL, 'basicInfo.profile_pictures.id': req.file.filename.split(".")[0], 'basicInfo.profile_pictures.filename': req.file.filename, 'basicInfo.profile_pictures.path': req.file.path});
+        await User.updateOne({ 'loginInfo.key': req.key }, { 'basicInfo.profile_picture.downloadURL': downloadURL, 'basicInfo.profile_picture.id': req.file.filename.split(".")[0], 'basicInfo.profile_picture.filename': req.file.filename, 'basicInfo.profile_picture.path': req.file.path}, { new: true });
 
         return res.status(204).json({
             ok: true,
@@ -105,12 +104,12 @@ export async function profile_picture_update(req, res) {
 
 export async function getProfilePicture(req, res) {
     const { fileName } = req.params;
-    const profile_picture = await User.findOne({ 'basicInfo.profile_pictures.id': fileName })
+    const profile_picture = await User.findOne({ 'basicInfo.profile_picture.id': fileName })
 
     const { basicInfo } = profile_picture
 
     try {
-        res.download( basicInfo.profile_pictures.path, basicInfo.profile_pictures.filename )
+        res.download( basicInfo.profile_picture.path, basicInfo.profile_picture.filename )
         return res.status(200)
     } catch (error) {
         return res.status(400).json({

@@ -20,7 +20,6 @@ const ChangeAvatar = ({ picture }) => {
 			const url = URL.createObjectURL(blob);
 			setPhotoURL(url);
 		}
-		onOpen();
 	};
 
     const onSave = async () => {

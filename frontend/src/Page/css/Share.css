@@ -1,0 +1,30 @@
+.Share .Bar {
+  height: 40px;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.Share .Bar .Buttons_Groups {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.Share .Bar .File_Name {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.Share .Preview .type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Share .Preview .type.image {
+  height: calc(100vh - 40px - 2rem);
+  overflow: hidden;
+}
+.Share .Preview .type.image img {
+  height: 100%;
+}

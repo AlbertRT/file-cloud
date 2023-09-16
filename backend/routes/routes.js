@@ -3,12 +3,11 @@ import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
 import { createFolder, deleteFolder, detailsFolder, lsFolder, renameFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
-import { uploadFile, renameFile, deleteFile, ls, details } from '../controllers/FileController.js';
+import { uploadFile, renameFile, deleteFile, ls, details, lsOnBoard } from '../controllers/FileController.js';
 import { download, share } from '../controllers/DownloadController.js';
 import upload from '../middleware/upload.js';
 import { accountDetails, deleteAccount, deleteProfilePicture, editInfo, getProfilePicture, profile_picture_update } from '../controllers/AccountController.js';
 import { fileAccess } from '../middleware/fileAccess.js';
-import random_string from '../utils/random_string.js';
 
 const Route = express.Router();
 
@@ -29,6 +28,7 @@ Route.delete('/user/board/delete', cookieValidation, deleteFolder);
 
 // file manager
 Route.get('/user/file', cookieValidation, ls);
+Route.get('/user/file/board/ls/:boardId', cookieValidation, lsOnBoard);
 Route.get('/user/file/details/:id', cookieValidation, details);
 Route.post('/user/file/upload', cookieValidation, upload, uploadFile);
 Route.patch('/user/file/rename/:id', cookieValidation, renameFile);

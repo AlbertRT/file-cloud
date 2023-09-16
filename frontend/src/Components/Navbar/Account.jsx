@@ -24,7 +24,7 @@ const Account = ({ data }) => {
 		<Dropdown showArrow>
 			<DropdownTrigger>
 				<Avatar
-					src={data.profile_picture.downloadURL}
+					src={data?.profile_picture?.downloadURL}
 					isBordered
 					color="secondary"
 					size="sm"
@@ -48,7 +48,7 @@ const Account = ({ data }) => {
 							description={data?.username}
 							avatarProps={{
 								size: "sm",
-								src: data.profile_picture.downloadURL,
+								src: data?.profile_picture?.downloadURL,
 							}}
 						/>
 					</DropdownItem>

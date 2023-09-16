@@ -77,45 +77,41 @@ const Board = () => {
 				</Button>
 				<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 					<ModalContent>
-						{(onClose) => (
-							<>
-								<ModalHeader className="flex flex-col gap-1">
-									Create Board
-								</ModalHeader>
-								<ModalBody>
-									<div className="my-4">
-										<Input
-											type="text"
-											variant="bordered"
-											placeholder={`for example "My Favorite Cars"`}
-											value={boardName}
-											onChange={(e) =>
-												setBoardName(e.target.value)
-											}
-											isClearable
-											onClear={() => setBoardName("")}
-										/>
-									</div>
-									<Switch
-										isSelected={isPublic}
-										onValueChange={setPublic}
-									>
-										Make this Board Public
-									</Switch>
-								</ModalBody>
-								<ModalFooter>
-									<Button
-										color="primary"
-										variant="flat"
-										disabled={boardName === ""}
-										isLoading={isLoading}
-										onClick={makeBoard}
-									>
-										Create
-									</Button>
-								</ModalFooter>
-							</>
-						)}
+						<ModalHeader className="flex flex-col gap-1">
+							Create Board
+						</ModalHeader>
+						<ModalBody>
+							<div className="my-4">
+								<Input
+									type="text"
+									variant="bordered"
+									placeholder={`for example "My Favorite Cars"`}
+									value={boardName}
+									onChange={(e) =>
+										setBoardName(e.target.value)
+									}
+									isClearable
+									onClear={() => setBoardName("")}
+								/>
+							</div>
+							<Switch
+								isSelected={isPublic}
+								onValueChange={setPublic}
+							>
+								Make this Board Public
+							</Switch>
+						</ModalBody>
+						<ModalFooter>
+							<Button
+								color="primary"
+								variant="flat"
+								disabled={boardName === ""}
+								isLoading={isLoading}
+								onClick={makeBoard}
+							>
+								Create
+							</Button>
+						</ModalFooter>
 					</ModalContent>
 				</Modal>
 			</div>
@@ -124,7 +120,9 @@ const Board = () => {
 					<Card isBlurred key={board.id}>
 						<CardBody className="block">
 							<div className="flex justify-between items-center w-full">
-								<Link to={`/board/${board.originalname.replaceAll(" ", "-")}`}>
+								<Link
+									to={`/board/${board.id}`}
+								>
 									<p className="font-bold">
 										{formatStr(board.originalname)}
 									</p>

@@ -81,17 +81,6 @@ export async function createFolder (req, res) {
         });
     }
 
-    // check the is duplicate or not
-    const isDuplicate = await Folder.findOne({ originalname: name });
-
-    if (isDuplicate) {
-        return res.status(400).json({
-            error: true,
-            ok: false,
-            msg: `${name} is already in use, please use other name`
-        });
-    }
-
     try {
         await createDir(path);
         await Folder.create({

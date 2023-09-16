@@ -10,7 +10,7 @@ export async function ls(req, res) {
     const { fullName, username } = basicInfo
 
     try {
-        const files = await File.find({ author: fullName});
+        const files = await File.find({ author: fullName });
 
         return res.status(200).json({
             ok: true,
@@ -23,6 +23,39 @@ export async function ls(req, res) {
             ok: false,
             msg: error.message
         });
+    }
+
+}
+
+export async function lsOnBoard(req, res) {
+    const { boardId } = req.params
+    let response = {}
+
+    try {
+        const { originalname, author, date_modified, access } = await Folder.findOne({ id: boardId })
+        const files = await File.find({ folderId: boardId })
+
+        response = {
+            ok: true,
+            error: false,
+            data: {
+                board: {
+                    originalname,
+                    author,
+                    date_modified,
+                    access
+                },
+                files: [...files]
+            }
+        }
+        return res.status(200).json(response)
+    } catch (error) {
+        response = {
+            error: true,
+            ok: false,
+            msg: error.message
+        }
+        return res.status(500).json(response)
     }
 
 }
@@ -57,7 +90,7 @@ export async function details(req, res) {
 
 export async function uploadFile(req, res) {
     const { originalname, path, filename, size, mimetype } = req.file;
-    const { altText, imageTitle, access } = req.meta_data
+    const { altText, imageTitle, access, location } = req.meta_data
     const key = req.key;
 
     const user = await User.findOne({ 'loginInfo.key': key });
@@ -89,7 +122,8 @@ export async function uploadFile(req, res) {
             title: imageTitle,
             altText,
             mimetype,
-            userId: user._id
+            userId: user._id,
+            folderId: location !== "" && location.split("/")[3]
         })
 
         return res.status(202).json({

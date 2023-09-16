@@ -5,9 +5,20 @@ import {
 import Account from "./Account";
 import { Link } from "react-router-dom";
 import {Navbar, NavbarContent, Input, NavbarBrand} from "@nextui-org/react"
+import useSWR from 'swr';
+import Fetcher from '../../Utils/Func/Fetcher';
 
-const NavBar = ({ data }) => {
+const NavBar = () => {
 	const [searchValue, setSearchValue] = useState("");
+    const {
+		data,
+		error,
+		isLoading,
+	} = useSWR("http://localhost:5050/account/details", Fetcher.get);
+    if (isLoading) {
+        return ""
+    }
+    const { basic_info } = data.data
 
 	return (
 		<Navbar isBordered isBlurred className="h-10 py-8">
@@ -34,7 +45,7 @@ const NavBar = ({ data }) => {
 					}
 					type="search"
 				/>
-				<Account data={data} />
+				<Account data={basic_info} />
 			</NavbarContent>
 		</Navbar>
 	);

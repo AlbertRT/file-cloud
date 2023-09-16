@@ -22,7 +22,6 @@ import { LuPlus } from "react-icons/lu";
 import axios from "axios";
 import { useState } from "react";
 import { revalidateLiveQueries } from '../../Utils/Func/RevalidateLiveQueries'
-import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -104,7 +103,7 @@ const Home = () => {
 
 	return (
 		<div className="flex flex-col relative">
-			<NavBar data={response.data.basic_info} />
+			<NavBar />
 			<section id="Main" className="flex flex-col">
 				<div className="px-8 py-4">
 					<span className="font-bold">Home</span>
@@ -185,8 +184,7 @@ const Home = () => {
 										name={basic_info.fullName}
 										description={basic_info?.username}
 										avatarProps={{
-											src: basic_info?.profile_picture
-												.downloadURL,
+											src: basic_info?.profile_picture?.downloadURL,
 										}}
 									/>
 								</div>

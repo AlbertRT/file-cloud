@@ -40,7 +40,7 @@ export async function register(req, res) {
             id: userId,
             basicInfo: {
                 fullName: name,
-                user_folder: folderName
+                user_folder: folderName,
             },
             contactInfo: {
                 email
