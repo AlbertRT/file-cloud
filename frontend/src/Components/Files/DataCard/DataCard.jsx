@@ -38,13 +38,7 @@ const DataCard = ({ data }) => {
 								: formatStr(img.originalname)}
 						</p>
 						<div className="flex justify-between items-center">
-							<User
-								avatarProps={{
-									size: "sm",
-									src: img.author.photo,
-								}}
-								name={img.author.name}
-							/>
+							<p className="text-sm select-none text-gray-500 font-bold">{img.author}</p>
 							<Dropdown>
 								<DropdownTrigger>
 									<Button isIconOnly size="sm">

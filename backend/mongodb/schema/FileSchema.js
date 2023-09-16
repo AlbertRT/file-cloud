@@ -36,7 +36,8 @@ const fileSchema = new Schema({
     date_modified: String,
     url: String,
     author: {
-        type: Object
+        type: String,
+        required: true
     },
     access: {
         type: String,

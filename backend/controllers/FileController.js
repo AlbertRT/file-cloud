@@ -10,7 +10,7 @@ export async function ls(req, res) {
     const { fullName, username } = basicInfo
 
     try {
-        const files = await File.find({ 'author.name': fullName});
+        const files = await File.find({ author: fullName});
 
         return res.status(200).json({
             ok: true,
@@ -84,11 +84,7 @@ export async function uploadFile(req, res) {
             size,
             date_modified: moment().unix(),
             url: downloadURL,
-            author: {
-                id: user.id,
-                photo: user.basicInfo.profile_pictures.downloadURL,
-                name: user.basicInfo.fullName
-            },
+            author: user.basicInfo.fullName,
             access,
             title: imageTitle,
             altText,
