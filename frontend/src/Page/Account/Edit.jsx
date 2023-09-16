@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import Fetcher from "../../Utils/Func/Fetcher";
 import Loading from "../../Components/Loading/Loading";
@@ -20,30 +20,45 @@ import moment from "moment";
 import axios from "axios";
 import { revalidateLiveQueries } from "../../Utils/Func/RevalidateLiveQueries";
 import { useNavigate } from "react-router-dom";
+import ChangeAvatar from "./Components/ChangeAvatar";
+
+function isDisabled(basic_info) {
+    return (
+		basic_info.fullName !== "" &&
+		basic_info.username !== "" &&
+		basic_info.gender !== "" &&
+		basic_info.birthday !== null
+	);
+}
 
 const Edit = () => {
-    const navigate = useNavigate()
-	const { data: response, error } = useSWR(
-		"http://localhost:5050/account/details",
-		Fetcher.get
-	);
-
-	const [profilePicture, setProfilePicture] = useState(null);
-	const profilePictureInput = useRef(null);
+	document.title = "Edit your Account";
+	const navigate = useNavigate();
 	const [isLoading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(true)
 	const [user, setUser] = useState({
 		basic_info: {
 			fullName: "",
 			username: "",
 			gender: "",
 			birthday: null,
-		},
-		contact_info: {
-			phone: "",
-			email: "",
-		},
+		}
 	});
-	document.title = "Edit your Account";
+	const { data: response, error } = useSWR(
+		"http://localhost:5050/account/details",
+		Fetcher.get
+	);
+    useEffect(() => {
+		const { basic_info } = user;
+		const isBasicInfoIncomplete =
+			basic_info.fullName !== "" ||
+			basic_info.username !== "" ||
+			basic_info.gender !== "" ||
+			basic_info.birthday !== null;
+
+		setDisabled(!isBasicInfoIncomplete);
+	}, [user]);
+
 
 	const onInputChange = (e) => {
 		const label = e.target.getAttribute("aria-label");
@@ -78,25 +93,33 @@ const Edit = () => {
 	};
 	const onSave = async () => {
 		setLoading(true);
+        
+        const data = {
+            basic_info: {
+                fullName: user.basic_info.fullName || response.data.basic_info.fullName,
+                username: user.basic_info.username || response.data.basic_info.username,
+                gender: user.basic_info.gender || response.data.basic_info.gender,
+                birthday: user.basic_info.birthday || response.data.basic_info.birthday
+            }
+        }
 		try {
-			await axios.patch("http://localhost:5050/account/edit", { ...user });
+			await axios.patch("http://localhost:5050/account/edit", {
+				...data,
+			});
 			setUser({
 				basic_info: {
 					fullName: "",
 					username: "",
 					gender: "",
 					birthday: null,
-				},
-				contact_info: {
-					phone: "",
-					email: "",
-				},
+				}
 			});
-            setLoading(false)
+            await revalidateLiveQueries()
+			setLoading(false);
 		} catch (error) {
-            console.log(error);
-            setLoading(false)
-        }
+			console.log(error);
+			setLoading(false);
+		}
 	};
 
 	const genders = [
@@ -128,30 +151,11 @@ const Edit = () => {
 					</div>
 					<div className="px-10 w-[40%]">
 						<div className="mt-10 flex items-center">
-							<Avatar
-								src={
+							<ChangeAvatar
+								picture={
 									response.data.basic_info.profile_picture
 										.downloadURL
 								}
-								size="lg"
-								isBordered
-								color="secondary"
-							/>
-							<Button
-								variant="flat"
-								className="ml-5"
-								size="sm"
-								onClick={() =>
-									profilePictureInput.current.click()
-								}
-							>
-								Change
-							</Button>
-							<input
-								type="file"
-								name="profilePicture"
-								ref={profilePictureInput}
-								className="hidden"
 							/>
 						</div>
 						<div className="mt-10">
@@ -168,6 +172,7 @@ const Edit = () => {
 									value={user.basic_info.fullName}
 									onChange={onInputChange}
 									aria-label="basic_info"
+                                    autoComplete="off"
 								/>
 							</div>
 							<div className="mt-4">
@@ -183,6 +188,7 @@ const Edit = () => {
 									value={user.basic_info.username}
 									onChange={onInputChange}
 									aria-label="basic_info"
+                                    autoComplete="off"
 								/>
 							</div>
 							<div className="mt-4 flex items-center">
@@ -238,43 +244,14 @@ const Edit = () => {
 								</div>
 							</div>
 						</div>
-						<div className="mt-10">
-							<div className="mt-4">
-								<Input
-									type="text"
-									variant="bordered"
-									label="Phone Number"
-									labelPlacement="outside"
-									placeholder={
-										response.data.contact_info.phone
-									}
-									name="phone"
-									value={user.contact_info.phone}
-									onChange={onInputChange}
-									aria-label="contact_info"
-								/>
-							</div>
-							<div className="mt-4">
-								<Input
-									type="text"
-									variant="bordered"
-									label="Email"
-									labelPlacement="outside"
-									placeholder={
-										response.data.contact_info.email
-									}
-									name="email"
-									value={user.contact_info.email}
-									onChange={onInputChange}
-									aria-label="contact_info"
-								/>
-							</div>
-						</div>
 						<div className="my-10 flex items-center gap-4">
-							<Button variant="bordered">Discard</Button>
+							<Button variant="bordered" color="secondary">
+								Discard
+							</Button>
 							<Button
-								color="success"
-								variant="flat"
+								color="secondary"
+								variant="solid"
+								isDisabled={disabled}
 								isLoading={isLoading}
 								onClick={onSave}
 							>

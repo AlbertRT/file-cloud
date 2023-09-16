@@ -44,7 +44,7 @@ export async function accountDetails(req, res) {
 }
 
 export async function editInfo(req, res) {
-    const { basic_info, contact_info } = req.body
+    const { basic_info } = req.body
 
     const me = await User.findOne({ 'loginInfo.key': req.key })
 
@@ -52,36 +52,20 @@ export async function editInfo(req, res) {
    
     let usn = basic_info.username
     let regex = /^@/
-    const isEmail = validator.isEmail(contact_info.email)
-    const isPhone = validator.isMobilePhone(contact_info.phone)
 
     // validation
     if (!regex.test(usn)) {
         usn = `@${usn}`
     }
-    if (!isEmail) {
-        return res.status(400).json({
-            error: true,
-            ok: false,
-            msg: "Email is not valid"
-        })
-    }
-    if (!isPhone) {
-        return res.status(400).json({
-            error: true,
-            ok: false,
-            msg: "Phone Number is not valid"
-        })
-    }
 
     try {
         await User.updateOne({ 'loginInfo.key': req.key }, {
-            'basicInfo.fullName': basic_info.fullName,
-            'basicInfo.username': usn,
-            'basicInfo.gender': basic_info.gender,
-            'basicInfo.birthday': moment(basic_info.birthday).format("MMMM, DD YYYY"),
-            'contactInfo.email': contact_info.email,
-            'contactInfo.phone': contact_info.phone
+            $set: {
+                'basicInfo.fullName': basic_info.fullName,
+                'basicInfo.username': basic_info.username,
+                'basicInfo.birthday': basic_info.birthday,
+                'basicInfo.gender': basic_info.gender
+            }
         })
         await File.updateMany({ 'author.name': me.basicInfo.fullName }, { 'author.name': basic_info.fullName })
         await Folder.updateMany({ author: me.basicInfo.fullName }, { author: basic_info.fullName })

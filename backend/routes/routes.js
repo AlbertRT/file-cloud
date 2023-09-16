@@ -46,7 +46,7 @@ Route.get('/', cookieValidation, (req, res) => res.json({ ok: true }));
 // Account Multer config
 const accountInfo = multer.diskStorage({
     destination: (req, file, cb) => {
-        const path = `${req.location}/details`
+        const path = `src/folders/${req.folder_name}/details`
         cb(null, path)
     },
     filename: (req, file, cb) => {
