@@ -3,14 +3,18 @@ import useSWR from "swr";
 import Loading from "../../Components/Loading/Loading";
 import Fetcher from "../../Utils/Func/Fetcher";
 import NavBar from "../../Components/Navbar/Navbar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DataCard from "../../Components/Files/DataCard/DataCard";
 import {LuGlobe2, LuLock, LuEdit2 } from 'react-icons/lu';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, useDisclosure, Textarea } from "@nextui-org/react";
+import axios from "axios";
+import { revalidateLiveQueries } from "../../Utils/Func/RevalidateLiveQueries";
 
 const Board = () => {
 	const { boardId } = useParams();
-    const { isOpen, onOpen, onOpenChange } = useDisclosure()
+    const navigation = useNavigate()
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+    const [loading, setLoading] = useState(false)
     const [myBoard, setMyBoard] = useState({
         originalname: "",
         access: ""
@@ -29,6 +33,46 @@ const Board = () => {
 	}
 	const { board, files } = response.data
     document.title = `Board - ${board.originalname}`
+
+    const onDelete = async () => {
+        try {
+            await axios.delete("http://localhost:5050/user/board/delete", {data: { id: boardId }});
+            navigation("/account")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const onAccessChange = value => {
+        if (value === true) {
+            setMyBoard(prev => ({
+                ...prev,
+                access: "private"
+            }))
+        } else {
+            setMyBoard(prev => ({
+                ...prev,
+                access: "public"
+            }))
+        }
+        
+    }
+
+    const onSave = async () => {
+        const data = {
+            originalname: myBoard.originalname || board.originalname,
+            access: myBoard.access || board.access
+        }
+        setLoading(true)
+        try {
+            await axios.patch(`http://localhost:5050/user/board/edit/${boardId}`, data);
+            await revalidateLiveQueries()
+            setLoading(false)
+            onClose()
+        } catch (error) {
+            setLoading(false)
+            console.log(error);
+        }
+    }
     
 	return (
 		<div className="flex flex-col relative">
@@ -80,17 +124,19 @@ const Board = () => {
                             <div className="mb-4">
                                 <Textarea variant="bordered" label="Description" labelPlacement="outside" />
                             </div>
-                            <Switch defaultSelected={board.access === "private"} size="sm">Make this Board private</Switch>
+                            <Switch defaultSelected={board.access === "private"} size="sm" onValueChange={onAccessChange}>Make this Board private</Switch>
 						</ModalBody>
 						<ModalFooter>
 							<div className="flex items-center justify-between w-full">
-								<Button color="danger" variant="flat" size="sm">
+								<Button color="danger" variant="flat" size="sm" onPress={onDelete}>
 									Delete this Board
 								</Button>
 								<Button
 									color="success"
 									variant="flat"
 									size="sm"
+                                    isLoading={loading}
+                                    onPress={onSave}
 								>
 									Save
 								</Button>

@@ -1,7 +1,7 @@
 import express from 'express';
 import { login, logout, me, register } from '../controllers/UserController.js';
 import { cookieValidation } from '../middleware/cookieValidation.js';
-import { createFolder, deleteFolder, detailsFolder, lsFolder, renameFolder } from '../controllers/FolderController.js';
+import { createFolder, deleteFolder, detailsFolder, editDetails, lsFolder } from '../controllers/FolderController.js';
 import multer from 'multer';
 import { uploadFile, renameFile, deleteFile, ls, details, lsOnBoard } from '../controllers/FileController.js';
 import { download, share } from '../controllers/DownloadController.js';
@@ -23,7 +23,7 @@ Route.delete('/user/logout', cookieValidation, logout);
 Route.get('/user/board/ls', cookieValidation, lsFolder)
 Route.post('/user/board/create', cookieValidation, createFolder);
 Route.get('/user/board/details/:folderId', cookieValidation, detailsFolder);
-Route.patch('/user/board/rename/:id', cookieValidation, renameFolder);
+Route.patch('/user/board/edit/:id', cookieValidation, editDetails);
 Route.delete('/user/board/delete', cookieValidation, deleteFolder);
 
 // file manager

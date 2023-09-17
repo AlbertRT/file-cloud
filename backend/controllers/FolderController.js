@@ -110,40 +110,25 @@ export async function createFolder (req, res) {
     }
 }
 
-export async function renameFolder (req, res) {
-    let { newName } = req.body;
+export async function editDetails (req, res) {
+    const { originalname, access } = req.body
     const { id } = req.params
 
-    const folder = await Folder.findOne({
-        id
-    })
-    // new properties
-    const newId = random_string(32)
-    const newDirectory = `${req.location}/${newId}`
-
-    if (!folder) {
+    const board = await Folder.findOne({ id })
+    if (!board) {
         return res.status(404).json({
             error: true,
             ok: false,
-            msg: "File not Found"
+            msg: "Board not Found"
         });
     }
-
+    
     try {
-        await rename(folder.directory, newDirectory)
-        await Folder.updateOne({
-            id
-        }, {
-            originalname: newName,
-            id: newId,
-            name: newId,
-            directory: newDirectory
-        })
-
+        await Folder.updateOne({ id }, { $set: { originalname, access } })
         return res.status(200).json({
             ok: true,
             error: false,
-            msg: `${newName} successfully renamed`
+            msg: `successfully edit`
         });
     } catch (error) {
         return res.status(400).json({
@@ -152,9 +137,11 @@ export async function renameFolder (req, res) {
             msg: error.message
         });
     }
+
 }
 export async function deleteFolder (req, res) {
     const { id } = req.body 
+    console.log(id);
 
     const folder = await Folder.findOne({ id });
     const sizes = await File.find({ folderId: id })
@@ -165,17 +152,11 @@ export async function deleteFolder (req, res) {
         return res.status(404).json({
             error: true,
             ok: false,
-            msg: "Folder not Found"
+            msg: "Board not Found"
         });
     }
 
     try {
-        const files = await readDir(folder.directory);
-        const filteredFileName = files.filter(item => !item.includes("."));
-        
-        filteredFileName.map(async id => {
-            await Folder.deleteOne({ name: id })
-        })
         await File.deleteMany({ folderId: id })
         await Folder.deleteOne({ id });
         await rmFolder(folder.directory);
